@@ -33,6 +33,18 @@ Line& Line::operator=(const Line& rhs)
     return *this;
 }
 
+
+Line Line::perpendicular(const Point& p) const
+{
+    return Line(p, -1.0 / this->m);
+}
+
+
+Point Line::getdirection() const
+{
+    return Point(this->m, 1.0).normalize();
+}
+
 //get method
 double Line::getm() const
 {

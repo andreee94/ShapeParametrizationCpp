@@ -8,6 +8,9 @@ class Point
     public:
         double x, y;
         /** Default constructor */
+        Point(int value);
+        Point(double value);
+        Point(int x, int y);
         Point(double x, double y);
         /** Default destructor */
         virtual ~Point();
@@ -23,9 +26,21 @@ class Point
 
         friend Point operator+(const Point& a, const Point& b); //in class
         friend Point operator-(const Point& a, const Point& b); //in class
+        friend Point operator*(const Point& a, const double b); //in class
+        friend Point operator*(const double b, const Point& a); //in class
+        friend Point operator/(const Point& a, const double b); //in class
+        friend Point operator/(const double b, const Point& a); //in class
 
+        Point reverse();
+        Point reverse() const;
+        Point normalize();
+        Point normalize() const;
+        double length() const;
+        double distance(const Point& other) const;
         double slope(const Point& other) const;
         Line axis(const Point& other) const;
+        Point move(const Line& line, const double dist) const;
+        Point move(const Point& direction, const double dist) const;
         //friend static double slope(const Point& a, const Point& b);
 
         // TODO override operators sum and others

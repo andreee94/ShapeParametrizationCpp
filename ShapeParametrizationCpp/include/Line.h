@@ -13,6 +13,10 @@ class Line
         Line(const Point &p1, const Point &p2);
         virtual ~Line();
         Line& operator=(const Line& other);
+
+        Line perpendicular(const Point& other) const;
+
+        Point getdirection() const;
         double getm() const;
         double getq() const;
 
