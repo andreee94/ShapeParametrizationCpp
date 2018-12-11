@@ -1,6 +1,7 @@
 #ifndef POINT_H
 #define POINT_H
 
+class Line;
 
 class Point
 {
@@ -19,6 +20,14 @@ class Point
          *  \return A reference to this
          */
         Point& operator=(const Point& other);
+
+        friend Point operator+(const Point& a, const Point& b); //in class
+        friend Point operator-(const Point& a, const Point& b); //in class
+
+        double slope(const Point& other) const;
+        Line axis(const Point& other) const;
+        //friend static double slope(const Point& a, const Point& b);
+
         // TODO override operators sum and others
 
     protected:

@@ -8,10 +8,15 @@ int main()
 {
     cout << "Hello world!" << endl;
 
-    Point p = Point(10, 10);
-    Line l = Line(p, 3);
-    cout << l.getm() << endl;
-    cout << l.getq() << endl;
+    Point p1 = Point(0, 0);
+    Point p2 = Point(1, 1);
+    Point p3 = Point(1, 0);
+    Point p = p1 + p2 - p3;
+    Line l = p1.axis(p2);
+    cout << "m" << l.getm() << endl;
+    cout << "q" << l.getq() << endl;
+    cout << p.x << ", " << p.y << endl;
+    cout << p2.slope(p3) << endl;
 
 
     return 0;

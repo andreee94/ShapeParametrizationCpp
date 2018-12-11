@@ -7,16 +7,18 @@ Line::Line(double y_intercept, double slope)
     q = slope;
 }
 
+//constructor
 Line::Line(const Point& p, double slope)
 {
     m = slope;
     q = p.y - slope * p.x; // yp - m * xp
 }
 
+//constructor
 Line::Line(const Point& p1, const Point& p2)
 {
-    double slope = (p2.y - p1.y) / (p2.x - p1.x);
-    Line:Line(p1, slope);
+    //double slope = (p2.y - p1.y) / (p2.x - p1.x);
+    Line:Line(p1, p1.slope(p2));
 }
 
 Line::~Line()
@@ -31,12 +33,14 @@ Line& Line::operator=(const Line& rhs)
     return *this;
 }
 
-double Line::getm()
+//get method
+double Line::getm() const
 {
     return m;
 }
 
-double Line::getq()
+//get method
+double Line::getq() const
 {
     return q;
 }

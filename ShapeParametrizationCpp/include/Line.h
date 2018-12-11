@@ -13,8 +13,8 @@ class Line
         Line(const Point &p1, const Point &p2);
         virtual ~Line();
         Line& operator=(const Line& other);
-        double getm();
-        double getq();
+        double getm() const;
+        double getq() const;
 
 
     protected:
