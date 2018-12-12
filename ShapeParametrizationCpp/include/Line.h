@@ -2,9 +2,13 @@
 #define LINE_H
 
 #include "Point.h"
+#include "Evaluable.h"
+#include <vector>
 
+typedef std::vector<Point> Points;
+typedef std::vector<double> doubles;
 
-class Line
+class Line: public Evaluable
 {
     public:
         Line();
@@ -14,7 +18,12 @@ class Line
         virtual ~Line();
         Line& operator=(const Line& other);
 
+        Point evaluate(double) const;
+        Points evaluate(int steps ) const;
+
         Line perpendicular(const Point& other) const;
+        Point intersection(const Line& other) const;
+        double rotateslope(double theta) const;
 
         Point getdirection() const;
         double getm() const;

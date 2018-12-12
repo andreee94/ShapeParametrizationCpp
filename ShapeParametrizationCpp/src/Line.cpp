@@ -1,5 +1,10 @@
 #include "Line.h"
 #include "Point.h"
+#include <cmath>
+
+using namespace std;
+typedef std::vector<Point> Points;
+typedef std::vector<double> doubles;
 
 Line::Line(double y_intercept, double slope)
 {
@@ -33,6 +38,30 @@ Line& Line::operator=(const Line& rhs)
     return *this;
 }
 
+Point Line::evaluate(double x) const
+{
+    // x, mx + q
+    return Point(x, this->m * x + this->q);
+}
+
+// when no start and end specified, use between 0 and 1
+Points Line::evaluate(int steps) const
+{
+    return this->Evaluable::evaluate(0.0, 1.0, steps);
+}
+
+double Line::rotateslope(double theta) const
+{
+    return (this->m * std::cos(theta) + std::sin(theta)) / (std::cos(theta) - this->m * std::sin(theta));
+}
+
+Point Line::intersection(const Line& l) const
+{
+    Point p;
+    p.x = - (l.q - this->q) / (l.m - this->m);
+    p.y = this->q + this->m * p.x;
+    return p;
+}
 
 Line Line::perpendicular(const Point& p) const
 {

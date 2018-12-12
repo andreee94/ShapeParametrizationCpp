@@ -4,16 +4,82 @@
 	"Line.h"
 	"Point.h"
 
-1544560336 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Line.cpp
+1544610905 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Line.cpp
 	"Line.h"
 	"Point.h"
+	<cmath>
 
-1544560067 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/Line.h
+1544610610 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/Line.h
 	"Point.h"
+	"Evaluable.h"
+	<vector>
 
-1544560263 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/Point.h
+1544623090 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/Point.h
 
-1544556890 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Point.cpp
+1544623054 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Point.cpp
 	"Point.h"
 	"Line.h"
+	<cmath>
+
+1544610481 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/Evaluable.h
+	<vector>
+	<Point.h>
+
+1544610467 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Evaluable.cpp
+	"Evaluable.h"
+	<Point.h>
+	"Utils.h"
+	<vector>
+
+1544624206 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Circle.cpp
+	"Circle.h"
+	"Line.h"
+	"Point.h"
+	<cmath>
+
+1544624202 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/Circle.h
+	<Evaluable.h>
+	"Line.h"
+	"Point.h"
+	<cmath>
+
+1544634944 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Utils.cpp
+	"Utils.h"
+	<vector>
+
+1544634632 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/Utils.h
+	<vector>
+
+1544626587 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Ellipse.cpp
+	"Ellipse.h"
+	"Circle.h"
+	"Line.h"
+	"Point.h"
+	<cmath>
+	<vector>
+	<array>
+	<iostream>
+	<eigen3/Eigen/Dense>
+
+1544626362 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/Ellipse.h
+	<Evaluable.h>
+	"Line.h"
+	"Point.h"
+	<vector>
+	<array>
+	<cmath>
+	<iostream>
+	<eigen3/Eigen/Dense>
+
+1544634995 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Bspline.cpp
+	"Bspline.h"
+	"Point.h"
+	"Line.h"
+	"Utils.h"
+	<cmath>
+
+1544634826 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/Bspline.h
+	"Point.h"
+	"Line.h"
+	<cmath>
 

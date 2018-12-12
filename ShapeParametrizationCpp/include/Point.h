@@ -8,6 +8,7 @@ class Point
     public:
         double x, y;
         /** Default constructor */
+        Point();
         Point(int value);
         Point(double value);
         Point(int x, int y);
@@ -26,6 +27,7 @@ class Point
 
         friend Point operator+(const Point& a, const Point& b); //in class
         friend Point operator-(const Point& a, const Point& b); //in class
+        friend double operator*(const Point& a, const Point& b); //in class
         friend Point operator*(const Point& a, const double b); //in class
         friend Point operator*(const double b, const Point& a); //in class
         friend Point operator/(const Point& a, const double b); //in class
@@ -33,10 +35,16 @@ class Point
 
         Point reverse();
         Point reverse() const;
+        Point rotate(double theta);
+        Point rotate(double theta) const;
         Point normalize();
         Point normalize() const;
         double length() const;
+        double lengthsquared() const;
+        double atan() const;
+        double atan2() const;
         double distance(const Point& other) const;
+        double distancesquared(const Point& other) const;
         double slope(const Point& other) const;
         Line axis(const Point& other) const;
         Point move(const Line& line, const double dist) const;

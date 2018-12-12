@@ -7,6 +7,11 @@
 //{
 //}
 
+Point::Point()
+{
+    Point(0.0, 0.0);
+}
+
 Point::Point(int value)
 {
     this->x = value;
@@ -58,6 +63,11 @@ Point operator-(const Point& a, const Point& b)
 {
     return a + b.reverse();
 }
+// OPERATOR times point is scalar product
+double operator*(const Point& a, const Point& b)
+{
+    return a.x + b.x +  a.y + b.y;
+}
 // OPERATOR times
 Point operator*(const Point& a, const double b)
 {
@@ -94,7 +104,40 @@ Point operator/(const Point& a, const int b)
 
 double Point::length() const
 {
-    return std::sqrt(this->x * this->x +  this->y * this->y);
+    return std::sqrt(this->lengthsquared());
+}
+double Point::lengthsquared() const
+{
+    return *this * *this; // scalar product with itself
+}
+
+
+double Point::atan() const
+{
+    return std::atan(this->y / this->x);
+}
+
+double Point::atan2() const
+{
+    return std::atan2(this->y, this->x);
+}
+
+Point Point::rotate(double theta) const
+{
+    Point p;
+    // x = x cos(theta) - y sin(theta)
+    p.x = *this * Point(std::cos(theta), - std::sin(theta));
+    // y = x sin(theta) + y cos(theta)
+    p.y = *this * Point(std::sin(theta), std::cos(theta));
+    return p;
+}
+Point Point::rotate(double theta)
+{
+    // x = x cos(theta) - y sin(theta)
+    this->x = *this * Point(std::cos(theta), - std::sin(theta));
+    // y = x sin(theta) + y cos(theta)
+    this->y = *this * Point(std::sin(theta), std::cos(theta));
+    return *this;
 }
 Point Point::reverse() const
 {
@@ -121,6 +164,10 @@ Point Point::normalize()
 double Point::distance(const Point& p2) const
 {
     return (*this - p2).length();
+}
+double Point::distancesquared(const Point& p2) const
+{
+    return (*this - p2).lengthsquared();
 }
 
 double Point::slope(const Point& p2) const
