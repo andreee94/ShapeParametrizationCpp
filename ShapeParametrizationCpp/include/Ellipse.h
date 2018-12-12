@@ -62,6 +62,8 @@ class Ellipse : public Evaluable
         double geteccentricity();
         Matrix3 getM() const;
 
+        void print() const;
+
 
     protected:
         Point center;

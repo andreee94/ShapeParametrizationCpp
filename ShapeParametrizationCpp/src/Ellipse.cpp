@@ -110,11 +110,12 @@ Ellipse& Ellipse::operator=(const Ellipse& rhs)
     return *this;
 }
 
-Point Ellipse::evaluate(double theta) const
+Point Ellipse::evaluate(double alpha) const
 {
-    //TODO
     Point p;
-    return p;
+    p.x = this->a * cos(this->theta) * cos(alpha) - this->b * sin(this->theta) * sin(alpha);
+    p.y = this->a * sin(this->theta) * cos(alpha) + this->b * cos(this->theta) * sin(alpha);
+    return p + this->center;
 }
 
 
@@ -295,3 +296,30 @@ Matrix3 Ellipse::getM() const
          D/2, E/2, F;
     return M;
 }
+
+
+void Ellipse::print() const
+{
+    if (this->ellipsetype & EllipseType::centerframe)
+    {
+        cout << "cx = " << this->center.x
+             << " cy = " << this->center.y
+             << " a = " << this->a
+             << " b = " << this->b << endl;
+    }
+
+    if (this->ellipsetype & EllipseType::coef)
+    {
+         cout << "A = " << this->A
+             << " B = " << this->B
+             << " C = " << this->C
+             << " D = " << this->D
+             << " E = " << this->E
+             << " F = " << this->F << endl;
+    }
+}
+
+
+
+
+

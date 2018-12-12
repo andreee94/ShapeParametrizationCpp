@@ -1,6 +1,7 @@
 #include "Line.h"
 #include "Point.h"
 #include <cmath>
+#include <iostream>
 
 using namespace std;
 typedef std::vector<Point> Points;
@@ -85,3 +86,15 @@ double Line::getq() const
 {
     return q;
 }
+
+void Line::print() const
+{
+    cout << "m = " << this->m
+         << " q = " << this->q << endl;
+}
+
+
+
+
+
+

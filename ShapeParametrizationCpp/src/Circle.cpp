@@ -34,12 +34,12 @@ Circle::Circle(const Point &p1, const Point &p2, const double m, const bool tang
     this->radius = p1.distance(this->center);
 }
 
-Circle& Circle::operator=(const Circle& rhs)
-{
-    if (this == &rhs) return *this; // handle self assignment
-    //assignment operator
-    return *this;
-}
+//Circle& Circle::operator=(const Circle& rhs)
+//{
+//    if (this == &rhs) return *this; // handle self assignment
+//    //assignment operator
+//    return *this;
+//}
 
 Point Circle::evaluate(double theta) const
 {
@@ -73,3 +73,13 @@ double Circle::getradius() const
 {
     return this->radius;
 }
+
+
+void Circle::print() const
+{
+    cout << "cx = " << this->center.x
+         << " cy = " << this->center.y
+         << " r = " << this->radius << endl;
+}
+
+

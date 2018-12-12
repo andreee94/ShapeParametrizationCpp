@@ -29,6 +29,8 @@ class Line: public Evaluable
         double getm() const;
         double getq() const;
 
+        void print() const;
+
 
     protected:
     // y = mx + q

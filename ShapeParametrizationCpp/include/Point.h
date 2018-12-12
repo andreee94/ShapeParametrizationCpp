@@ -23,7 +23,7 @@ class Point
          *  \param other Object to assign from
          *  \return A reference to this
          */
-        Point& operator=(const Point& other);
+        //Point& operator=(const Point& other);
 
         friend Point operator+(const Point& a, const Point& b); //in class
         friend Point operator-(const Point& a, const Point& b); //in class
@@ -49,6 +49,8 @@ class Point
         Line axis(const Point& other) const;
         Point move(const Line& line, const double dist) const;
         Point move(const Point& direction, const double dist) const;
+
+        void print() const;
         //friend static double slope(const Point& a, const Point& b);
 
         // TODO override operators sum and others

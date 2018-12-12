@@ -5,6 +5,7 @@
 #include "Line.h"
 #include "Point.h"
 #include <cmath>
+#include <iostream>
 
 using namespace std;
 typedef std::vector<Point> Points;
@@ -25,7 +26,7 @@ class Circle : public Evaluable
          *  \param other Object to assign from
          *  \return A reference to this
          */
-        Circle& operator=(const Circle& other);
+        //Circle& operator=(const Circle& other);
 
         Point evaluate(double) const;
         Points evaluate(int steps ) const;
@@ -34,6 +35,8 @@ class Circle : public Evaluable
 
         Point getcenter() const;
         double getradius() const;
+
+        void print() const;
 
     protected:
         Point center;

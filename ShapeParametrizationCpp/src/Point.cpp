@@ -1,11 +1,12 @@
 #include "Point.h"
 #include "Line.h"
 #include <cmath>
-
+#include <iostream>
 
 //Point::Point(double px, double py): x(px), y(py)
 //{
 //}
+using namespace std;
 
 Point::Point()
 {
@@ -46,12 +47,12 @@ Point::Point(const Point& other)
     //copy ctor
 }
 
-Point& Point::operator=(const Point& rhs)
-{
-    if (this == &rhs) return *this; // handle self assignment
-    //assignment operator
-    return *this;
-}
+//Point& Point::operator=(const Point& rhs)
+//{
+//    if (this == &rhs) return *this; // handle self assignment
+//    //assignment operator
+//    return *this;
+//}
 
 // OPERATOR plus
 Point operator+(const Point& a, const Point& b)
@@ -66,7 +67,7 @@ Point operator-(const Point& a, const Point& b)
 // OPERATOR times point is scalar product
 double operator*(const Point& a, const Point& b)
 {
-    return a.x + b.x +  a.y + b.y;
+    return a.x * b.x + a.y * b.y;
 }
 // OPERATOR times
 Point operator*(const Point& a, const double b)
@@ -108,7 +109,7 @@ double Point::length() const
 }
 double Point::lengthsquared() const
 {
-    return *this * *this; // scalar product with itself
+    return (*this) * (*this); // scalar product with itself
 }
 
 
@@ -178,7 +179,7 @@ double Point::slope(const Point& p2) const
 Line Point::axis(const Point& p2) const
 {
     double m, q;
-    m = this->slope(p2);
+    m = -1.0 / this->slope(p2);
     q = 0.5 * (this->y + p2.y) - 0.5 * (this->x + p2.x) * m;
     return Line(m, q);
 }
@@ -192,3 +193,10 @@ Point Point::move(const Point& direction, double dist) const
 {
     return *this + direction.normalize() * dist;
 }
+
+void Point::print() const
+{
+    std::cout << "x = " << this->x
+              << " y = " << this->y << std::endl;
+}
+
