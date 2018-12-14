@@ -53,8 +53,6 @@ class Point
         void print() const;
         //friend static double slope(const Point& a, const Point& b);
 
-        // TODO override operators sum and others
-
     protected:
 
     private:

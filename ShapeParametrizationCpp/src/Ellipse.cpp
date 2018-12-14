@@ -219,8 +219,9 @@ Ellipse Ellipse::rotate_centerframe(double theta)
 }
 Ellipse Ellipse::rotate_centerframe(double theta) const
 {
-    //TODO
-    return *this;
+    Ellipse e = Ellipse(*this);
+    e.theta = e.theta + theta;
+    return e;
 }
 
 Ellipse Ellipse::translate_coef(const Point &p)
