@@ -1,7 +1,12 @@
 #include "Utils.h"
 #include <vector>
+#include <cmath>
+#include <iostream>
+
+using namespace std;
 
 typedef std::vector<double> doubles;
+typedef std::vector<Point> Points;
 
 doubles Utils::linspace(double start_in, double end_in, int num_in)
 {
@@ -37,3 +42,33 @@ doubles Utils::extractmid(const doubles items, int offset)
     doubles newitems(first, last);
     return newitems;
 }
+
+
+
+ doubles Utils::centripetal(const Points points, int alpha)
+ {
+    doubles w;
+    double totallenght = 0;
+    w.push_back(0);
+    for (int i = 1; i< points.size(); i++) // skip i = 0
+    {
+        double previous_dist = points[i].distance(points[i-1]);
+        previous_dist = pow(previous_dist, alpha);
+        w.push_back(w[i-1] + previous_dist);
+        totallenght += previous_dist;
+    }
+    // now we need to normalize respect to total lenght
+    doubles w_norm(w.size());
+    for(int i = 0; i < w.size(); i++)
+        w_norm[i] = w[i] / totallenght;
+    return w_norm;
+ }
+
+
+ void Utils::print(doubles vec)
+ {
+    for (const auto& i: vec)
+        cout << i << ' ';
+    cout << endl;
+ }
+

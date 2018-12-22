@@ -42,6 +42,8 @@ class Bspline: public Evaluable
         doubles uarray;
 
         Point deBoor(int k, double u) const;
+        static double interpolate_N(int l, int n, doubles uarray, double u);
+        static Points interpolate_getCP(Points points, doubles uarray, int numCP, int n);
 
     private:
 };
