@@ -12,7 +12,7 @@ Points Evaluable::evaluate(const doubles x) const
 {
     Points points;
     points.reserve(x.size());
-    for (int i = 0; i < x.size(); i++)
+    for (unsigned int i = 0; i < x.size(); i++)
     {
         points[i] = this->evaluate(x[i]);
     }

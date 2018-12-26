@@ -30,10 +30,20 @@ class Bspline: public Evaluable
 
         Bspline computeDerivarive() const;
         Points getnormals(doubles us) const;
-        Points getnormalsinControlPoints() const;
+        Points getnormalsInCP() const;
 
         Point evaluate(double) const;
         Points evaluate(int steps) const;
+
+        Points evaluate(const doubles d) const {
+            return this->Evaluable::evaluate(d);
+        }
+        Points evaluate(double start, double end, int steps) const {
+            return this->Evaluable::evaluate(start, end, steps);
+        }
+
+        void IOsave(string filename) const;
+        Bspline IOload(string filename);
 
 
     protected:

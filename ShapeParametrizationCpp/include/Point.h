@@ -1,7 +1,18 @@
 #ifndef POINT_H
 #define POINT_H
 
+#include <vector>
+#include <cmath>
+#include <Utils.h>
+#include <iostream>
+
+using namespace std;
+
 class Line;
+class Point;
+
+typedef std::vector<double> doubles;
+typedef std::vector<Point> Points;
 
 class Point
 {
@@ -39,6 +50,8 @@ class Point
         Point rotate(double theta) const;
         Point normalize();
         Point normalize() const;
+        Point normal(); // compute the normal direction
+        Point normal() const; // compute the normal direction
         double length() const;
         double lengthsquared() const;
         double atan() const;
@@ -52,6 +65,9 @@ class Point
 
         void print() const;
         //friend static double slope(const Point& a, const Point& b);
+
+        static void normalize(Points &points);
+        static void normals(Points &points);
 
     protected:
 

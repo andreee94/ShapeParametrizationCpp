@@ -113,6 +113,23 @@ Bspline Bspline::computeDerivarive() const
 
 
 
+Points Bspline::getnormals(doubles us) const
+{
+    Bspline derivative = this->computeDerivarive(); // compute bspline derivative
+    Points derivatives = derivative.Evaluable::evaluate(us); // evaluate bspline derivative is control points
+    Point::normalize(derivatives); // normalize directions
+    return derivatives;
+}
+
+
+Points Bspline::getnormalsInCP() const
+{
+    doubles wCP = Utils::centripetal(this->CParray); // estimate u value of the control points
+    return this->getnormals(wCP);
+}
+
+
+
 // compute coef of matrix for interpolation
 double Bspline::interpolate_N(int l, int n, doubles uarray, double u)
 {

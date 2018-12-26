@@ -12,7 +12,7 @@ class BaseKnotSequence
     public:
         /** Default constructor */
         BaseKnotSequence();
-        BaseKnotSequence(int  numParams, double start, double end);
+        BaseKnotSequence(int numParams, double start, double end);
         virtual doubles getSequence(doubles params) = 0;
 
         int getNumParams() const { return numParams;}
@@ -69,6 +69,10 @@ class UniformFixedKS: public BaseFixedKnotSequence, public UniformKS
     public:
         UniformFixedKS(double start, double end, int steps);
         doubles getSequence();
+        doubles getSequence(doubles params)
+        {
+            return BaseFixedKnotSequence::getSequence(params);
+        }
 
     protected:
         int steps;
@@ -168,7 +172,11 @@ class RationalFixedKS: public BaseFixedKnotSequence, public RationalKS
 {
     public:
         RationalFixedKS(double start, double end, int numpoints, double q);
-        doubles getSequence();
+
+        doubles getSequence() {
+            doubles params = {(double)this->q};
+            return RationalKS::getSequence(params);
+        }
 
     protected:
         double q;
@@ -201,11 +209,63 @@ class BiRationalFixedKS: public BaseFixedKnotSequence, public BiRationalKS
         // by defaults if not specified, the sequence is symmetric respect to the center, so q, 1/q
         BiRationalFixedKS(double start, double end, int numpoints, double q, double center)
         :BiRationalFixedKS(start, end, numpoints, q, 1 / q, center){};
-        doubles getSequence();
+
+        doubles getSequence(){
+            doubles params = {this->q1, this->q2, this->center};
+            return BiRationalKS::getSequence(params);
+        }
 
     protected:
         double q1, q2;
         double center;
+    private:
+};
+
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+
+class CustomFixedKS: public BaseFixedKnotSequence
+{
+    public:
+        CustomFixedKS(double start, double end, doubles sequence);
+        doubles getSequence();
+
+    protected:
+        doubles sequence;
+    private:
+};
+
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+
+// it takes params, compute the cumulate sequence and normalize between start and end;
+class CumulKS: public BaseKnotSequence
+{
+    public:
+        CumulKS(double start, double end, int numParams);
+        doubles getSequence(doubles params);
+
+    protected:
+
+    private:
+};
+
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+
+// it takes params, compute the cumulate sequence and normalize between start and end;
+class CumulFixedKS: public BaseFixedKnotSequence, public CumulKS
+{
+    public:
+        CumulFixedKS(double start, double end, doubles params);
+
+        doubles getSequence(){
+            return this->CumulKS::getSequence(this->params);
+        }
+
+    protected:
+        doubles params;
+
     private:
 };
 

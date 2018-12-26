@@ -1,12 +1,14 @@
 # depslib dependency file v1.0
-1545470308 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/main.cpp
+1545863300 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/main.cpp
 	<iostream>
 	"Line.h"
 	"Point.h"
 	"Circle.h"
 	"Ellipse.h"
 	"BaseKnotSequence.h"
+	"KnotSequences.h"
 	"Utils.h"
+	"Settings.h"
 	"matplotlibcpp.h"
 
 1544686561 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Line.cpp
@@ -20,19 +22,25 @@
 	"Evaluable.h"
 	<vector>
 
-1544716705 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/Point.h
+1545819856 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/Point.h
+	<vector>
+	<cmath>
+	<Utils.h>
+	<iostream>
 
-1544686561 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Point.cpp
+1545819880 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Point.cpp
 	"Point.h"
 	"Line.h"
 	<cmath>
 	<iostream>
+	<vector>
+	<Utils.h>
 
 1544610481 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/Evaluable.h
 	<vector>
 	<Point.h>
 
-1544610467 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Evaluable.cpp
+1545664138 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Evaluable.cpp
 	"Evaluable.h"
 	<Point.h>
 	"Utils.h"
@@ -51,15 +59,24 @@
 	<cmath>
 	<iostream>
 
-1545467850 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Utils.cpp
+1545863677 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Utils.cpp
 	"Utils.h"
 	<vector>
 	<cmath>
 	<iostream>
+	<math.h>
+	<pystring.h>
 
-1545467568 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/Utils.h
+1545858979 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/Utils.h
 	<vector>
 	<Point.h>
+	<cmath>
+	<Utils.h>
+	<iostream>
+	<string>
+	<fstream>
+	<iostream>
+	<iomanip>
 
 1544716601 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Ellipse.cpp
 	"Ellipse.h"
@@ -82,7 +99,7 @@
 	<iostream>
 	<eigen3/Eigen/Dense>
 
-1545409595 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Bspline.cpp
+1545820460 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Bspline.cpp
 	"Bspline.h"
 	"Point.h"
 	"Line.h"
@@ -94,7 +111,7 @@
 	<iostream>
 	<eigen3/Eigen/Dense>
 
-1545408149 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/Bspline.h
+1545820440 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/Bspline.h
 	"Point.h"
 	"Line.h"
 	<cmath>
@@ -111,15 +128,84 @@
 	<Python.h>
 	<numpy/arrayobject.h>
 
-1545470433 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/BaseKnotSequence.cpp
+1545665132 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/BaseKnotSequence.cpp
 	"BaseKnotSequence.h"
 	<vector>
 	<cmath>
 	<Utils.h>
 	<iostream>
 
-1545470523 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/BaseKnotSequence.h
+1545661734 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/BaseKnotSequence.h
 	<vector>
 	<cmath>
 	<Point.h>
+
+1545665117 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/KnotSequences.cpp
+	"KnotSequences.h"
+	"Utils.h"
+	"BaseKnotSequence.h"
+	<vector>
+	<cmath>
+	<Point.h>
+	<iostream>
+
+1545664726 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/KnotSequences.h
+	"Utils.h"
+	"BaseKnotSequence.h"
+	<vector>
+	<cmath>
+	<Point.h>
+
+1545821745 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/BsplineIO.cpp
+	"Bspline.h"
+	"Point.h"
+	"Line.h"
+	"Utils.h"
+	<cmath>
+	<cmath>
+	<vector>
+	<array>
+	<iostream>
+	<string>
+	<fstream>
+	<iostream>
+	<iomanip>
+	<eigen3/Eigen/Dense>
+
+1545852948 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Editable.cpp
+	"Editable.h"
+
+1545852706 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/Editable.h
+	<vector>
+	<cmath>
+	<Utils.h>
+	<iostream>
+
+1350423077 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/pystring.cpp
+	"pystring.h"
+	<algorithm>
+	<cctype>
+	<cstring>
+	<iostream>
+	<sstream>
+
+1350423077 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/pystring.h
+	<string>
+	<vector>
+
+1545863795 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Settings.cpp
+	"Settings.h"
+	<vector>
+	<cmath>
+	<Utils.h>
+	<iostream>
+	<map>
+	<pystring.h>
+
+1545860752 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/Settings.h
+	<vector>
+	<cmath>
+	<Utils.h>
+	<iostream>
+	<map>
 

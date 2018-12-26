@@ -2,6 +2,12 @@
 #include "Line.h"
 #include <cmath>
 #include <iostream>
+#include <vector>
+#include <Utils.h>
+using namespace std;
+
+typedef std::vector<double> doubles;
+typedef std::vector<Point> Points;
 
 //Point::Point(double px, double py): x(px), y(py)
 //{
@@ -162,6 +168,18 @@ Point Point::normalize()
     return *this;
 }
 
+Point Point::normal() const
+{
+    return Point(-this->y, this->x);
+}
+Point Point::normal()
+{
+    double tempx = this->x;
+    this->x = -this->y;
+    this->y = tempx;
+    return *this;
+}
+
 double Point::distance(const Point& p2) const
 {
     return (*this - p2).length();
@@ -198,5 +216,16 @@ void Point::print() const
 {
     std::cout << "x = " << this->x
               << " y = " << this->y << std::endl;
+}
+
+void Point::normalize(Points &points)
+{
+    for (Point p : points)
+        p.normalize();
+}
+void Point::normals(Points &points)
+{
+    for (Point p : points)
+        p.normal();
 }
 
