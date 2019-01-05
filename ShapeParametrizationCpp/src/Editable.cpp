@@ -1,13 +1,6 @@
 #include "Editable.h"
 
 template<class T>
-Editable<T>::Editable()
-{
-    //ctor
-}
-
-
-template<class T>
 T Editable<T>::getExtremeMin(){
     return modifyCP(minRange);
 }

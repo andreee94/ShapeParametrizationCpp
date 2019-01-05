@@ -1,6 +1,7 @@
 #ifndef ELLIPSE_H
 #define ELLIPSE_H
 
+#include <TrailingEdge.h>
 #include <Evaluable.h>
 #include "Line.h"
 #include "Point.h"
@@ -21,7 +22,7 @@ typedef Matrix<double, 3, 3> Matrix3;
 
 enum EllipseType { none=0, coef=1, centerframe=2, full=3};
 
-class Ellipse : public Evaluable
+class Ellipse : public TrailingEdge
 {
     public:
 
@@ -50,7 +51,7 @@ class Ellipse : public Evaluable
         Ellipse translate(const Point &p);
         Ellipse translate(const Point &p) const;
 
-        double getanglepoint(const Point p);
+        double getangleofpoint(const Point &p);
 
         Point evaluate(double) const;
         Points evaluate(int steps) const;

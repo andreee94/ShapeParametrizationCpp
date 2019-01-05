@@ -4,43 +4,36 @@
 #include <iostream>
 #include <vector>
 #include <Utils.h>
+#include <pystring.h>
+#include <sstream>
 using namespace std;
 
 typedef std::vector<double> doubles;
 typedef std::vector<Point> Points;
+typedef std::vector<string> strings;
 
 //Point::Point(double px, double py): x(px), y(py)
 //{
 //}
 using namespace std;
 
-Point::Point()
-{
-    Point(0.0, 0.0);
-}
+Point::Point(): x(0), y(0){}
 
-Point::Point(int value)
-{
-    this->x = value;
-    this->y = value;
-}
+Point::Point(int value): x(value), y(value){}
 
-Point::Point(double value)
-{
-    this->x = value;
-    this->y = value;
-}
+Point::Point(double value): x(value), y(value){}
 
-Point::Point(double x, double y)
-{
-    this->x = x;
-    this->y = y;
-}
+Point::Point(int xx, int yy): x(xx), y(yy){}
 
-Point::Point(int x, int y)
+Point::Point(double xx, double yy): x(xx), y(yy){}
+
+
+Point::Point(string str)
 {
-    this->x = x;
-    this->y = y;
+    strings ss;
+    pystring::split(str, ss, ",");
+    this->x = std::stod(ss[0]);
+    this->y = std::stod(ss[1]);
 }
 
 Point::~Point()
@@ -48,17 +41,20 @@ Point::~Point()
     //dtor
 }
 
+// copy constructor
 Point::Point(const Point& other)
 {
-    //copy ctor
+    this->x = other.x;
+    this->y = other.y;
 }
 
-//Point& Point::operator=(const Point& rhs)
-//{
-//    if (this == &rhs) return *this; // handle self assignment
-//    //assignment operator
-//    return *this;
-//}
+Point& Point::operator=(const Point& other)
+{
+    if (this == &other) return *this; // handle self assignment
+    this->x = other.x;
+    this->y = other.y;
+    return *this;
+}
 
 // OPERATOR plus
 Point operator+(const Point& a, const Point& b)
@@ -184,6 +180,7 @@ double Point::distance(const Point& p2) const
 {
     return (*this - p2).length();
 }
+
 double Point::distancesquared(const Point& p2) const
 {
     return (*this - p2).lengthsquared();
@@ -192,6 +189,11 @@ double Point::distancesquared(const Point& p2) const
 double Point::slope(const Point& p2) const
 {
     return (p2.y - this->y) / (p2.x - this->x);
+}
+
+double Point::slope() const
+{
+    return this->y / this->x;
 }
 
 Line Point::axis(const Point& p2) const
@@ -218,6 +220,20 @@ void Point::print() const
               << " y = " << this->y << std::endl;
 }
 
+string Point::to_str() const
+{
+    std::ostringstream strs;
+    strs << this->x;
+    strs << ",";
+    strs << this->y;
+    return strs.str();
+}
+
+//operator Point::string() const
+//{
+//    return this->to_str();
+//}
+
 void Point::normalize(Points &points)
 {
     for (Point p : points)
@@ -228,4 +244,71 @@ void Point::normals(Points &points)
     for (Point p : points)
         p.normal();
 }
+
+
+//get method
+double Point::getx() const
+{
+    return this->x;
+}
+
+//get method
+double Point::gety() const
+{
+    return this->y;
+}
+
+void Point::setx(double x)
+{
+    this->x = x;
+}
+
+//get method
+void Point::sety(double y)
+{
+    this->y = y;
+}
+
+
+Points Point::fromDoubles(doubles &x, doubles &y)
+{
+    Points points;
+    points.reserve(x.size());
+    for (int i = 0; i < x.size(); i++)
+    {
+        points.push_back(Point(x[i], y[i]));
+    }
+    return points;
+}
+
+void Point::toDoubles(const Points& points, doubles &x, doubles &y)
+{
+    x.clear();
+    y.clear();
+    x.reserve(points.size());
+    y.reserve(points.size());
+    for (int i = 0; i < points.size(); i++)
+    {
+        x.push_back(points[i].x);
+        y.push_back(points[i].y);
+    }
+}
+
+//std::ostream & Point::operator<<(std::ostream & Str) {
+//    // print something from v to str, e.g: Str << v.getX();
+//    std::ostringstream strs;
+//    strs << this->x;
+//    strs << ",";
+//    strs << this->y;
+//    return strs;
+//}
+//
+//std::ostream & operator<<(std::ostream & Str, Point const & v) {
+//    // print something from v to str, e.g: Str << v.getX();
+//    std::ostringstream strs;
+//    strs << v.x;
+//    strs << ",";
+//    strs << v.y;
+//    return strs;
+//}
 

@@ -5,6 +5,10 @@
 #include <cmath>
 #include <Utils.h>
 #include <iostream>
+#include <sstream>
+#include  <string>
+#include  <fstream>
+#include <iostream>
 
 using namespace std;
 
@@ -17,13 +21,13 @@ typedef std::vector<Point> Points;
 class Point
 {
     public:
-        double x, y;
         /** Default constructor */
         Point();
         Point(int value);
         Point(double value);
         Point(int x, int y);
         Point(double x, double y);
+        Point(string str);
         /** Default destructor */
         virtual ~Point();
         /** Copy constructor
@@ -34,7 +38,7 @@ class Point
          *  \param other Object to assign from
          *  \return A reference to this
          */
-        //Point& operator=(const Point& other);
+        Point& operator=(const Point& other);
 
         friend Point operator+(const Point& a, const Point& b); //in class
         friend Point operator-(const Point& a, const Point& b); //in class
@@ -59,17 +63,46 @@ class Point
         double distance(const Point& other) const;
         double distancesquared(const Point& other) const;
         double slope(const Point& other) const;
+        double slope() const;
         Line axis(const Point& other) const;
         Point move(const Line& line, const double dist) const;
         Point move(const Point& direction, const double dist) const;
 
+        double getx() const;
+        double gety() const;
+        void setx(double x);
+        void sety(double y);
+
+
+        string to_str() const;
         void print() const;
+        //ostream & operator<<(ostream & Str);
+        friend ostream & operator<<(ostream & Stream, Point const & v)
+        {
+            // print something from v to str, e.g: Str << v.getX();
+            Stream << v.x << "," << v.y;
+            return Stream;
+        }
+        friend stringstream & operator<<(stringstream & Stream, Point const & v)
+        {
+            // print something from v to str, e.g: Str << v.getX();
+            Stream << v.x << "," << v.y;
+            return Stream;
+        }
+        operator string() const
+        {
+            return this->to_str();
+        }
+
         //friend static double slope(const Point& a, const Point& b);
 
         static void normalize(Points &points);
         static void normals(Points &points);
+        static Points fromDoubles(doubles &x, doubles &y);
+        static void toDoubles(const Points& points, doubles &x, doubles &y);
 
     protected:
+        double x, y;
 
     private:
 };

@@ -35,6 +35,7 @@ class Settings
 
         strings getlist(string key);
 
+        strings getstrings(string key);
         ints getints(string key);
         floats getfloats(string key);
         doubles getdoubles(string key);

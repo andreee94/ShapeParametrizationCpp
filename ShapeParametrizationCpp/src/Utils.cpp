@@ -4,6 +4,7 @@
 #include <iostream>
 #include <math.h>
 #include <pystring.h>
+#include <boost/lexical_cast.hpp>
 
 using namespace std;
 
@@ -55,7 +56,7 @@ doubles Utils::extractmid(const doubles &items, int offset)
     doubles w;
     double totallenght = 0;
     w.push_back(0);
-    for (int i = 1; i< points.size(); i++) // skip i = 0
+    for (unsigned int i = 1; i< points.size(); i++) // skip i = 0
     {
         double previous_dist = points[i].distance(points[i-1]);
         previous_dist = pow(previous_dist, alpha);
@@ -64,7 +65,7 @@ doubles Utils::extractmid(const doubles &items, int offset)
     }
     // now we need to normalize respect to total lenght
     doubles w_norm(w.size());
-    for(int i = 0; i < w.size(); i++)
+    for(unsigned int i = 0; i < w.size(); i++)
         w_norm[i] = w[i] / totallenght;
     return w_norm;
  }
@@ -105,7 +106,7 @@ doubles Utils::interp1(const doubles &x,const doubles &y,const doubles &x_new )
         }
     }
 
-    for ( int i = 0; i < x_new.size(); ++i )
+    for (unsigned int i = 0; i < x_new.size(); ++i )
     {
         int idx = findNearestNeighbourIndex( x_new[i], x );
         y_new.push_back( slope[idx] * x_new[i] + intercept[idx] );
@@ -117,7 +118,7 @@ int Utils::findNearestNeighbourIndex(const double value, const doubles &x )
 {
     double dist = 1e100;
     int idx = -1;
-    for ( int i = 0; i < x.size(); ++i ) {
+    for (unsigned int i = 0; i < x.size(); ++i ) {
         double newDist = value - x[i];
         if ( newDist > 0 && newDist < dist ) {
             dist = newDist;
@@ -153,15 +154,15 @@ doubles Utils::computeCumul(double start, double end, doubles params)
         cout << endl;
  }
 
-string Utils::print(doubles vec, string separator, bool endline)
- {
-    std::stringstream out;
-    for (const auto& i: vec)
-        out << i << separator;
-    if (endline)
-        out << endl;
-    return out.str();
- }
+//string Utils::print(doubles vec, string separator, bool endline)
+// {
+//    std::stringstream out;
+//    for (const auto& i: vec)
+//        out << i << separator;
+//    if (endline)
+//        out << endl;
+//    return out.str();
+// }
 
 
 string Utils::fixline(string line)
@@ -177,9 +178,69 @@ string Utils::fixline(string line)
 }
 
 
-template<class T>
-bool Utils::contains(vector<T> items, T item)
+string Utils::tostring( std::ostream& str )
 {
-    return std::find(items.begin(), items.end(), item) != items.end();
+    std::ostringstream ss;
+    ss << str.rdbuf();
+    return ss.str();
 }
 
+//template<class T>
+//strings Utils::tostrings(vector<T> items) const
+//{
+//    strings res;
+//    res.reserve(items.size());
+//    for (int i = 0; i < items.size(); i++)
+//        res[i] = (string)items[i];
+//    return res;
+//}
+
+
+bool Utils::getbool(string str)
+{
+    vector<string> valid_bools = {"true", "1", "yes", "on"};
+    if (Utils::contains(valid_bools, pystring::lower(str)))
+        return true;
+    if (Utils::iszeroint(str))
+        return false;
+    return true;
+
+}
+
+bool Utils::iszeroint(string str)
+{
+    try
+    {
+        long x = boost::lexical_cast<long>(str);
+        return x == 0;
+    }
+    catch(...)
+    {
+        // it is not an int so non zero
+        return false;
+    }
+}
+
+
+//template<typename T>
+//bool Utils::contains(vector<T> items, const T item)
+//{
+//    return std::find(items.begin(), items.end(), item) != items.end();
+//}
+//
+//template<typename T>
+//ints Utils::find_all(vector<T> items, const T item)
+//{
+//    auto begin = items.begin();
+//    auto end = items.end();
+//    ints result;
+//
+//    for(int index = 0; begin != end; ++begin, ++index)
+//    {
+//        if ((*begin) == item)
+//        {
+//            result.emplace_back(index);
+//        }
+//    }
+//    return result;
+//}

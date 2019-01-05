@@ -113,8 +113,8 @@ Ellipse& Ellipse::operator=(const Ellipse& rhs)
 Point Ellipse::evaluate(double alpha) const
 {
     Point p;
-    p.x = this->a * cos(this->theta) * cos(alpha) - this->b * sin(this->theta) * sin(alpha);
-    p.y = this->a * sin(this->theta) * cos(alpha) + this->b * cos(this->theta) * sin(alpha);
+    p.setx(this->a * cos(this->theta) * cos(alpha) - this->b * sin(this->theta) * sin(alpha));
+    p.sety(this->a * sin(this->theta) * cos(alpha) + this->b * cos(this->theta) * sin(alpha));
     return p + this->center;
 }
 
@@ -185,12 +185,12 @@ Ellipse Ellipse::translate(const Point &p) const
 }
 
 
-double Ellipse::getanglepoint(const Point p)
+double Ellipse::getangleofpoint(const Point &p)
 {
     if ((this->ellipsetype & EllipseType::centerframe) == false)
         this->compute_frame();
     Point p_referenceframe = (p - this->center).rotate(-this->theta);
-    double alpha = atan2(p_referenceframe.y / this->b, p_referenceframe.x / this->a);
+    double alpha = atan2(p_referenceframe.gety() / this->b, p_referenceframe.getx() / this->a);
     return alpha;
 }
 
@@ -229,7 +229,7 @@ Ellipse Ellipse::translate_coef(const Point &p)
     //*this = const_cast<Ellipse*>(this)->translate_coef(p);
     this->D = this->D - p * Point(2 * this->A, this->B);
     this->E = this->E - p * Point(this->B, 2 * this->C);
-    this->F = this->A * p.x * p.x + this->B * p.x * p.y + this->C * p.y * p.y - p * Point(this->D, this->E) + this->F;
+    this->F = this->A * p.getx() * p.getx() + this->B * p.getx() * p.gety() + this->C * p.gety() * p.gety() - p * Point(this->D, this->E) + this->F;
     return *this;
 }
 Ellipse Ellipse::translate_coef(const Point &p) const
@@ -240,7 +240,7 @@ Ellipse Ellipse::translate_coef(const Point &p) const
     e.C = this->C;
     e.D = this->D - p * Point(2 * this->A, this->B);
     e.E = this->E - p * Point(this->B, 2 * this->C);
-    e.F = this->A * p.x * p.x + this->B * p.x * p.y + this->C * p.y * p.y - p * Point(this->D, this->E) + this->F;
+    e.F = this->A * p.getx() * p.getx() + this->B * p.getx() * p.gety() + this->C * p.gety() * p.gety() - p * Point(this->D, this->E) + this->F;
     return e;
 }
 Ellipse Ellipse::translate_centerframe(const Point &p)
@@ -303,8 +303,8 @@ void Ellipse::print() const
 {
     if (this->ellipsetype & EllipseType::centerframe)
     {
-        cout << "cx = " << this->center.x
-             << " cy = " << this->center.y
+        cout << "cx = " << this->center.getx()
+             << " cy = " << this->center.gety()
              << " a = " << this->a
              << " b = " << this->b << endl;
     }

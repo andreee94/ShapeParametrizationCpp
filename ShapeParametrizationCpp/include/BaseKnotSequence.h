@@ -15,6 +15,27 @@ class BaseKnotSequence
         BaseKnotSequence(int numParams, double start, double end);
         virtual doubles getSequence(doubles params) = 0;
 
+        virtual ~BaseKnotSequence (){}
+
+        BaseKnotSequence& operator=(const BaseKnotSequence& other)
+        {
+            if (this == &other) return *this; // handle self assignment
+            //assignment operator
+            this->numParams = other.numParams;
+            this->start = other.start;
+            this->end = other.end;
+            return *this;
+        }
+
+        // copy constructor
+        BaseKnotSequence(const BaseKnotSequence& other)
+        {
+            this->numParams = other.numParams;
+            this->start = other.start;
+            this->end = other.end;
+        }
+
+
         int getNumParams() const { return numParams;}
         double getStart() const { return start;}
         double getEnd() const { return end;}

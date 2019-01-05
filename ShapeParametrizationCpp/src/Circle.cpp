@@ -56,7 +56,7 @@ Points Circle::evaluate(int steps) const
 }
 
 
-double Circle::getanglepoint(const Point p) const
+double Circle::getangleofpoint(const Point &p)
 {
     Point p_referenceframe = (p - this->center) / this->radius;
     return p_referenceframe.atan2();
@@ -77,8 +77,8 @@ double Circle::getradius() const
 
 void Circle::print() const
 {
-    cout << "cx = " << this->center.x
-         << " cy = " << this->center.y
+    cout << "cx = " << this->center.getx()
+         << " cy = " << this->center.gety()
          << " r = " << this->radius << endl;
 }
 

@@ -10,8 +10,11 @@ class Evaluable
 {
     public:
         /** Default constructor */
-        //Evaluable() {}
-        Points evaluate(const doubles) const;
+        Evaluable()
+        {
+        }
+
+        Points evaluate(const doubles& values) const;
         Points evaluate(double start, double end, int steps) const;
         virtual Point evaluate(double) const = 0;
         virtual Points evaluate(int steps) const = 0;

@@ -17,14 +17,18 @@ Line::Line(double y_intercept, double slope)
 Line::Line(const Point& p, double slope)
 {
     m = slope;
-    q = p.y - slope * p.x; // yp - m * xp
+    q = p.gety() - slope * p.getx(); // yp - m * xp
 }
 
 //constructor
 Line::Line(const Point& p1, const Point& p2)
+:Line(p1, p1.slope(p2)) { }
+
+// copy constructor
+Line::Line(const Line& other)
 {
-    //double slope = (p2.y - p1.y) / (p2.x - p1.x);
-    Line:Line(p1, p1.slope(p2));
+    this->m = other.m;
+    this->q = other.q;
 }
 
 Line::~Line()
@@ -36,6 +40,8 @@ Line& Line::operator=(const Line& rhs)
 {
     if (this == &rhs) return *this; // handle self assignment
     //assignment operator
+    this->m = rhs.m;
+    this->q = rhs.q;
     return *this;
 }
 
@@ -59,8 +65,8 @@ double Line::rotateslope(double theta) const
 Point Line::intersection(const Line& l) const
 {
     Point p;
-    p.x = - (l.q - this->q) / (l.m - this->m);
-    p.y = this->q + this->m * p.x;
+    p.setx(- (l.q - this->q) / (l.m - this->m));
+    p.sety(this->q + this->m * p.getx());
     return p;
 }
 

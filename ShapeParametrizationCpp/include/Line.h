@@ -15,6 +15,7 @@ class Line: public Evaluable
         Line(double m, double q);
         Line(const Point &p, double m);
         Line(const Point &p1, const Point &p2);
+        Line(const Line& other);
         virtual ~Line();
         Line& operator=(const Line& other);
 

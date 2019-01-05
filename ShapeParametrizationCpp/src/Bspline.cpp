@@ -1,7 +1,15 @@
 #include "Bspline.h"
 #include "Point.h"
 #include "Line.h"
+#include "Ellipse.h"
+#include "Circle.h"
 #include "Utils.h"
+#include "TrailingEdge.h"
+#include "Editable.h"
+#include "Evaluable.h"
+#include "pystring.h"
+#include "Table.h"
+#include "Bspline.h"
 #include <cmath>
 
 #define _USE_MATH_DEFINES
@@ -19,7 +27,10 @@ typedef std::vector<Point> Points;
 typedef std::vector<double> doubles;
 
 
-Bspline::Bspline(Points CParray, doubles uarray, int n)
+
+Bspline::Bspline(const Points &CParray, const doubles &uarray, int n)
+:Evaluable::Evaluable()
+,Editable::Editable()
 {
     this->CParray = CParray;
     this->uarray = uarray;
@@ -27,6 +38,8 @@ Bspline::Bspline(Points CParray, doubles uarray, int n)
 }
 
 Bspline::Bspline()
+:Evaluable::Evaluable()
+,Editable<Bspline>::Editable()
 {
     //ctor
 }
@@ -37,15 +50,34 @@ Bspline::~Bspline()
 }
 
 Bspline::Bspline(const Bspline& other)
+:Evaluable::Evaluable()
+,Editable<Bspline>::Editable()
 {
-    //copy ctor
+    this->CParray = other.CParray;
+    this->uarray = other.uarray;
+    this->n = other.n;
+    this->Editable<Bspline>::minRange = other.Editable<Bspline>::minRange;
+    this->Editable<Bspline>::maxRange = other.Editable<Bspline>::maxRange;
+    this->Editable<Bspline>::adjustableIndices = other.Editable<Bspline>::adjustableIndices;
 }
 
 Bspline& Bspline::operator=(const Bspline& rhs)
 {
     if (this == &rhs) return *this; // handle self assignment
     //assignment operator
+    this->n = rhs.n;
+    this->uarray = rhs.uarray;
+    this->CParray = rhs.CParray;
+    this->minRange = rhs.minRange;
+    this->maxRange = rhs.maxRange;
+    this->adjustableIndices = rhs.adjustableIndices;
     return *this;
+}
+
+
+Points Bspline::getCParray() const
+{
+    return this->CParray;
 }
 
 Point Bspline::deBoor(int k, double u) const
@@ -65,7 +97,14 @@ Point Bspline::deBoor(int k, double u) const
     Points d;
     d.reserve(this->n + 1);
     for (int j = 0; j < this->n + 1; j++)
+    {
+//        cout << j << endl;
+//        cout << j + k - this->n << endl;
+//        cout << this->n + 1 << endl;
+//        cout << CParray.size() << endl;
+
         d[j] = this->CParray[j + k - this->n];
+    }
 
     for (int r = 1; r < this->n + 1; r++)
         for (int j = this->n; j > r - 1; j--)
@@ -102,7 +141,7 @@ Bspline Bspline::computeDerivarive() const
     for (unsigned int i = 0; i < this->CParray.size() - 1; i++) // 1 less control point
     {
         Point P = this->n / (this->uarray[i + this->n + 1] - this->uarray[i + 1]) * (this->CParray[i + 1] - this->CParray[i]);
-        CQarray[i] = P;
+        CQarray.push_back(P);
     }
     // return a new Bspline: knots array, control points, degrees
     // we remove first and last knots
@@ -175,15 +214,15 @@ Points Bspline::interpolate_getCP(Points points, doubles uarray, int numCP, int 
         for (unsigned int i = 0; i < points.size(); i++)
         {
             double Nk = interpolate_N(k + 1, n, uarray, w[i]);
-            bx(k) = bx(k) + Nk * points[i].x;
-            by(k) = by(k) + Nk * points[i].y;
+            bx(k) = bx(k) + Nk * points[i].getx();
+            by(k) = by(k) + Nk * points[i].gety();
         }
 
     // first point fixed to points[0]
     for (int i = 0; i< numCP; i++)
     {
-        bx(i) = bx(i) - M(i, 0) * points.front().x - M(i, numCP - 1) * points.back().x;
-        by(i) = by(i) - M(i, 0) * points.front().y - M(i, numCP - 1) * points.back().y;
+        bx(i) = bx(i) - M(i, 0) * points.front().getx() - M(i, numCP - 1) * points.back().getx();
+        by(i) = by(i) - M(i, 0) * points.front().gety() - M(i, numCP - 1) * points.back().gety();
     }
     // first column and row
     M.col(0) = VectorXd::Zero(numCP);
@@ -195,10 +234,10 @@ Points Bspline::interpolate_getCP(Points points, doubles uarray, int numCP, int 
     M(0, 0) = 1;
     M(numCP - 1, numCP - 1) = 1;
     // fix first and last points in known vector
-    bx(0) = points.front().x;
-    by(0) = points.front().y;
-    bx(numCP - 1) = points.back().x;
-    by(numCP - 1) = points.back().y;
+    bx(0) = points.front().getx();
+    by(0) = points.front().gety();
+    bx(numCP - 1) = points.back().getx();
+    by(numCP - 1) = points.back().gety();
 
     LDLT<MatrixXd> L = M.ldlt(); // cholesky decomposition
     VectorXd CPx = L.solve(bx);
@@ -208,11 +247,78 @@ Points Bspline::interpolate_getCP(Points points, doubles uarray, int numCP, int 
     Points CP;
     CP.reserve(numCP);
     for( int i = 0; i < numCP; i++)
-        CP[i] = Point(CPx[i], CPy[i]);
+        CP.push_back(Point(CPx[i], CPy[i]));
     return CP;
 }
 
 
+
+Bspline Bspline::interpolate(Points &points, int numCP, int n, KnotSequences &knotsequence)
+{
+    doubles uarray = knotsequence.getSequence((doubles){});
+    Points CParray = Bspline::interpolate_getCP(points, uarray, numCP, n);
+    cout << "CParray = " << CParray.size() << endl;
+    return Bspline(CParray, uarray, n);
+}
+
+
+
+Points Bspline::evaluateWithTE(int numpoints, int numpointsTE, string shape, bool tangent_first)
+{
+    // compute bspline points
+    Points bspline_points = this->evaluate(numpoints);
+    // compute tangents at start and end
+    Points tangents = this->getnormals((doubles){0, 1});
+
+    TrailingEdge *TE;
+    if (pystring::lower(shape) == "ellipse")
+    {
+        Ellipse ellipse = Ellipse(bspline_points.front(), bspline_points.back(), tangents.front().slope(), tangents.back().slope());
+        TE = dynamic_cast<TrailingEdge*>(&ellipse);
+    }
+    else if (pystring::lower(shape) == "circle")
+    {
+        double m = tangent_first ? tangents.front().slope() : tangents.back().slope();
+        Circle circle = Circle(bspline_points.front(), bspline_points.back(), m, tangent_first);
+        TE = dynamic_cast<TrailingEdge*>(&circle);
+    }
+    // compute trailing edge points
+    Points tepoints = TE->computeTE(bspline_points, numpointsTE);
+    if (tepoints.size() > 0)
+    {
+        // reverse te points array
+        // remove latest item if size > 1 since it is dupplicated
+        std::reverse(tepoints.begin(),tepoints.end() - (int)(tepoints.size() > 1));
+    }
+    // concat bspline and te points
+    bspline_points.insert(bspline_points.end(), tepoints.begin(), tepoints.end());
+    return bspline_points;
+}
+
+
+
+Bspline Bspline::modifyCP(doubles params) const
+{
+    Bspline modified_bspline = Bspline(*this);
+    Points normals = this->getnormalsInCP();
+
+    for (unsigned int i = 0; i < this->CParray.size(); i++)
+    {
+        modified_bspline.CParray[i] = this->CParray[i].move(normals[i], params[i]);
+    }
+    return modified_bspline;
+}
+
+Bspline Bspline::modifyCP(doubles params)
+{
+    Points normals = this->getnormalsInCP();
+
+    for (unsigned int i = 0; i < this->CParray.size(); i++)
+    {
+        this->CParray[i] = this->CParray[i].move(normals[i], params[i]);
+    }
+    return *this;
+}
 
 
 

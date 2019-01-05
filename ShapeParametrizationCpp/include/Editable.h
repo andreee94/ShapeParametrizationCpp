@@ -18,9 +18,10 @@ class Editable
 {
     public:
         /** Default constructor */
-        Editable();
+        Editable<T>(){}
 
-        virtual T modifyCP(doubles params);
+        virtual T modifyCP(doubles params) const = 0;
+        virtual T modifyCP(doubles params) = 0;
 
         T getExtremeMin();
         T getExtremeMax();

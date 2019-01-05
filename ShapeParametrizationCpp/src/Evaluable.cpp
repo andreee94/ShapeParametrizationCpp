@@ -8,13 +8,14 @@ typedef std::vector<Point> Points;
 typedef std::vector<double> doubles;
 
 
-Points Evaluable::evaluate(const doubles x) const
+
+Points Evaluable::evaluate(const doubles &x) const
 {
     Points points;
     points.reserve(x.size());
     for (unsigned int i = 0; i < x.size(); i++)
     {
-        points[i] = this->evaluate(x[i]);
+        points.push_back(this->evaluate(x[i]));
     }
     return points;
 }

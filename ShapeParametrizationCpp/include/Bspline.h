@@ -2,20 +2,27 @@
 #define BSPLINE_H
 #include "Point.h"
 #include "Line.h"
+#include "Editable.h"
+#include "Evaluable.h"
 #include <cmath>
+#include <string>
+#include <BaseKnotSequence.h>
+#include <KnotSequences.h>
 
 using namespace std;
 
 typedef std::vector<Point> Points;
 typedef std::vector<double> doubles;
+typedef std::vector<string> strings;
+typedef std::vector<BaseKnotSequence*> Knots;
 
 
-class Bspline: public Evaluable
+class Bspline: public Evaluable, public Editable<Bspline>
 {
     public:
         /** Default constructor */
         Bspline();
-        Bspline(Points CParray, doubles uarray, int n);
+        Bspline(const Points &CParray, const doubles &uarray, int n);
         /** Default destructor */
         virtual ~Bspline();
         /** Copy constructor
@@ -42,9 +49,18 @@ class Bspline: public Evaluable
             return this->Evaluable::evaluate(start, end, steps);
         }
 
+        Points evaluateWithTE(int numpoints, int numpointsTE, string shape, bool tangent_first=true);
+
+        Bspline modifyCP(doubles params) const;
+        Bspline modifyCP(doubles params);
+
         void IOsave(string filename) const;
         Bspline IOload(string filename);
 
+        strings getCParray_str() const;
+        Points getCParray() const;
+
+        static Bspline interpolate(Points &points, int numCP, int n, KnotSequences &knotsequence);
 
     protected:
         Points CParray;

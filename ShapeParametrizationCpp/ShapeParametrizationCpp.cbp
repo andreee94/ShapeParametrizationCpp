@@ -34,22 +34,38 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="include/BaseKnotSequence.h" />
 		<Unit filename="include/Bspline.h" />
+		<Unit filename="include/BsplineIO.h" />
 		<Unit filename="include/Circle.h" />
+		<Unit filename="include/Editable.h" />
 		<Unit filename="include/Ellipse.h" />
 		<Unit filename="include/Evaluable.h" />
+		<Unit filename="include/KnotSequences.h" />
 		<Unit filename="include/Line.h" />
 		<Unit filename="include/Point.h" />
+		<Unit filename="include/Settings.h" />
+		<Unit filename="include/Table.h" />
+		<Unit filename="include/TrailingEdge.h" />
 		<Unit filename="include/Utils.h" />
 		<Unit filename="include/matplotlibcpp.h" />
+		<Unit filename="include/pystring.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src/BaseKnotSequence.cpp" />
 		<Unit filename="src/Bspline.cpp" />
+		<Unit filename="src/BsplineIO.cpp" />
 		<Unit filename="src/Circle.cpp" />
+		<Unit filename="src/Editable.cpp" />
 		<Unit filename="src/Ellipse.cpp" />
 		<Unit filename="src/Evaluable.cpp" />
+		<Unit filename="src/KnotSequences.cpp" />
 		<Unit filename="src/Line.cpp" />
 		<Unit filename="src/Point.cpp" />
+		<Unit filename="src/Settings.cpp" />
+		<Unit filename="src/Table.cpp" />
+		<Unit filename="src/TrailingEdge.cpp" />
 		<Unit filename="src/Utils.cpp" />
+		<Unit filename="src/pystring.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />

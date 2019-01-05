@@ -2,6 +2,7 @@
 #define CIRCLE_H
 
 #include <Evaluable.h>
+#include <TrailingEdge.h>
 #include "Line.h"
 #include "Point.h"
 #include <cmath>
@@ -11,7 +12,7 @@ using namespace std;
 typedef std::vector<Point> Points;
 typedef std::vector<double> doubles;
 
-class Circle : public Evaluable
+class Circle : public TrailingEdge
 {
     public:
 
@@ -29,9 +30,9 @@ class Circle : public Evaluable
         //Circle& operator=(const Circle& other);
 
         Point evaluate(double) const;
-        Points evaluate(int steps ) const;
+        Points evaluate(int steps) const;
 
-        double getanglepoint(const Point p) const;
+        double getangleofpoint(const Point &p);
 
         Point getcenter() const;
         double getradius() const;

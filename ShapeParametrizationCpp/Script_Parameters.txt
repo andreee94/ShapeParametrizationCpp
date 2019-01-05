@@ -50,7 +50,7 @@ constraints-statror-behaviour=	min
 # multipoint
 multipoint-number=3
 multipoint-parallel=False # launch each point in parallel
-multipoint-weights-objective1=30 30 40
+multipoint-weights-objective1=31.9 30 40
 # multipoint-weights-objective2=30 40 30
 # multipoint-weights-objective3=30 40 30
 # multipoint-reference-objective1=40 40 40  	# not implemented
