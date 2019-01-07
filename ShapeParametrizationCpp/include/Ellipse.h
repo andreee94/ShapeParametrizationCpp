@@ -44,11 +44,11 @@ class Ellipse : public TrailingEdge
          */
         Ellipse& operator=(const Ellipse& other);
 
-        Ellipse compute_frame();
+        Ellipse compute_frame_self();
         Ellipse compute_frame() const;
-        Ellipse rotate(double theta);
+        Ellipse rotate_self(double theta);
         Ellipse rotate(double theta) const;
-        Ellipse translate(const Point &p);
+        Ellipse translate_self(const Point &p);
         Ellipse translate(const Point &p) const;
 
         double getangleofpoint(const Point &p);
@@ -79,14 +79,14 @@ class Ellipse : public TrailingEdge
         Ellipse(double A, double B, double C, double D, double E, double F);
         Ellipse(Matrix3 M);
 
-        Ellipse rotate_coef(double theta);
+        Ellipse rotate_coef_self(double theta);
         Ellipse rotate_coef(double theta) const;
-        Ellipse rotate_centerframe(double theta);
+        Ellipse rotate_centerframe_self(double theta);
         Ellipse rotate_centerframe(double theta) const;
 
-        Ellipse translate_coef(const Point &p);
+        Ellipse translate_coef_self(const Point &p);
         Ellipse translate_coef(const Point &p) const;
-        Ellipse translate_centerframe(const Point &p);
+        Ellipse translate_centerframe_self(const Point &p);
         Ellipse translate_centerframe(const Point &p) const;
 
     private:

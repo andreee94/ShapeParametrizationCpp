@@ -55,7 +55,6 @@ Points Circle::evaluate(int steps) const
     return this->Evaluable::evaluate(0.0, 2 * M_PI, steps);
 }
 
-
 double Circle::getangleofpoint(const Point &p)
 {
     Point p_referenceframe = (p - this->center) / this->radius;

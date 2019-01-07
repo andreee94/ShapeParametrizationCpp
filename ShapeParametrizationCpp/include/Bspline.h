@@ -6,6 +6,7 @@
 #include "Evaluable.h"
 #include <cmath>
 #include <string>
+#include <Settings.h>
 #include <BaseKnotSequence.h>
 #include <KnotSequences.h>
 
@@ -20,6 +21,7 @@ typedef std::vector<BaseKnotSequence*> Knots;
 class Bspline: public Evaluable, public Editable<Bspline>
 {
     public:
+
         /** Default constructor */
         Bspline();
         Bspline(const Points &CParray, const doubles &uarray, int n);
@@ -59,6 +61,9 @@ class Bspline: public Evaluable, public Editable<Bspline>
 
         strings getCParray_str() const;
         Points getCParray() const;
+        Settings getSettings() const;
+        void setSettings(Settings s);
+        void setSettings(string filename);
 
         static Bspline interpolate(Points &points, int numCP, int n, KnotSequences &knotsequence);
 
@@ -66,6 +71,7 @@ class Bspline: public Evaluable, public Editable<Bspline>
         Points CParray;
         int n;
         doubles uarray;
+        Settings settings;
 
         Point deBoor(int k, double u) const;
         static double interpolate_N(int l, int n, doubles uarray, double u);

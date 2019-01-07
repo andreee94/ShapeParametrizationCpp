@@ -48,13 +48,13 @@ class Point
         friend Point operator/(const Point& a, const double b); //in class
         friend Point operator/(const double b, const Point& a); //in class
 
-        Point reverse();
+        Point reverse_self();
         Point reverse() const;
-        Point rotate(double theta);
+        Point rotate_self(double theta);
         Point rotate(double theta) const;
-        Point normalize();
+        Point normalize_self();
         Point normalize() const;
-        Point normal(); // compute the normal direction
+        Point normal_self(); // compute the normal direction
         Point normal() const; // compute the normal direction
         double length() const;
         double lengthsquared() const;
@@ -65,6 +65,8 @@ class Point
         double slope(const Point& other) const;
         double slope() const;
         Line axis(const Point& other) const;
+        Point move_self(const Line& line, const double dist);
+        Point move_self(const Point& direction, const double dist);
         Point move(const Line& line, const double dist) const;
         Point move(const Point& direction, const double dist) const;
 

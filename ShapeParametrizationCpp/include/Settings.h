@@ -23,6 +23,15 @@ class Settings
         /** Default constructor */
         Settings();
         Settings(string filename);
+        /** Copy constructor
+         *  \param other Object to copy from
+         */
+        Settings(const Settings& other);
+        /** Assignment operator
+         *  \param other Object to assign from
+         *  \return A reference to this
+         */
+        Settings& operator=(const Settings& other);
         /** Default destructor */
         virtual ~Settings();
 
@@ -41,6 +50,9 @@ class Settings
         doubles getdoubles(string key);
         bools getbools(string key);
         Points getpoints(string key);
+
+        void setvalue(string key, string value);
+        void setvalues(string key, strings values);
 
         // IO methods
         Settings save(string filename);

@@ -59,6 +59,7 @@ Bspline::Bspline(const Bspline& other)
     this->Editable<Bspline>::minRange = other.Editable<Bspline>::minRange;
     this->Editable<Bspline>::maxRange = other.Editable<Bspline>::maxRange;
     this->Editable<Bspline>::adjustableIndices = other.Editable<Bspline>::adjustableIndices;
+    this->settings = other.settings;
 }
 
 Bspline& Bspline::operator=(const Bspline& rhs)
@@ -71,6 +72,7 @@ Bspline& Bspline::operator=(const Bspline& rhs)
     this->minRange = rhs.minRange;
     this->maxRange = rhs.maxRange;
     this->adjustableIndices = rhs.adjustableIndices;
+    this->settings = rhs.settings;
     return *this;
 }
 
@@ -271,24 +273,26 @@ Points Bspline::evaluateWithTE(int numpoints, int numpointsTE, string shape, boo
     Points tangents = this->getnormals((doubles){0, 1});
 
     TrailingEdge *TE;
+    Points tepoints;
     if (pystring::lower(shape) == "ellipse")
     {
         Ellipse ellipse = Ellipse(bspline_points.front(), bspline_points.back(), tangents.front().slope(), tangents.back().slope());
         TE = dynamic_cast<TrailingEdge*>(&ellipse);
+        tepoints = ellipse.computeTE(bspline_points, numpointsTE);
     }
     else if (pystring::lower(shape) == "circle")
     {
         double m = tangent_first ? tangents.front().slope() : tangents.back().slope();
         Circle circle = Circle(bspline_points.front(), bspline_points.back(), m, tangent_first);
         TE = dynamic_cast<TrailingEdge*>(&circle);
+        tepoints = circle.computeTE(bspline_points, numpointsTE);
     }
     // compute trailing edge points
-    Points tepoints = TE->computeTE(bspline_points, numpointsTE);
     if (tepoints.size() > 0)
     {
         // reverse te points array
         // remove latest item if size > 1 since it is dupplicated
-        std::reverse(tepoints.begin(),tepoints.end() - (int)(tepoints.size() > 1));
+        std::reverse(tepoints.begin(),tepoints.end() - (int)(tepoints.size() == 1));
     }
     // concat bspline and te points
     bspline_points.insert(bspline_points.end(), tepoints.begin(), tepoints.end());

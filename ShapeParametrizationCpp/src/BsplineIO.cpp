@@ -88,6 +88,22 @@ strings Bspline::getCParray_str() const
 }
 
 
+Settings Bspline::getSettings() const
+{
+    return this->settings;
+}
+
+void Bspline::setSettings(Settings s)
+{
+    this->settings = s;
+}
+
+void Bspline::setSettings(string filename)
+{
+    this->settings = Settings(filename);
+}
+
+
 
 
 

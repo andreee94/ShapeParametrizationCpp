@@ -49,6 +49,20 @@ Settings::Settings(string filename)
     //   cout << key << "=" << this->dict[key] << endl;
 }
 
+
+// copy constructor
+Settings::Settings(const Settings& other)
+{
+    this->dict = other.dict;
+}
+
+Settings& Settings::operator=(const Settings& other)
+{
+    if (this == &other) return *this; // handle self assignment
+    this->dict = other.dict;
+    return *this;
+}
+
 bool Settings::getbool(string key)
 {
     return Utils::getbool(this->dict[key]);
@@ -151,9 +165,28 @@ strings Settings::getstrings(string key)
     return this->getlist(key);
 }
 
+void Settings::setvalue(string key, string value)
+{
+    this->dict[key] = value;
+}
+
+void Settings::setvalues(string key, strings values)
+{
+    this->dict[key] = pystring::join(" ", values);
+}
+
 Settings Settings::load(string filename)
 {
     return Settings(filename);
+}
+
+Settings Settings::save(string filename)
+{
+    ofstream file;
+    file.open(filename, ios::out);
+    for( auto const& [key, val] : this->dict)
+        file << key << "=" << this->dict[key] << endl;
+    file.close();
 }
 
 

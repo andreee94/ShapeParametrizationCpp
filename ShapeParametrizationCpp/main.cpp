@@ -43,17 +43,30 @@ int main()
 
     Bspline bspline = Bspline::interpolate(blade, 21, 3, sequence);
 
-    Points interpolated = bspline.evaluateWithTE(1000, 100, "ellipse");
+    //Points interpolated = bspline.evaluateWithTE(1000, 100, "ellipse");
 
-    plt::plot(x, y, ".k");
+    //plt::plot(x, y, ".k");
 
-    Point::toDoubles(interpolated, x, y);
+    //Point::toDoubles(interpolated, x, y);
 
-    plt::plot(x, y, "-r");
+    //plt::plot(x, y, "-r");
+
+
+    Ellipse ellipse = Ellipse(Point(1,11), Point(2,12), -5, -1);
+    ellipse = ellipse.compute_frame();
+    cout <<  "a = " << ellipse.geta() << endl;
+    cout <<  "b = " << ellipse.getb() << endl;
+    cout <<  "theta = " << ellipse.gettheta() << endl;
+    cout <<  "center = " << ellipse.getcenter() << endl;
+    doubles ex, ey;
+    Point::toDoubles(ellipse.evaluate(100), ex ,ey);
+    plt::plot(ex, ey, "-r");
 
     doubles cpx, cpy;
     Point::toDoubles(bspline.getCParray(), cpx ,cpy);
-    plt::plot(cpx, cpy, "+b");
+    //plt::plot(cpx, cpy, "+b");
+    plt::axis("equal");
+    plt::grid(true);
     plt::show();
 
 

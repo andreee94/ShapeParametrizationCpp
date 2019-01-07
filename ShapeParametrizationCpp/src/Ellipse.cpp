@@ -51,12 +51,12 @@ Ellipse::Ellipse(const Ellipse &e)
 
 Ellipse::Ellipse(double a, const Line &m1,  const Line &m2)
 {
-    Ellipse(a, m1.getm(), m2.getm());
+    *this = Ellipse(a, m1.getm(), m2.getm());
 }
 
 Ellipse::Ellipse(Matrix3 M)
 {
-    Ellipse(M(0,0), M(0,1)*2, M(1,1), M(0, 2)*2, M(1, 2) * 2,  M(2,2));
+    *this = Ellipse(M(0,0), M(0,1)*2, M(1,1), M(0, 2)*2, M(1, 2) * 2,  M(2,2));
 }
 
 Ellipse::Ellipse(double a, double m1, double m2)
@@ -64,13 +64,15 @@ Ellipse::Ellipse(double a, double m1, double m2)
     // change of variables
     m1 = -1.0 / m1;
     m2 = -1.0 / m2;
-    A = 1;
-    B = m1 + m2;
-    C = 1.0 + 0.5 * (m1 + m2) * (m1 + m2);
-    D = 0;
-    E = a * (m1 - m2);
-    F = - a * a;
-    Ellipse(A, B, C, D, E, F);
+    this->A = 1;
+    this->B = m1 + m2;
+    this->C = 1.0 + 0.5 * (m1 + m2) * (m1 + m2);
+    this->D = 0;
+    this->E = a * (m1 - m2);
+    this->F = - a * a;
+    this->ellipsetype = EllipseType::coef;
+    //cout << this->A << " " << this->B << " " << this->C << " " << this->D << " " << this->E << " " << this->F << endl;
+    //Ellipse(A, B, C, D, E, F);
 }
 
 Ellipse::Ellipse(double A, double B, double C, double D, double E, double F)
@@ -86,7 +88,7 @@ Ellipse::Ellipse(double A, double B, double C, double D, double E, double F)
 
 Ellipse::Ellipse(const Point &p1, const Point &p2, double m1, double m2)
 {
-    Ellipse(p1, p2, Line(m1, 0), Line(m2, 0));
+    *this = Ellipse(p1, p2, Line(m1, 0), Line(m2, 0));
 }
 
 Ellipse::Ellipse(const Point &p1, const Point &p2, const Line &m1,  const Line &m2)
@@ -97,16 +99,30 @@ Ellipse::Ellipse(const Point &p1, const Point &p2, const Line &m1,  const Line &
     double tangent1 = m1.rotateslope(-theta);
     double tangent2 = m2.rotateslope(-theta);
     // create ellipse in the easy reference frame
-    Ellipse(a, tangent1, tangent2); // SET A,B,C,D,E,F
+    *this = Ellipse(a, tangent1, tangent2); // SET A,B,C,D,E,F
+    cout << this->A << " " << this->B << " " << this->C << " " << this->D << " " << this->E << " " << this->F << endl;
     // restore original frame
-    this->rotate(-theta);
-    this->translate(center);
+    // this->rotate_self(-theta).translate(center);
+    this->rotate_self(-theta);
+    cout << this->A << " " << this->B << " " << this->C << " " << this->D << " " << this->E << " " << this->F << endl;
+    this->translate_self(center);
+    cout << this->A << " " << this->B << " " << this->C << " " << this->D << " " << this->E << " " << this->F << endl;
 }
 
-Ellipse& Ellipse::operator=(const Ellipse& rhs)
+Ellipse& Ellipse::operator=(const Ellipse& other)
 {
-    if (this == &rhs) return *this; // handle self assignment
-    //assignment operator
+    if (this == &other) return *this; // handle self assignment
+    this->A = other.A;
+    this->B = other.B;
+    this->C = other.C;
+    this->D = other.D;
+    this->E = other.E;
+    this->F = other.F;
+    this->ellipsetype = other.ellipsetype;
+    this->center = other.center;
+    this->a = other.a;
+    this->b = other.b;
+    this->theta = other.theta;
     return *this;
 }
 
@@ -126,7 +142,14 @@ Points Ellipse::evaluate(int steps) const
 }
 
 
-Ellipse Ellipse::compute_frame()
+Ellipse Ellipse::compute_frame() const
+{
+    Ellipse e = Ellipse(*this);
+    e.compute_frame_self();
+    return e;
+}
+
+Ellipse Ellipse::compute_frame_self()
 {
     Ellipse e = Ellipse(*this);
     e.ellipsetype = EllipseType::coef;
@@ -137,26 +160,22 @@ Ellipse Ellipse::compute_frame()
     else
         e.theta = atan((e.C - e.A - sqrt((e.A - e.C) * (e.A - e.C) + e.B * e.B)) / e.B);
     Ellipse reference_ellipse = Ellipse(e);
-    reference_ellipse = reference_ellipse.translate(e.center);
-    reference_ellipse = reference_ellipse.rotate(e.theta);
+    reference_ellipse.translate_self(e.center.reverse());
+    reference_ellipse.rotate_self(e.theta);
     e.a = sqrt(- reference_ellipse.F / reference_ellipse.A);
     e.b = sqrt(- reference_ellipse.F / reference_ellipse.C);
     e.ellipsetype = (EllipseType)(e.ellipsetype & EllipseType::centerframe);
-    return e;
-}
-
-Ellipse Ellipse::compute_frame() const
-{
+    *this = e;
     //*this = const_cast<Ellipse*>(this)->compute_frame();
     return *this;
 }
 
-Ellipse Ellipse::rotate(double theta)
+Ellipse Ellipse::rotate_self(double theta)
 {
     if (ellipsetype & EllipseType::coef)
-        return this->rotate_coef(theta);
+        return this->rotate_coef_self(theta);
     if (ellipsetype & EllipseType::centerframe)
-        return this->rotate_centerframe(theta);
+        return this->rotate_centerframe_self(theta);
     return *this;
 }
 Ellipse Ellipse::rotate(double theta) const
@@ -167,12 +186,12 @@ Ellipse Ellipse::rotate(double theta) const
         return this->rotate_centerframe(theta);
     return *this;
 }
-Ellipse Ellipse::translate(const Point &p)
+Ellipse Ellipse::translate_self(const Point &p)
 {
     if (ellipsetype & EllipseType::coef)
-        return this->translate_coef(p);
+        return this->translate_coef_self(p);
     if (ellipsetype & EllipseType::centerframe)
-        return this->translate_centerframe(p);
+        return this->translate_centerframe_self(p);
     return *this;
 }
 Ellipse Ellipse::translate(const Point &p) const
@@ -194,65 +213,58 @@ double Ellipse::getangleofpoint(const Point &p)
     return alpha;
 }
 
-Ellipse Ellipse::rotate_coef(double theta)
+Ellipse Ellipse::rotate_coef_self(double theta)
 {
-    *this = const_cast<Ellipse*>(this)->rotate_coef(theta);
+    Matrix3 R, newM;
+    R << cos(theta), sin(theta), 0,
+        -sin(theta), cos(theta), 0,
+         0               , 0               , 1;
+    R = R.inverse().eval();
+    // A' = (R^-1)T * A * (R^-1)
+    newM = R.transpose() * this->getM() * R;
+    *this = Ellipse(newM);
     return *this;
 }
 Ellipse Ellipse::rotate_coef(double theta) const
 {
-    Matrix3 R, newM;
-    R << cos(this->theta), sin(this->theta), 0,
-        -sin(this->theta), cos(this->theta), 0,
-         0               , 0               , 1;
-    R = R.inverse();
-    // A' = (R^-1)T * A * (R^-1)
-    newM = R.transpose() * this->getM() * R;
-    Ellipse e = Ellipse(newM);
-    return *this;
+    Ellipse e = Ellipse(*this);
+    return e.rotate_coef_self(theta);
 }
 
-Ellipse Ellipse::rotate_centerframe(double theta)
+Ellipse Ellipse::rotate_centerframe_self(double theta)
 {
-    *this = const_cast<Ellipse*>(this)->rotate_centerframe(theta);
+    this->theta = this->theta + theta;
     return *this;
 }
 Ellipse Ellipse::rotate_centerframe(double theta) const
 {
     Ellipse e = Ellipse(*this);
-    e.theta = e.theta + theta;
+    e.rotate_centerframe_self(theta);
     return e;
 }
 
-Ellipse Ellipse::translate_coef(const Point &p)
+Ellipse Ellipse::translate_coef_self(const Point &p)
 {
     //*this = const_cast<Ellipse*>(this)->translate_coef(p);
+    this->F = this->A * p.getx() * p.getx() + this->B * p.getx() * p.gety() + this->C * p.gety() * p.gety() - p * Point(this->D, this->E) + this->F;
     this->D = this->D - p * Point(2 * this->A, this->B);
     this->E = this->E - p * Point(this->B, 2 * this->C);
-    this->F = this->A * p.getx() * p.getx() + this->B * p.getx() * p.gety() + this->C * p.gety() * p.gety() - p * Point(this->D, this->E) + this->F;
     return *this;
 }
 Ellipse Ellipse::translate_coef(const Point &p) const
 {
     Ellipse e = Ellipse(*this);
-    e.A = this->A;
-    e.B = this->B;
-    e.C = this->C;
-    e.D = this->D - p * Point(2 * this->A, this->B);
-    e.E = this->E - p * Point(this->B, 2 * this->C);
-    e.F = this->A * p.getx() * p.getx() + this->B * p.getx() * p.gety() + this->C * p.gety() * p.gety() - p * Point(this->D, this->E) + this->F;
-    return e;
+    return e.translate_coef_self(p);
 }
-Ellipse Ellipse::translate_centerframe(const Point &p)
+Ellipse Ellipse::translate_centerframe_self(const Point &p)
 {
-    //*this = const_cast<Ellipse*>(this)->translate_centerframe(p);
     this->center = this->center + p;
     return *this;
 }
 Ellipse Ellipse::translate_centerframe(const Point &p) const
 {
     Ellipse e = Ellipse(*this);
-    e.center = e.center + p;
+    e.translate_centerframe_self(p);
     return e;
 }
 

@@ -134,7 +134,7 @@ Point Point::rotate(double theta) const
     p.y = *this * Point(std::sin(theta), std::cos(theta));
     return p;
 }
-Point Point::rotate(double theta)
+Point Point::rotate_self(double theta)
 {
     // x = x cos(theta) - y sin(theta)
     this->x = *this * Point(std::cos(theta), - std::sin(theta));
@@ -146,7 +146,7 @@ Point Point::reverse() const
 {
     return Point(-this->x, -this->y);
 }
-Point Point::reverse()
+Point Point::reverse_self()
 {
     this->x = -this->x;
     this->y = -this->y;
@@ -156,7 +156,7 @@ Point Point::normalize() const
 {
     return *this / this->length();
 }
-Point Point::normalize()
+Point Point::normalize_self()
 {
     double len = this->length();
     this->x = this->x / len;
@@ -168,7 +168,7 @@ Point Point::normal() const
 {
     return Point(-this->y, this->x);
 }
-Point Point::normal()
+Point Point::normal_self()
 {
     double tempx = this->x;
     this->x = -this->y;
@@ -212,6 +212,18 @@ Point Point::move(const Line& line, double dist) const
 Point Point::move(const Point& direction, double dist) const
 {
     return *this + direction.normalize() * dist;
+}
+
+Point Point::move_self(const Line& line, double dist)
+{
+    this->move_self(line.getdirection(), dist);
+    return *this;
+}
+
+Point Point::move_self(const Point& direction, double dist)
+{
+    *this = *this + direction.normalize() * dist;
+    return *this;
 }
 
 void Point::print() const
