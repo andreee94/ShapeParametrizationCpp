@@ -11,6 +11,7 @@
 #include  <fstream>
 #include <iostream>
 #include <iomanip>
+#include <sstream>
 
 using namespace std;
 
@@ -52,7 +53,8 @@ class Utils
                 out << i << separator;
             if (endline)
                 out << endl;
-            return Utils::tostring(out);
+            return out.str();
+//            return Utils::tostring(out);
         }
 
         static string fixline(string line);

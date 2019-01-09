@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1546771795 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/main.cpp
+1546888010 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/main.cpp
 	<iostream>
 	"Line.h"
 	"Point.h"
@@ -13,18 +13,18 @@
 	"Bspline.h"
 	"matplotlibcpp.h"
 
-1546703766 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Line.cpp
+1547048223 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Line.cpp
 	"Line.h"
 	"Point.h"
 	<cmath>
 	<iostream>
 
-1546687709 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/Line.h
+1547047472 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/Line.h
 	"Point.h"
 	"Evaluable.h"
 	<vector>
 
-1546874753 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/Point.h
+1547047884 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/Point.h
 	<vector>
 	<cmath>
 	<Utils.h>
@@ -34,7 +34,7 @@
 	<fstream>
 	<iostream>
 
-1546887405 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Point.cpp
+1547048172 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Point.cpp
 	"Point.h"
 	"Line.h"
 	<cmath>
@@ -42,9 +42,10 @@
 	<vector>
 	<Utils.h>
 	<pystring.h>
+	<string>
 	<sstream>
 
-1546712216 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/Evaluable.h
+1547047475 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/Evaluable.h
 	<vector>
 	<Point.h>
 
@@ -54,7 +55,7 @@
 	"Utils.h"
 	<vector>
 
-1546714347 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Circle.cpp
+1547047884 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Circle.cpp
 	"Circle.h"
 	"Line.h"
 	"Point.h"
@@ -68,7 +69,7 @@
 	<cmath>
 	<iostream>
 
-1546683568 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Utils.cpp
+1547047474 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Utils.cpp
 	"Utils.h"
 	<vector>
 	<cmath>
@@ -77,7 +78,7 @@
 	<pystring.h>
 	<boost/lexical_cast.hpp>
 
-1546701472 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/Utils.h
+1547048244 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/Utils.h
 	<vector>
 	<Point.h>
 	<pystring.h>
@@ -88,6 +89,7 @@
 	<fstream>
 	<iostream>
 	<iomanip>
+	<sstream>
 
 1546887939 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Ellipse.cpp
 	"Ellipse.h"
@@ -199,10 +201,10 @@
 	<iomanip>
 	<eigen3/Eigen/Dense>
 
-1546624157 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Editable.cpp
+1547047476 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Editable.cpp
 	"Editable.h"
 
-1546688698 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/Editable.h
+1547047477 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/Editable.h
 	<vector>
 	<cmath>
 	<Utils.h>
@@ -254,18 +256,20 @@
 	<vector>
 	<array>
 
-1546701069 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Table.cpp
+1547048095 source:/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src/Table.cpp
 	"Table.h"
 	<vector>
 	<cmath>
 	<Utils.h>
 	<iostream>
 	<map>
+	<string>
 
-1546703678 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/Table.h
+1547048061 /home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include/Table.h
 	<vector>
 	<cmath>
 	<Utils.h>
 	<iostream>
 	<map>
+	<string>
 

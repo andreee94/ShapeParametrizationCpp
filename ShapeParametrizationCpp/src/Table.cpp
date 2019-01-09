@@ -4,6 +4,8 @@
 #include <Utils.h>
 #include <iostream>
 #include <map>
+#include <string>
+
 
 using namespace std;
 
@@ -49,14 +51,14 @@ Table::Table(string filename)
     this->numRows = num_rows;
     this->numCols = this->data.size() / num_rows;
 
-//    cout << "numrows = " << numRows << endl;
-//    cout << "numcols = " << numCols << endl;
-//    for (int i = 0; i < this->data.size(); i++)
-//    {
-//        cout << data[i] << "   ";
-//        if (i % numCols == numCols - 1)
-//            cout << endl;
-//    }
+    cout << "numrows = " << numRows << endl;
+    cout << "numcols = " << numCols << endl;
+    for (int i = 0; i < this->data.size(); i++)
+    {
+        cout << data[i] << "   ";
+        if (i % numCols == numCols - 1)
+            cout << endl;
+    }
 }
 
 doubles Table::StridedSlice( int start, int length, int stride ) const
@@ -65,6 +67,10 @@ doubles Table::StridedSlice( int start, int length, int stride ) const
     result.reserve( length );
     const double *pos = &this->data[start];
     for( int i = 0; i < length; i++ ) {
+        cout << "start=" << start;
+        cout << "lenght=" << length;
+        cout << pos << endl;
+        cout << *pos << endl;
         result.push_back(*pos);
         pos += stride;
     }
@@ -89,6 +95,9 @@ doubles Table::getrow( int row, int colBegin, int colEnd ) const
 
 doubles Table::getcolumn( int col, int rowBegin, int rowEnd ) const
 {
+        cout << "col=" << col << endl;
+        cout << "rowBegin=" << rowBegin << endl;
+        cout << "rowEnd=" << rowEnd << endl;
     if( rowEnd < 0 ) rowEnd = this->numRows-1;
     if( rowBegin <= rowEnd )
         return StridedSlice( Index(rowBegin,col), rowEnd-rowBegin+1, numCols );

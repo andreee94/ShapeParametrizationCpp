@@ -6,66 +6,54 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>314</width>
-    <height>393</height>
+    <width>400</width>
+    <height>300</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QTableWidget" name="tableWidget">
+   <widget class="QWidget" name="formLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>10</y>
-      <width>141</width>
-      <height>101</height>
+      <x>30</x>
+      <y>20</y>
+      <width>281</width>
+      <height>21</height>
      </rect>
     </property>
+    <layout class="QFormLayout" name="formLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="inputProfileLabel">
+       <property name="text">
+        <string>Input profile</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QWidget" name="inputProfileWidget" native="true"/>
+     </item>
+    </layout>
    </widget>
-   <widget class="QTableWidget" name="tableWidget_2">
+   <widget class="QWidget" name="gridLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>190</x>
-      <y>10</y>
-      <width>101</width>
-      <height>91</height>
+      <x>30</x>
+      <y>60</y>
+      <width>281</width>
+      <height>131</height>
      </rect>
     </property>
-   </widget>
-   <widget class="QTableView" name="tableView">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>120</y>
-      <width>271</width>
-      <height>41</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>180</y>
-      <width>84</width>
-      <height>28</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>PushButton</string>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="comboBox">
-    <property name="geometry">
-     <rect>
-      <x>150</x>
-      <y>180</y>
-      <width>79</width>
-      <height>28</height>
-     </rect>
-    </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>X</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -73,8 +61,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>314</width>
-     <height>25</height>
+     <width>400</width>
+     <height>22</height>
     </rect>
    </property>
   </widget>

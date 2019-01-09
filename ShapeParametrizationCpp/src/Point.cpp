@@ -5,6 +5,7 @@
 #include <vector>
 #include <Utils.h>
 #include <pystring.h>
+#include  <string>
 #include <sstream>
 using namespace std;
 

@@ -7,11 +7,7 @@ using namespace std;
 typedef std::vector<Point> Points;
 typedef std::vector<double> doubles;
 
-Line::Line(double y_intercept, double slope)
-{
-    m = y_intercept;
-    q = slope;
-}
+Line::Line(double m, double q): m(m), q(q) { }
 
 //constructor
 Line::Line(const Point& p, double slope)

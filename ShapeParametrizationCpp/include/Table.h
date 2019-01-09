@@ -5,6 +5,7 @@
 #include <Utils.h>
 #include <iostream>
 #include <map>
+#include <string>
 
 using namespace std;
 
@@ -20,7 +21,7 @@ class Table
 {
     public:
         /** Default constructor */
-        Table();
+        Table() {};
         Table(string filename);
         Table( int rows, int cols, const double& initVal = 0.0 );
         /** Default destructor */
@@ -44,7 +45,13 @@ class Table
 
         // Direct vector access and indexing
         operator const doubles& () const        { return this->data; }
-        int Index( int row, int col ) const       { return row * this->numCols + col; }
+        int Index( int row, int col ) const
+        {
+        cout << "row=" << row << endl;
+        cout << "col=" << col << endl;
+        cout << "index=" << this->numCols * row + col << endl;
+        return this->numCols * row + col;
+        }
 
         // Get a single value
               double & Value( int row, int col )       { return this->data[Index(row,col)]; }
