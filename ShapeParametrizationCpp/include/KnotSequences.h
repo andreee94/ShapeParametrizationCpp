@@ -16,7 +16,7 @@ class KnotSequences
     public:
         /** Default constructor */
         KnotSequences(Knots knots);
-        doubles getSequence(doubles params);
+        doubles getSequence(doubles params) const;
         int computeNumParams();
 
         static KnotSequences getCompleteBirationalFixedKS(int bspline_n, int bspline_numCP, double q1, double q2, double center);

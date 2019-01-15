@@ -67,10 +67,6 @@ doubles Table::StridedSlice( int start, int length, int stride ) const
     result.reserve( length );
     const double *pos = &this->data[start];
     for( int i = 0; i < length; i++ ) {
-        cout << "start=" << start;
-        cout << "lenght=" << length;
-        cout << pos << endl;
-        cout << *pos << endl;
         result.push_back(*pos);
         pos += stride;
     }
@@ -87,6 +83,7 @@ Table::Table( int rows, int cols, const double& initVal )
 doubles Table::getrow( int row, int colBegin, int colEnd ) const
 {
     if( colEnd < 0 ) colEnd = this->numCols-1;
+    if( colBegin < 0 ) colBegin = this->numCols-1;
     if( colBegin <= colEnd )
         return StridedSlice( Index(row,colBegin), colEnd-colBegin+1, 1 );
     else
@@ -95,13 +92,13 @@ doubles Table::getrow( int row, int colBegin, int colEnd ) const
 
 doubles Table::getcolumn( int col, int rowBegin, int rowEnd ) const
 {
-        cout << "col=" << col << endl;
-        cout << "rowBegin=" << rowBegin << endl;
-        cout << "rowEnd=" << rowEnd << endl;
     if( rowEnd < 0 ) rowEnd = this->numRows-1;
+    if( rowBegin < 0 ) rowBegin = this->numRows-1;
     if( rowBegin <= rowEnd )
         return StridedSlice( Index(rowBegin,col), rowEnd-rowBegin+1, numCols );
     else
+        cout << "rowBegin = " << rowBegin << endl;
+        cout << "rowEnd = " << rowEnd << endl;
         return StridedSlice( Index(rowBegin,col), rowBegin-rowEnd+1, -numCols );
 }
 

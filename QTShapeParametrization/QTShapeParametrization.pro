@@ -6,6 +6,7 @@
 
 QT += core gui
 QT += charts
+QT += quickcontrols2
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -36,7 +37,12 @@ SOURCES += \
         #$$PWD/../ShapeParametrizationCpp/src/Table.cpp \
         #$$PWD/../ShapeParametrizationCpp/src/Point.cpp \
         #$$PWD/../ShapeParametrizationCpp/src/Line.cpp \
-        $$PWD/../ShapeParametrizationCpp/src/*.cpp
+        $$PWD/../ShapeParametrizationCpp/src/*.cpp \
+    mychart.cpp \
+    mychartview.cpp \
+    RangeSlider.cpp \
+    rangesliderlayout.cpp \
+    MultiSliderView.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -45,7 +51,14 @@ HEADERS += \
         #$$PWD/../ShapeParametrizationCpp/include/Table.h \
         #$$PWD/../ShapeParametrizationCpp/include/Point.h \
         #$$PWD/../ShapeParametrizationCpp/include/Line.h \
-        $$PWD/../ShapeParametrizationCpp/include/*.h
+        $$PWD/../ShapeParametrizationCpp/include/*.h \
+    mainwindow.h \
+    mychartview.h \
+    mychart.h \
+    RangeSlider.h \
+    rangesliderlayout.h \
+    MultiSliderView.h
+    mychart.h
 
 
 #HEADERS += *.h
@@ -54,7 +67,10 @@ HEADERS += \
 
 FORMS += \
         mainwindow.ui \
-    loadprofiledialog.ui
+    loadprofiledialog.ui \
+    loadprofiledialog.ui \
+    mainwindow.ui \
+    rangesliderlayout.ui
 
 
 # Default rules for deployment.

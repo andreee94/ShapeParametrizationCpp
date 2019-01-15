@@ -51,7 +51,7 @@ doubles Utils::extractmid(const doubles &items, int offset)
 }
 
 
- doubles Utils::centripetal(const Points &points, int alpha)
+ doubles Utils::centripetal(const Points &points, double alpha)
  {
     doubles w;
     double totallenght = 0;
@@ -146,12 +146,96 @@ doubles Utils::computeCumul(double start, double end, doubles params)
 }
 
 
+void Utils::getminmaxindexes(const Points &points, int &minindex, int &maxindex, char XorY)
+{
+    double minvalue = INT_MAX;
+    double maxvalue = INT_MIN;
+    for (unsigned int i = 0; i < points.size(); i++)
+    {
+        if (XorY == 'X')
+        {
+            if (points[i].getx() > maxvalue)
+            {
+                maxvalue = points[i].getx();
+                maxindex = i;
+            }
+            if (points[i].getx() < minvalue)
+            {
+                minvalue = points[i].getx();
+                minindex = i;
+            }
+        }
+        else if (XorY == 'Y')
+        {
+            if (points[i].gety() > maxvalue)
+            {
+                maxvalue = points[i].gety();
+                maxindex = i;
+            }
+            if (points[i].gety() < minvalue)
+            {
+                minvalue = points[i].gety();
+                minindex = i;
+            }
+        }
+    }
+}
+
+void Utils::getupperlowercurves(const Points &points, Points &lower, Points &upper)
+{
+    int index_minX;
+    int index_maxX;
+    getminmaxindexes(points, index_minX, index_maxX, 'X');
+    lower.clear();
+    upper.clear();
+    if (index_minX > index_maxX)
+    {
+        lower = vector<Point>(points.begin() + index_maxX, points.begin() + index_minX);
+        std::reverse(lower.begin(), lower.end()); // points from left to right
+        upper = vector<Point>(points.begin() + index_minX, points.end());
+        upper.insert(upper.end(), points.begin(), points.begin() + index_maxX);
+
+    }
+    else if (index_minX > index_maxX)
+    {
+        lower = vector<Point>(points.begin() + index_maxX, points.end());
+        lower.insert(lower.end(), points.begin(), points.begin() + index_minX);
+        std::reverse(lower.begin(), lower.end()); // points from left to right
+        upper = vector<Point>(points.begin() + index_minX, points.begin() + index_maxX);
+    }
+}
+
  void Utils::printcout(doubles vec, string separator, bool endline)
  {
     for (const auto& i: vec)
         cout << i << ' ';
     if (endline)
         cout << endl;
+ }
+
+ bool Utils::eq(double d1, double d2, double threshold)
+ {
+     return std::abs(d1 - d2) < threshold;
+ }
+
+ bool Utils::lessoreq(double d1, double d2, double threshold)
+ {
+     return less(d1, d2, threshold) || eq(d1, d2, threshold);
+ }
+
+ bool Utils::less(double d1, double d2, double threshold)
+ {
+     return d1 - d2 < 0;
+ }
+
+ bool Utils::greateroreq(double d1, double d2, double threshold)
+ {
+     return greater(d1, d2, threshold) || eq(d1, d2, threshold);
+ }
+
+ bool Utils::greater(double d1, double d2, double threshold)
+ {
+     return d1 - d2 > 0;
  }
 
 //string Utils::print(doubles vec, string separator, bool endline)

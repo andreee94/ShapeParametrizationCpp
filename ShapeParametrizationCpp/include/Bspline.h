@@ -38,8 +38,10 @@ class Bspline: public Evaluable, public Editable<Bspline>
         Bspline& operator=(const Bspline& other);
 
         Bspline computeDerivarive() const;
-        Points getnormals(doubles us) const;
-        Points getnormalsInCP() const;
+        Points getNormals(doubles us) const;
+        Points getNormalsInCP() const;
+        Points getTangents(doubles us) const;
+        Points getTangentsInCP() const;
 
         Point evaluate(double) const;
         Points evaluate(int steps) const;
@@ -52,9 +54,10 @@ class Bspline: public Evaluable, public Editable<Bspline>
         }
 
         Points evaluateWithTE(int numpoints, int numpointsTE, string shape, bool tangent_first=true);
+        Points evaluateTE(int numpointsTE, string shape, bool tangent_first=true);
 
-        Bspline modifyCP(doubles params) const;
-        Bspline modifyCP(doubles params);
+        Bspline modifyCP(const doubles &params) const;
+        Bspline modifyCP_self(const doubles &params);
 
         void IOsave(string filename) const;
         Bspline IOload(string filename);
@@ -65,7 +68,7 @@ class Bspline: public Evaluable, public Editable<Bspline>
         void setSettings(Settings s);
         void setSettings(string filename);
 
-        static Bspline interpolate(Points &points, int numCP, int n, KnotSequences &knotsequence);
+        static Bspline interpolate(const Points &points, int numCP, int n, const KnotSequences &knotsequence);
 
     protected:
         Points CParray;
@@ -75,7 +78,7 @@ class Bspline: public Evaluable, public Editable<Bspline>
 
         Point deBoor(int k, double u) const;
         static double interpolate_N(int l, int n, doubles uarray, double u);
-        static Points interpolate_getCP(Points points, doubles uarray, int numCP, int n);
+        static Points interpolate_getCP(const Points &points, doubles uarray, int numCP, int n);
 
     private:
 };

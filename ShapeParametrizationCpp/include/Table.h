@@ -33,7 +33,7 @@ class Table
 
         // Simple row or column slices
         doubles getrow( int row, int colBegin = 0, int colEnd = -1 ) const;
-        doubles getcolumn( int row, int colBegin = 0, int colEnd = -1 ) const;
+        doubles getcolumn( int col, int rowBegin = 0, int rowEnd = -1) const ;
 
 
         static Table load(string filename);
@@ -47,9 +47,9 @@ class Table
         operator const doubles& () const        { return this->data; }
         int Index( int row, int col ) const
         {
-        cout << "row=" << row << endl;
-        cout << "col=" << col << endl;
-        cout << "index=" << this->numCols * row + col << endl;
+//        cout << "row=" << row << endl;
+//        cout << "col=" << col << endl;
+//        cout << "index=" << this->numCols * row + col << endl;
         return this->numCols * row + col;
         }
 

@@ -189,7 +189,7 @@ double Point::distancesquared(const Point& p2) const
 
 double Point::slope(const Point& p2) const
 {
-    return (p2.y - this->y) / (p2.x - this->x);
+    return (p2 - *this).slope(); // (p2.y - this->y) / (p2.x - this->x);
 }
 
 double Point::slope() const
@@ -249,13 +249,13 @@ string Point::to_str() const
 
 void Point::normalize(Points &points)
 {
-    for (Point p : points)
-        p.normalize();
+    for (Point &p : points)
+        p.normalize_self();
 }
 void Point::normals(Points &points)
 {
-    for (Point p : points)
-        p.normal();
+    for (Point &p : points)
+        p.normal_self();
 }
 
 

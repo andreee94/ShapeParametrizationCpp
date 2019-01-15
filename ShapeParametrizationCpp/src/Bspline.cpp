@@ -120,11 +120,13 @@ Point Bspline::deBoor(int k, double u) const
 Point Bspline::evaluate(double u) const
 {
     unsigned int k = 0;
-    if (u == this->uarray[0])
-        u = u + 1e-6;
+    if (Utils::eq(u, this->uarray[0]))
+        u = this->uarray.front() + 1e-6;
+    if (Utils::eq(u, this->uarray.back()))
+        u = this->uarray.back() - 1e-6;
 
-    while (k + 1 < this->uarray.size() && u > this->uarray[k + 1])
-        k = k + 1;
+    while (k + 1 < this->uarray.size() && Utils::greater(u, this->uarray[k + 1]))
+        k++;
     return this->deBoor(k, u);
 }
 
@@ -154,7 +156,24 @@ Bspline Bspline::computeDerivarive() const
 
 
 
-Points Bspline::getnormals(doubles us) const
+Points Bspline::getNormals(doubles us) const
+{
+    Bspline derivative = this->computeDerivarive(); // compute bspline derivative
+    Points derivatives = derivative.Evaluable::evaluate(us); // evaluate bspline derivative is control points
+    Point::normals(derivatives); // normals directions
+    Point::normalize(derivatives); // normalize directions
+    return derivatives;
+}
+
+
+Points Bspline::getNormalsInCP() const
+{
+    doubles wCP;// = Utils::centripetal(this->CParray, 1); // estimate u value of the control points
+    wCP = Utils::extractmid(uarray, n-1);
+    return this->getNormals(wCP);
+}
+
+Points Bspline::getTangents(doubles us) const
 {
     Bspline derivative = this->computeDerivarive(); // compute bspline derivative
     Points derivatives = derivative.Evaluable::evaluate(us); // evaluate bspline derivative is control points
@@ -163,10 +182,11 @@ Points Bspline::getnormals(doubles us) const
 }
 
 
-Points Bspline::getnormalsInCP() const
+Points Bspline::getTangentsInCP() const
 {
-    doubles wCP = Utils::centripetal(this->CParray); // estimate u value of the control points
-    return this->getnormals(wCP);
+    doubles wCP;// = Utils::centripetal(this->CParray, 1); // estimate u value of the control points
+    wCP = Utils::extractmid(uarray, n-1);
+    return this->getTangents(wCP);
 }
 
 
@@ -193,7 +213,7 @@ double Bspline::interpolate_N(int l, int n, doubles uarray, double u)
 
 }
 
-Points Bspline::interpolate_getCP(Points points, doubles uarray, int numCP, int n)
+Points Bspline::interpolate_getCP(const Points &points, doubles uarray, int numCP, int n)
 {
     doubles w = Utils::centripetal(points, 1);
     MatrixXd M = MatrixXd::Zero(numCP, numCP); // init empty matrix
@@ -255,7 +275,7 @@ Points Bspline::interpolate_getCP(Points points, doubles uarray, int numCP, int 
 
 
 
-Bspline Bspline::interpolate(Points &points, int numCP, int n, KnotSequences &knotsequence)
+Bspline Bspline::interpolate(const Points &points, int numCP, int n, const KnotSequences &knotsequence)
 {
     doubles uarray = knotsequence.getSequence((doubles){});
     Points CParray = Bspline::interpolate_getCP(points, uarray, numCP, n);
@@ -270,7 +290,7 @@ Points Bspline::evaluateWithTE(int numpoints, int numpointsTE, string shape, boo
     // compute bspline points
     Points bspline_points = this->evaluate(numpoints);
     // compute tangents at start and end
-    Points tangents = this->getnormals((doubles){0, 1});
+    Points tangents = this->getTangents((doubles){0, 1});
 
     TrailingEdge *TE;
     Points tepoints;
@@ -299,12 +319,44 @@ Points Bspline::evaluateWithTE(int numpoints, int numpointsTE, string shape, boo
     return bspline_points;
 }
 
+Points Bspline::evaluateTE(int numpointsTE, string shape, bool tangent_first)
+{
+    // compute bspline points
+    Points bspline_points = this->evaluate(10); // small amount of curve points required
+    // compute tangents at start and end
+    Points tangents = this->getTangents((doubles){0, 1});
+
+    TrailingEdge *TE;
+    Points tepoints;
+    if (pystring::lower(shape) == "ellipse")
+    {
+        Ellipse ellipse = Ellipse(bspline_points.front(), bspline_points.back(), tangents.front().slope(), tangents.back().slope());
+        TE = dynamic_cast<TrailingEdge*>(&ellipse);
+        tepoints = ellipse.computeTE(bspline_points, numpointsTE);
+    }
+    else if (pystring::lower(shape) == "circle")
+    {
+        double m = tangent_first ? tangents.front().slope() : tangents.back().slope();
+        Circle circle = Circle(bspline_points.front(), bspline_points.back(), m, tangent_first);
+        TE = dynamic_cast<TrailingEdge*>(&circle);
+        tepoints = circle.computeTE(bspline_points, numpointsTE);
+    }
+    // compute trailing edge points
+    if (tepoints.size() > 0)
+    {
+        // reverse te points array
+        // remove latest item if size > 1 since it is dupplicated
+        std::reverse(tepoints.begin(),tepoints.end() - (int)(tepoints.size() == 1));
+    }
+    return tepoints;
+}
 
 
-Bspline Bspline::modifyCP(doubles params) const
+
+Bspline Bspline::modifyCP(const doubles &params) const
 {
     Bspline modified_bspline = Bspline(*this);
-    Points normals = this->getnormalsInCP();
+    Points normals = this->getNormalsInCP();
 
     for (unsigned int i = 0; i < this->CParray.size(); i++)
     {
@@ -313,9 +365,9 @@ Bspline Bspline::modifyCP(doubles params) const
     return modified_bspline;
 }
 
-Bspline Bspline::modifyCP(doubles params)
+Bspline Bspline::modifyCP_self(const doubles &params)
 {
-    Points normals = this->getnormalsInCP();
+    Points normals = this->getNormalsInCP();
 
     for (unsigned int i = 0; i < this->CParray.size(); i++)
     {

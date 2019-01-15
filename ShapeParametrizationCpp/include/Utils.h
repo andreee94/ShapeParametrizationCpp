@@ -28,12 +28,19 @@ class Utils
     public:
         static doubles linspace(double start_in, double end_in, int num_in);
         static doubles extractmid(const doubles &items, int offset=1);
-        static doubles centripetal(const Points &points, int alpha=0.5);
+        static doubles centripetal(const Points &points, double alpha=0.5);
         static doubles chordlength(const Points &points);
         static doubles interp1(const doubles &x, const doubles &y, const doubles &x_new );
         static int findNearestNeighbourIndex(const double value, const doubles &x );
         static doubles computeCumul(double start, double end, doubles params);
         static void printcout(doubles vector, string separator=" ", bool endline=true);
+        static bool eq(double d1, double d2, double threshold=1e-15);
+        static bool lessoreq(double d1, double d2, double threshold=1e-15);
+        static bool less(double d1, double d2, double threshold=1e-15);
+        static bool greateroreq(double d1, double d2, double threshold=1e-15);
+        static bool greater(double d1, double d2, double threshold=1e-15);
+        static void getupperlowercurves(const Points &points, Points &lower, Points &upper);
+        static void getminmaxindexes(const Points &points, int &minindex, int &maxindex, char XorY);
 
 //        template<class T>
 //        static string print(vector<T> vec, string separator, bool endline=true)

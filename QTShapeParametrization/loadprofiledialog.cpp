@@ -27,7 +27,7 @@ LoadProfileDialog::LoadProfileDialog(QWidget *parent) :
         loadLayout->addWidget(loadButton);
 
     // table of example of columns
-    table = new QTableWidget(2, numcolumns);
+    table = new QTableWidget(3, numcolumns);
         table->setEditTriggers(QAbstractItemView::NoEditTriggers); // not editable
     QHeaderView* headerH = table->horizontalHeader();
     QHeaderView* headerV = table->verticalHeader();
@@ -42,19 +42,22 @@ LoadProfileDialog::LoadProfileDialog(QWidget *parent) :
 //        table->setItem(0, i, item);
 //    }
 //    table->setVerticalHeaderLabels({"X", "Y", "1", "2"});
-    verticalResizeTableViewToContents(table);
+    verticalResizeTableViewToContents(table, 3);
 
 
     // choice of x and y
     QHBoxLayout *chartLayout = new QHBoxLayout;
     QLineSeries *series = new QLineSeries();
-    QChart *chart = new QChart();
+    Chart *chart = new Chart();
        chart->legend()->hide();
        chart->addSeries(series);
        chart->createDefaultAxes();
-       chart->setTitle("Simple line chart example");
-    chartView = new QChartView(chart);
+       chart->setTitle("Profile plot");
+       chart->setMargins(QMargins(4,4,4,4));
+    chartView = new ChartView(chart);
         chartView->setRenderHint(QPainter::Antialiasing);
+        chartView->setDirectionZoom(ChartView::BothDirectionZoom);
+        chartView->setRubberBand(QChartView::RectangleRubberBand);
     QGridLayout *gridColsChoice = new QGridLayout;
     comboXcol = new QComboBox();
         comboXcol->addItems(getColumnComboBox(numcolumns));
@@ -62,18 +65,40 @@ LoadProfileDialog::LoadProfileDialog(QWidget *parent) :
     comboYcol = new QComboBox();
         comboYcol->addItems(getColumnComboBox(numcolumns));
         comboYcol->setCurrentIndex(1);
+    comboRcol = new QComboBox();
+        comboRcol->addItems(getColumnComboBox(numcolumns));
+        comboRcol->setCurrentIndex(0);
     QLabel *colsXLabel = new QLabel("x:");
     QLabel *colsYLabel = new QLabel("y:");
+    colsRLabel = new QLabel("R: (max of)");
+    QHBoxLayout *colsRLayout = new QHBoxLayout;
+        colsRLayout->addWidget(colsRLabel);
+        colsRLayout->addWidget(comboRcol);
+        colsRLabel->setEnabled(false);
+        comboRcol->setEnabled(false);
     QGroupBox *coordinateGroupBox = new QGroupBox(tr("Frame of reference"));
     radioCartesian = new QRadioButton(tr("&Cartesian(x, y, z)"));
+        radioCartesian->setChecked(true);
     radioCylindrical = new QRadioButton(tr("C&ylindrical(r, r*theta, z)"));
+    QGroupBox *reverseGroupBox = new QGroupBox(tr("Reverse x or y coordinates"));
+    checkboxReverseX = new QCheckBox(tr("Reverse X Coordinate"));
+    checkboxReverseY = new QCheckBox(tr("Reverse Y Coordinate"));
+    checkboxReverseZ = new QCheckBox(tr("Reverse Z Coordinate"));
+        checkboxReverseZ->setEnabled(false);
     QWidget* empty = new QWidget();
     empty->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
-    QVBoxLayout *vbox = new QVBoxLayout;
-        vbox->addWidget(radioCartesian);
-        vbox->addWidget(radioCylindrical);
-        vbox->addStretch(1);
-        coordinateGroupBox->setLayout(vbox);
+    QVBoxLayout *vbox_framereference = new QVBoxLayout;
+        vbox_framereference->addWidget(radioCartesian);
+        vbox_framereference->addWidget(radioCylindrical);
+        vbox_framereference->addLayout(colsRLayout);
+        vbox_framereference->addStretch(1);
+        coordinateGroupBox->setLayout(vbox_framereference);
+    QVBoxLayout *vbox_reverse = new QVBoxLayout;
+        vbox_reverse->addWidget(checkboxReverseX);
+        vbox_reverse->addWidget(checkboxReverseY);
+        vbox_reverse->addWidget(checkboxReverseZ);
+        vbox_reverse->addStretch(1);
+        reverseGroupBox->setLayout(vbox_reverse);
 
     gridColsChoice->addItem(separator(), 0, 0, 2, 2);
     gridColsChoice->addWidget(colsXLabel, 0, 0, 1, 1); //, Qt::AlignTop);
@@ -81,7 +106,8 @@ LoadProfileDialog::LoadProfileDialog(QWidget *parent) :
     gridColsChoice->addWidget(comboXcol, 0, 1, 1, 1); //, Qt::AlignTop);
     gridColsChoice->addWidget(comboYcol, 1, 1, 1, 1); //, Qt::AlignTop);
     gridColsChoice->addWidget(coordinateGroupBox, 2, 0, 2, 2); //, Qt::AlignTop);
-    gridColsChoice->addWidget(empty, 4, 0, 2, 2);
+    gridColsChoice->addWidget(reverseGroupBox, 4, 0, 2, 2); //, Qt::AlignTop);
+    gridColsChoice->addWidget(empty, 6, 0, 2, 2);
 
     chartLayout->addWidget(chartView, 1);
     chartLayout->addLayout(gridColsChoice, 0);
@@ -98,8 +124,11 @@ LoadProfileDialog::LoadProfileDialog(QWidget *parent) :
     connect(loadButton, &QPushButton::clicked, this, &LoadProfileDialog::OpenFileDialog);
     connect(comboXcol, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &LoadProfileDialog::ComboXActivated);
     connect(comboYcol, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &LoadProfileDialog::ComboYActivated);
-    connect(radioCartesian,&QAbstractButton::clicked,this, &LoadProfileDialog::RadioCartesianSelected);
-    connect(radioCylindrical,&QAbstractButton::clicked,this, &LoadProfileDialog::RadioCylindricalSelected);
+    connect(comboRcol, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &LoadProfileDialog::ComboRActivated);
+    connect(radioCartesian, &QAbstractButton::clicked,this, &LoadProfileDialog::RadioCartesianSelected);
+    connect(radioCylindrical, &QAbstractButton::clicked,this, &LoadProfileDialog::RadioCylindricalSelected);
+    connect(checkboxReverseX,QOverload<int>::of(&QCheckBox::stateChanged),this, &LoadProfileDialog::CheckReverseXChanged);
+    connect(checkboxReverseY,QOverload<int>::of(&QCheckBox::stateChanged),this, &LoadProfileDialog::CheckReverseYChanged);
     connect(okButton, &QAbstractButton::clicked, this, &QDialog::accept);
     connect(cancelButton, &QAbstractButton::clicked, this, &QDialog::reject);
 
@@ -128,27 +157,52 @@ void LoadProfileDialog::updateTableAndChart(bool hasUpdatedFilename)
             comboYcol->clear();
             comboXcol->addItems(getColumnComboBox(numcolumns));
             comboYcol->addItems(getColumnComboBox(numcolumns));
+            comboRcol->addItems(getColumnComboBox(numcolumns));
             comboXcol->setCurrentIndex(data.getColumnX());
             comboYcol->setCurrentIndex(data.getColumnY());
             table->setColumnCount(numcolumns);
+            table->setRowCount(data.getDataRowsNum());
             table->update();
             for (int i = 0; i < numcolumns; i++)
             {
-                table->setItem(0, i, new QTableWidgetItem(QString::number(data.Value(0, i))));
-                table->setItem(1, i, new QTableWidgetItem(QString::number(data.Value(1, i))));
+                for (int j = 0; j < data.getDataRowsNum(); j++)
+                {
+                    table->setItem(j, i, new QTableWidgetItem(QString::number(data.Value(j, i))));
+                }
+//                table->setItem(0, i, new QTableWidgetItem(QString::number(data.Value(0, i))));
+//                table->setItem(1, i, new QTableWidgetItem(QString::number(data.Value(1, i))));
             }
         }
         QLineSeries *series = new QLineSeries();
+        QScatterSeries *seriesPoints = new QScatterSeries();
         Points points = data.getPoints();
         for (unsigned int i = 0; i < points.size(); i++)
         {
             series->append(points[i].getx(), points[i].gety());
+            seriesPoints->append(points[i].getx(), points[i].gety());
         }
+//        series->setPointsVisible(true);
+//        series->setPen(QPen(Qt::darkBlue, 2));
+        seriesPoints->setMarkerSize(6);
+        seriesPoints->setColor(Qt::blue); //series->pen().color());
+        seriesPoints->setBorderColor(Qt::blue); //series->pen().color());
         chartView->chart()->removeAllSeries();
         chartView->chart()->addSeries(series);
+        chartView->chart()->addSeries(seriesPoints);
+        chartView->chart()->createDefaultAxes();
     }
 }
 
+void LoadProfileDialog::setProfileData(const ProfileData &value)
+{
+    data = value;
+    updateTableAndChart(true);
+}
+
+ProfileData LoadProfileDialog::getProfileData() const
+{
+    return data;
+}
 
 void LoadProfileDialog::ComboXActivated(int index)
 {
@@ -168,12 +222,50 @@ void LoadProfileDialog::ComboYActivated(int index)
     }
 }
 
+void LoadProfileDialog::ComboRActivated(int index)
+{
+    if (index != this->data.getColumnR() && index >=0 )
+    {
+        data.setColumnR(index);
+        this->updateTableAndChart(false);
+    }
+}
 
 void LoadProfileDialog::RadioSelected(FrameOfReference type)
 {
     if (type != this->data.getFrameOfReference())
     {
         data.setFrameOfReference(type);
+        this->updateTableAndChart(false);
+        colsRLabel->setEnabled(type == FrameOfReference::CYLINDRICAL);
+        comboRcol->setEnabled(type == FrameOfReference::CYLINDRICAL);
+        checkboxReverseZ->setEnabled(type == FrameOfReference::CYLINDRICAL);
+    }
+}
+
+void LoadProfileDialog::CheckReverseXChanged(int state)
+{
+    if (this->boolFromState(state) != this->data.getReverseX())
+    {
+        data.setReverseX(boolFromState(state));
+        this->updateTableAndChart(false);
+    }
+}
+
+void LoadProfileDialog::CheckReverseYChanged(int state)
+{
+    if (this->boolFromState(state) != this->data.getReverseY())
+    {
+        data.setReverseY(boolFromState(state));
+        this->updateTableAndChart(false);
+    }
+}
+
+void LoadProfileDialog::CheckReverseZChanged(int state)
+{
+    if (this->boolFromState(state) != this->data.getReverseZ())
+    {
+        data.setReverseZ(boolFromState(state));
         this->updateTableAndChart(false);
     }
 }
@@ -210,14 +302,14 @@ QLayoutItem* LoadProfileDialog::separator()
 //    return line;
 }
 
-void LoadProfileDialog::verticalResizeTableViewToContents(QTableView *tableView)
+void LoadProfileDialog::verticalResizeTableViewToContents(QTableView *tableView, int maxnumrows)
 {
     int rowTotalHeightMin=0;
     int rowTotalHeightMax=0;
 
     // Rows height
     int count=tableView->verticalHeader()->count();
-    for (int i = 0; i < count; ++i) {
+    for (int i = 0; i < min(count, maxnumrows); ++i) {
         // 2018-03 edit: only account for row if it is visible
         if (!tableView->verticalHeader()->isSectionHidden(i)) {
             rowTotalHeightMin+=tableView->verticalHeader()->sectionSize(i);

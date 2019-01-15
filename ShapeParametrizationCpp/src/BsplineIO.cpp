@@ -28,7 +28,7 @@ typedef std::vector<string> strings;
 
 void Bspline::IOsave(string filename) const
 {
-    Points Normals = this->getnormalsInCP();
+    Points Normals = this->getNormalsInCP();
     ofstream file;
     file.open(filename, ios::out);
     //int margin = 5;

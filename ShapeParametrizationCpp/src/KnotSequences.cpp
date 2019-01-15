@@ -17,7 +17,7 @@ KnotSequences::KnotSequences(Knots knots)
     this->knots = knots;
 }
 
-doubles KnotSequences::getSequence(doubles params)
+doubles KnotSequences::getSequence(doubles params) const
 {
     doubles uarray;
     int StartIndex = 0;
