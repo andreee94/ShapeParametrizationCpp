@@ -55,6 +55,9 @@ private:
 
     void changedMinMaxValue();
 
+    void changedTextValueMin();
+    void changedTextValueMax();
+
     RangeSlider *rangeSlider;
     QLineEdit *minEdit;
     QLineEdit *maxEdit;

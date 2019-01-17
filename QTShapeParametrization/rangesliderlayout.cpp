@@ -41,6 +41,8 @@ RangeSliderLayout::RangeSliderLayout(QWidget *parent) :
     connect(rangeSlider, &RangeSlider::lowerValueChanged, this, &RangeSliderLayout::private_lowerValueChanged);
     connect(rangeSlider, &RangeSlider::upperValueChanged, this, &RangeSliderLayout::private_upperValueChanged);
     connect(rangeSlider, &RangeSlider::rangeChanged, this, &RangeSliderLayout::private_rangeChanged);
+    connect(minEdit, &QLineEdit::textChanged, this, &RangeSliderLayout::changedTextValueMin);
+    connect(maxEdit, &QLineEdit::textChanged, this, &RangeSliderLayout::changedTextValueMax);
 
 }
 
@@ -115,6 +117,16 @@ void RangeSliderLayout::changedMinMaxValue()
 {
     minEdit->setValidator(new QDoubleValidator(rangeSlider->GetMinimun(), rangeSlider->GetMaximun(), 3, this));
     maxEdit->setValidator(new QDoubleValidator(rangeSlider->GetMinimun(), rangeSlider->GetMaximun(), 3, this));
+}
+
+void RangeSliderLayout::changedTextValueMin()
+{
+
+}
+
+void RangeSliderLayout::changedTextValueMax()
+{
+
 }
 
 RangeSliderLayout::~RangeSliderLayout()

@@ -31,6 +31,8 @@ MainWindow::MainWindow(QWidget *parent) :
     //mainVLayout->addWidget(multislider);
     mainVLayout->addWidget(generateKnotChartLayout());
 
+    connect(tabLayout ,QOverload<int>::of(&QTabWidget::currentChanged),this, &MainWindow::tabChanged);
+
     QWidget *widget = new QWidget(this);
     setCentralWidget(widget);
     widget->setLayout(mainVLayout);
@@ -75,7 +77,7 @@ QWidget* MainWindow::generateTabBspline()
         bsplineCPnumEdit->setValidator( new QIntValidator(5, 100, this) );
         bsplineNumPointsEdit->setValidator( new QIntValidator(10, 10000, this) );
         bsplineTEShapeCombo->addItems(QStringList{"Ellipse", "Circle", "None"});
-        bsplineTEMotionCombo->addItems(QStringList{"Rigid", "First point", "Second point", "Second-Last point", "Last point", "Auto"});
+        bsplineTEMotionCombo->addItems(QStringList{"Rigid", "First point", "Second point", "Second-Last point", "Last point", "Auto", "None"});
         bsplineTENumPointsEdit->setValidator( new QIntValidator(10, 1000, this) );
 
     buttonComputeCP = new QPushButton("Compute CP");
@@ -134,29 +136,12 @@ QWidget* MainWindow::generateTabRanges()
     QScrollArea *scrollLayout = new QScrollArea;
     scrollLayout->setWidgetResizable(true);
     //QVBoxLayout *boxScrollVLayout = new QVBoxLayout;
-    QFormLayout *boxScrollVLayout = new QFormLayout;
-    for (int i=0; i < 25; i++)
-    {
-        RangeSliderLayout *rangeslider = new RangeSliderLayout;
-        rangeslider->SetRange(-1, 1);
-        rangeslider->setMinimumWidth(320);
-        QLabel *label = new QLabel("CP" + QString::number(i+1));
-        label->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-        label->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        //boxScrollVLayout->addWidget(rangeslider, 1);
-        boxScrollVLayout->addRow(label, rangeslider);
-        if ( i % 3 == 0)
-        {
-            boxScrollVLayout->itemAt(2 * i)->widget()->setEnabled(false);
-            boxScrollVLayout->itemAt(2 * i + 1)->widget()->setEnabled(false);
-        }
-        rangeSliders.push_back(rangeslider);
-    }
-    //boxScrollVLayout->addStretch(1);
-    boxScrollVLayout->setLabelAlignment(Qt::AlignCenter);
+    rangesContainerLayout = new QFormLayout;
+    updateRangesWidgets();
+    rangesContainerLayout->setLabelAlignment(Qt::AlignCenter);
 
     QWidget *widgetscroll = new QWidget();
-    widgetscroll->setLayout(boxScrollVLayout);
+    widgetscroll->setLayout(rangesContainerLayout);
     scrollLayout->setWidget(widgetscroll);
     scrollLayout->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
@@ -459,6 +444,30 @@ void MainWindow::updateBspline()
     }
 }
 
+void MainWindow::updateRangesWidgets()
+{
+    int numCP = getNumCP();
+    if (rangesContainerLayout->rowCount() > numCP)
+        while (rangesContainerLayout->rowCount() > numCP)
+        {
+            rangesContainerLayout->removeRow(rangesContainerLayout->rowCount() - 1);
+            rangeSliders.pop_back();
+        }
+    if (rangesContainerLayout->rowCount() < numCP)
+        for (int i = rangesContainerLayout->rowCount(); i < numCP; i++)
+        {
+            RangeSliderLayout *rangeslider = new RangeSliderLayout;
+            rangeslider->SetRange(-1, 1);
+            rangeslider->setMinimumWidth(320);
+            QLabel *label = new QLabel("CP" + QString::number(i+1));
+            label->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+            label->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+            //boxScrollVLayout->addWidget(rangeslider, 1);
+            rangesContainerLayout->addRow(label, rangeslider);
+            rangeSliders.push_back(rangeslider);
+        }
+}
+
 void MainWindow::updateTangentsNormals(bool changednumcp)
 {
     if (this->data.getFileName().size() > 0 && bspline && bspline->getCParray().size() > 0)
@@ -521,6 +530,14 @@ void MainWindow::updateTangentsNormals(bool changednumcp)
         updateCheckBoxEnable();
         checkBoxNormalsChanged(checkBoxNormals->isChecked());
         checkBoxTangentsChanged(checkBoxTangents->isChecked());
+    }
+}
+
+void MainWindow::tabChanged(int index)
+{
+    if (index == 1) // ranges tab
+    {
+        updateRangesWidgets();
     }
 }
 
@@ -656,6 +673,8 @@ void MainWindow::updateMINMAX()
             series_maxParams->upperSeries()->clear();
             series_maxParams->lowerSeries()->clear();
         }
+        bspline->setTEMotion(getTEMotion());
+        bspline->fillFixedParams({}, getNumCP());
         Points minBsplinePoints = bspline->getExtremeMin(getMinParams()).evaluateWithTE(getNumPoints(), getTENumPoints(), getTEShape(), true);
         Points maxBsplinePoints = bspline->getExtremeMax(getMaxParams()).evaluateWithTE(getNumPoints(), getTENumPoints(), getTEShape(), true);
 
@@ -826,6 +845,11 @@ doubles MainWindow::getMaxParams()
         params.push_back(rangeSliders[i]->GetUpperValue());
     }
     return params;
+}
+
+TEMotion MainWindow::getTEMotion()
+{
+    return (TEMotion)bsplineTEMotionCombo->currentIndex();
 }
 
 void MainWindow::appendPointsToSeries(QLineSeries *series, const Points &points)

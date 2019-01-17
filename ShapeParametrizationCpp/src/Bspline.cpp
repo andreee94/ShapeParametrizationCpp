@@ -59,6 +59,7 @@ Bspline::Bspline(const Bspline& other)
     this->Editable<Bspline>::minRange = other.Editable<Bspline>::minRange;
     this->Editable<Bspline>::maxRange = other.Editable<Bspline>::maxRange;
     this->Editable<Bspline>::adjustableIndices = other.Editable<Bspline>::adjustableIndices;
+    this->Editable<Bspline>::temotion = other.Editable<Bspline>::temotion;
     this->settings = other.settings;
 }
 
@@ -73,6 +74,7 @@ Bspline& Bspline::operator=(const Bspline& rhs)
     this->maxRange = rhs.maxRange;
     this->adjustableIndices = rhs.adjustableIndices;
     this->settings = rhs.settings;
+    this->temotion = rhs.temotion;
     return *this;
 }
 
@@ -353,10 +355,13 @@ Points Bspline::evaluateTE(int numpointsTE, string shape, bool tangent_first)
 
 
 
-Bspline Bspline::modifyCP(const doubles &params) const
+Bspline Bspline::modifyCP(const doubles &paramsoriginal) const
 {
     Bspline modified_bspline = Bspline(*this);
-    Points normals = this->getNormalsInCP();
+    doubles params = modified_bspline.filterFixedParams(paramsoriginal);
+    Points normals = modified_bspline.getNormalsInCP();
+
+    modified_bspline.manageTEType(params, normals, modified_bspline.temotion);
 
     for (unsigned int i = 0; i < this->CParray.size(); i++)
     {
@@ -365,13 +370,17 @@ Bspline Bspline::modifyCP(const doubles &params) const
     return modified_bspline;
 }
 
-Bspline Bspline::modifyCP_self(const doubles &params)
+Bspline Bspline::modifyCP_self(const doubles &paramsoriginal)
 {
+    doubles params = this->filterFixedParams(paramsoriginal);
     Points normals = this->getNormalsInCP();
+
+    manageTEType(params, normals, temotion);
 
     for (unsigned int i = 0; i < this->CParray.size(); i++)
     {
-        this->CParray[i] = this->CParray[i].move(normals[i], params[i]);
+        this->CParray[i].move_self(normals[i], params[i]);
+        //this->CParray[i] = this->CParray[i].move(normals[i], params[i]);
     }
     return *this;
 }

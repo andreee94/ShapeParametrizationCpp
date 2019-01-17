@@ -67,6 +67,7 @@ private:
     QList<QLineSeries*> series_tangents = QList<QLineSeries*>();
 
     // views for range
+    QFormLayout *rangesContainerLayout;
     std::vector<RangeSliderLayout*> rangeSliders;
     QLineEdit *rangeMinEdit;
     QLineEdit *rangeMaxEdit;
@@ -115,6 +116,8 @@ private:
     QScatterSeries *knotsSeries;
     ChartView *knotsChartView;
 
+    void tabChanged(int index);
+    void updateRangesWidgets();
     void updateCheckBoxEnable();
     void checkBoxOriginalPointsChanged(int state);
     void checkBoxOriginalCurveChanged(int state);
@@ -153,6 +156,7 @@ private:
     string getTEShape();
     doubles getMinParams();
     doubles getMaxParams();
+    TEMotion getTEMotion();
     void appendPointsToSeries(QLineSeries *series, const Points &points);
 };
 
