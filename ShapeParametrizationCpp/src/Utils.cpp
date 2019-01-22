@@ -218,6 +218,11 @@ void Utils::getupperlowercurves(const Points &points, Points &lower, Points &upp
      return std::abs(d1 - d2) < threshold;
  }
 
+ bool Utils::eqzero(double d1, double threshold)
+ {
+     return std::abs(d1) < threshold;
+ }
+
  bool Utils::lessoreq(double d1, double d2, double threshold)
  {
      return less(d1, d2, threshold) || eq(d1, d2, threshold);

@@ -35,12 +35,14 @@ Bspline::Bspline(const Points &CParray, const doubles &uarray, int n)
     this->CParray = CParray;
     this->uarray = uarray;
     this->n = n;
+    this->Evaluable::setParallel(true);
 }
 
 Bspline::Bspline()
 :Evaluable::Evaluable()
 ,Editable<Bspline>::Editable()
 {
+    this->Evaluable::setParallel(true);
     //ctor
 }
 
@@ -61,6 +63,7 @@ Bspline::Bspline(const Bspline& other)
     this->Editable<Bspline>::adjustableIndices = other.Editable<Bspline>::adjustableIndices;
     this->Editable<Bspline>::temotion = other.Editable<Bspline>::temotion;
     this->settings = other.settings;
+    this->Evaluable::setParallel(false);
 }
 
 Bspline& Bspline::operator=(const Bspline& rhs)
@@ -75,6 +78,7 @@ Bspline& Bspline::operator=(const Bspline& rhs)
     this->adjustableIndices = rhs.adjustableIndices;
     this->settings = rhs.settings;
     this->temotion = rhs.temotion;
+    this->Evaluable::setParallel(false);
     return *this;
 }
 
@@ -84,7 +88,7 @@ Points Bspline::getCParray() const
     return this->CParray;
 }
 
-Point Bspline::deBoor(int k, double u) const
+Point Bspline::deBoor(unsigned int  k, double u) const
 {
     /*"""
     Evaluates S(x).
@@ -98,20 +102,14 @@ Point Bspline::deBoor(int k, double u) const
     n: degree of B-spline
     */
     // we need to have u != from  uarray[0]
-    Points d;
-    d.reserve(this->n + 1);
-    for (int j = 0; j < this->n + 1; j++)
-    {
-//        cout << j << endl;
-//        cout << j + k - this->n << endl;
-//        cout << this->n + 1 << endl;
-//        cout << CParray.size() << endl;
-
+    Points d(this->n + 1, 0);
+    //d.reserve(this->n + 1);
+    for (unsigned int j = 0; j < this->n + 1; j++)
         d[j] = this->CParray[j + k - this->n];
-    }
 
-    for (int r = 1; r < this->n + 1; r++)
-        for (int j = this->n; j > r - 1; j--)
+
+    for (unsigned int r = 1; r < this->n + 1; r++)
+        for (unsigned int j = this->n; j > r - 1; j--)
         {
             double alpha = (u - uarray[j + k - n]) / (uarray[j + 1 + k - r] - uarray[j + k - n]);
             d[j] = (1.0 - alpha) * d[j - 1] + alpha * d[j];
@@ -358,10 +356,13 @@ Points Bspline::evaluateTE(int numpointsTE, string shape, bool tangent_first)
 Bspline Bspline::modifyCP(const doubles &paramsoriginal) const
 {
     Bspline modified_bspline = Bspline(*this);
-    doubles params = modified_bspline.filterFixedParams(paramsoriginal);
+    cout << "original params = " << Utils::print(paramsoriginal, "/", true);
+    doubles params = modified_bspline.filterFixedParams(paramsoriginal, true);
+    cout << "params filtered = " << Utils::print(params, "/", true);
     Points normals = modified_bspline.getNormalsInCP();
 
     modified_bspline.manageTEType(params, normals, modified_bspline.temotion);
+    cout << "params TE = " << Utils::print(params, "/", true);
 
     for (unsigned int i = 0; i < this->CParray.size(); i++)
     {
@@ -372,7 +373,7 @@ Bspline Bspline::modifyCP(const doubles &paramsoriginal) const
 
 Bspline Bspline::modifyCP_self(const doubles &paramsoriginal)
 {
-    doubles params = this->filterFixedParams(paramsoriginal);
+    doubles params = this->filterFixedParams(paramsoriginal, true);
     Points normals = this->getNormalsInCP();
 
     manageTEType(params, normals, temotion);

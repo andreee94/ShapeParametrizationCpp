@@ -76,7 +76,7 @@ class Bspline: public Evaluable, public Editable<Bspline>
         doubles uarray;
         Settings settings;
 
-        Point deBoor(int k, double u) const;
+        Point deBoor(unsigned int k, double u) const;
         static double interpolate_N(int l, int n, doubles uarray, double u);
         static Points interpolate_getCP(const Points &points, doubles uarray, int numCP, int n);
 

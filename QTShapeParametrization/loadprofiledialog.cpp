@@ -54,10 +54,11 @@ LoadProfileDialog::LoadProfileDialog(QWidget *parent) :
        chart->createDefaultAxes();
        chart->setTitle("Profile plot");
        chart->setMargins(QMargins(4,4,4,4));
-    chartView = new ChartView(chart);
+    chartView = new ChartView();
+        chartView->setChart(chart);
         chartView->setRenderHint(QPainter::Antialiasing);
         chartView->setDirectionZoom(ChartView::BothDirectionZoom);
-        chartView->setRubberBand(QChartView::RectangleRubberBand);
+        chartView->setRubberBand(new QRubberBand(QRubberBand::Shape::Rectangle));
     QGridLayout *gridColsChoice = new QGridLayout;
     comboXcol = new QComboBox();
         comboXcol->addItems(getColumnComboBox(numcolumns));

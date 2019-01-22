@@ -10,7 +10,9 @@ class Evaluable
 {
     public:
         /** Default constructor */
-        Evaluable()
+        Evaluable() :
+            parallel(true),
+            coresNumber(4)
         {
         }
 
@@ -19,9 +21,16 @@ class Evaluable
         virtual Point evaluate(double) const = 0;
         virtual Points evaluate(int steps) const = 0;
 
-    protected:
+        bool isParallel() const;
+        void setParallel(bool value);
 
-    private:
+        unsigned int getCoresNumber() const;
+        void setCoresNumber(unsigned int value);
+
+protected:
+        bool parallel = true;
+        unsigned int coresNumber;
+private:
 };
 
 #endif // EVALUABLE_H

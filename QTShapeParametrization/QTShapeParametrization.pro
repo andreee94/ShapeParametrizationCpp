@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT += core gui
-QT += charts
+QT += charts concurrent
 QT += quickcontrols2
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -28,6 +28,13 @@ INCLUDEPATH += $$PWD/../ShapeParametrizationCpp/include
 INCLUDEPATH += $$PWD/../ShapeParametrizationCpp/src
 
 CONFIG += c++11
+CONFIG += c++17
+QMAKE_CXXFLAGS += -std=c++17
+QMAKE_CXXFLAGS += -fopenmp
+QMAKE_LFLAGS += -fopenmp
+QMAKE_CFLAGS_RELEASE += -fopenmp
+QMAKE_CFLAGS_DEBUG += -fopenmp
+LIBS += -fopenmp
 
 SOURCES += \
         main.cpp \
@@ -42,7 +49,9 @@ SOURCES += \
     mychartview.cpp \
     RangeSlider.cpp \
     rangesliderlayout.cpp \
-    MultiSliderView.cpp
+    MultiSliderView.cpp \
+    code.cpp \
+    bsplinetask.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -57,7 +66,8 @@ HEADERS += \
     mychart.h \
     RangeSlider.h \
     rangesliderlayout.h \
-    MultiSliderView.h
+    MultiSliderView.h \
+    bsplinetask.h
     mychart.h
 
 

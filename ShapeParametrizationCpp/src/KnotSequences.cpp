@@ -12,9 +12,21 @@ typedef std::vector<double> doubles;
 typedef std::vector<Point> Points;
 typedef std::vector<BaseKnotSequence*> Knots;
 
+KnotSequences::KnotSequences(const KnotSequences &knotSequences)
+{
+    this->knots = knotSequences.knots;
+}
+
 KnotSequences::KnotSequences(Knots knots)
 {
     this->knots = knots;
+}
+
+KnotSequences &KnotSequences::operator=(const KnotSequences &other)
+{
+    if (this == &other) return *this; // handle self assignment
+    this->knots = other.knots;
+    return *this;
 }
 
 doubles KnotSequences::getSequence(doubles params) const
@@ -25,7 +37,7 @@ doubles KnotSequences::getSequence(doubles params) const
     // for each knot extract params ang generate the sequence
     //for (BaseKnotSequence* item : this->knots)
     cout << this->knots.size();
-    for (int i = 0; i < this->knots.size(); i++)
+    for (unsigned int i = 0; i < this->knots.size(); i++)
     {
         // extract params
 

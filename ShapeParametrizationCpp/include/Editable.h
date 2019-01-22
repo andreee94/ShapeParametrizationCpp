@@ -5,6 +5,7 @@
 #include <cmath>
 #include <Utils.h>
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 
@@ -71,19 +72,21 @@ class Editable
             return getExtremeMax_self();
         }
 
-        doubles filterFixedParams(const doubles& params)
+        doubles filterFixedParams(const doubles& params, bool exceptTE=false) const
         {
+            unsigned int padding = exceptTE ? 2 : 0;
             doubles res;
             res.reserve(params.size());
-            for (int i = 0; i< params.size(); i++)
-            {
-                res[i] = Utils::contains<int>(this->adjustableIndices, i) ? params[i] : 0;
-            }
+            for (unsigned int i = 0; i< padding; i++)
+                res.push_back(params[i]);
+            for (unsigned int i = 0 + padding; i< params.size() - padding; i++)
+                res.push_back(Utils::contains<int>(this->adjustableIndices, i) ? params[i] : 0);
+            for (unsigned int i = params.size() - padding; i< params.size(); i++)
+                res.push_back(params[i]);
             return res;
         }
 
-
-        doubles fillFixedParams(const doubles& params, int numCP)
+        doubles fillFixedParams(const doubles& params, int numCP) const
         {
             doubles res(numCP, 0); // set everything to zero
             for (int i = 0; i < params.size(); i++)
@@ -96,10 +99,8 @@ class Editable
 
         void manageTEType(doubles& params, Points &normals, TEMotion temotion) const
         {
-            if (temotion == TEMotion::NONE)
-                return;
             int end = params.size();
-            int index;
+            int index = -1;
             if (temotion == TEMotion::RIGID) // we will set everything to 0
                 index = -1;
             else if (temotion == TEMotion::FIRSTPOINT) // we will set everything to 0
@@ -113,20 +114,31 @@ class Editable
             else if (temotion == TEMotion::AUTO) // we will set everything to 0
             {
                 ints free_indexes = {0, 1, end - 1, end - 2}; // fill with TE control points
-                for (unsigned int i = 0; i < free_indexes.size(); i++)
-                    if (!Utils::contains(adjustableIndices, free_indexes[i])) // if point of index i is not adjustable, remove it.
-                        free_indexes.erase(free_indexes.begin() + i);
+                // delete items which are not contained in adjustableIndices
+                free_indexes.erase(
+                            std::remove_if(free_indexes.begin(), free_indexes.end(),
+                               [this] (int i)
+                                {
+                                    return !Utils::contains(adjustableIndices, i);
+                                }),
+                            free_indexes.end());
                 if (free_indexes.size() > 1) // for auto recognition just one free point is required
-                    return;
-                if (free_indexes.size() < 1) // all points are fixed
-                    return;
-                index = free_indexes.at(0); // get the only free point index
+                    temotion = TEMotion::NONE;
+                else if (free_indexes.size() < 1) // all points are fixed
+                    index = -1;
+                else
+                    index = free_indexes.at(0); // get the only free point index
+            }
+            if (temotion == TEMotion::NONE)
+            {
+                params = filterFixedParams(params, false); // apply filtering also at TE
+                return;
             }
             ints te_indexes = {0, 1, end - 1, end - 2}; // fill with TE control points
             for (int ind : te_indexes)
             {
                 params[ind] = index >= 0 ? params[index] : 0;
-                normals[ind] = index >= 0 ? normals[index] : Point(0, 0);
+                normals[ind] = index >= 0 ? normals[index] : normals[ind]; //Point(0, 0);
             }
         }   
 

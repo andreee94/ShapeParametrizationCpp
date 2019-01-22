@@ -6,9 +6,16 @@
 #include <QtCharts>
 #include <QLayoutItem>
 #include <QGraphicsSimpleTextItem>
+#include "Utils.h"
 
-ChartView::ChartView(QChart *chart, QWidget *parent) :
-    QChartView(chart, parent),
+using namespace QtCharts;
+
+ChartView::~ChartView()
+{
+}
+
+ChartView::ChartView(QWidget *parent)
+    : QChartView(new QChart(), parent),
     m_isTouching(false)
 {
     setDragMode(QGraphicsView::NoDrag);
@@ -43,6 +50,16 @@ void ChartView::mousePressEvent(QMouseEvent *event)
             event->accept();
         }
 
+    if (event->button() == Qt::LeftButton && rubberBand)
+    {
+        startingDragPoint = event->pos();
+        rubberBand = new QRubberBand(QRubberBand::Shape::Rectangle, this);
+        rubberBand->setGeometry(QRect(startingDragPoint, QSize()).normalized()); // init empty rectangle with origin in starting point
+        rubberBand->setEnabled(true);
+        rubberBand->show();
+    }
+
+    manageClicked(event);
     QChartView::mousePressEvent(event);
 }
 
@@ -60,87 +77,26 @@ void ChartView::mouseMoveEvent(QMouseEvent *event)
         }
     if (showTooltip())
         manageTooltip(event);
+    if (rubberBand && rubberBand->isVisible())// && event->button() & Qt::LeftButton)
+    {
+        rubberBand->setGeometry(QRect(startingDragPoint, event->pos()).normalized());
+    }
     QChartView::mouseMoveEvent(event);
 }
-
-void ChartView::manageTooltip(QMouseEvent * event)
-{
-    if (popup)
-    {
-        bool foundsomething = false;
-        //QPointF mousePoint = chart()->mapToValue(event->pos());
-        if (chart()->series().size() > 0)
-        {
-            if (qobject_cast<QScatterSeries*>(chart()->series().at(0))) // series is made by points
-            {
-                QList<QPointF> points = qobject_cast<QScatterSeries*>(chart()->series().at(0))->points();
-                for (QPointF point : points)
-                {
-                    if (QLineF(event->pos(), chart()->mapToPosition(point)).length() < 12) // less than 10 px
-                    {
-                        QString text;
-                        text.append(popupShowX ? QString::number(point.x(), 'g', popupPrecision) : "");
-                        text.append(popupShowX && popupShowY ? ", " : "");
-                        text.append(popupShowY ? QString::number(point.y(), 'g', popupPrecision) : "");
-                        popup->setText(text);
-                        proxy->setPos(chart()->mapToPosition(point) - QPointF(popup->width() / 2, 10 + popup->height()));
-                        foundsomething = true;
-                    }
-                }
-            }
-        }
-        proxy->widget()->setVisible(foundsomething);
-    }
-}
-
-int ChartView::getPopupPrecision() const
-{
-    return popupPrecision;
-}
-
-void ChartView::setPopupPrecision(int value)
-{
-    popupPrecision = value;
-}
-
-bool ChartView::getPopupShowY() const
-{
-    return popupShowY;
-}
-
-void ChartView::setPopupShowY(bool value)
-{
-    popupShowY = value;
-}
-
-bool ChartView::getPopupShowX() const
-{
-    return popupShowX;
-}
-
-void ChartView::setPopupShowX(bool value)
-{
-    popupShowX = value;
-}
-
-QLabel *ChartView::getPopup() const
-{
-    return popup;
-}
-
-void ChartView::setPopup(QLabel *value)
-{
-    this->popup = value;
-    this->popup->setVisible(false);
-    this->proxy = scene()->addWidget(popup);
-}
-
 
 void ChartView::mouseReleaseEvent(QMouseEvent *event)
 {
     QApplication::restoreOverrideCursor();
+
+    if (rubberBand && rubberBand->isVisible() && event->button() == Qt::LeftButton)
+    {
+        if (QLineF(event->pos(), startingDragPoint).length() > 10) // zoom only if region is sufficiently big
+            chart()->zoomIn(rubberBand->geometry());
+        rubberBand->hide();
+    }
     QChartView::mouseReleaseEvent(event);
 }
+
 
 void ChartView::keyPressEvent(QKeyEvent *event)
 {
@@ -170,9 +126,9 @@ void ChartView::keyPressEvent(QKeyEvent *event)
         break;
     case Qt::Key_0:
     case 96: //numpad 0
-        chart()->resetTransform();
-        chart()->resetMatrix();
-        chart()->createDefaultAxes();
+        //chart()->resetTransform();
+        //chart()->resetMatrix();
+        //chart()->createDefaultAxes();
         chart()->zoomReset();
         break;
     default:
@@ -199,6 +155,173 @@ void ChartView::wheelEvent(QWheelEvent *event)
             chart()->zoomIn(r);
         }
     QChartView::wheelEvent(event);
+}
+
+void ChartView::manageTooltip(QMouseEvent * event)
+{
+    if (popup)
+    {
+        bool foundsomething = false;
+        //QPointF mousePoint = chart()->mapToValue(event->pos());
+        if (popup_map.size() > 0)
+        {
+            QPointF cursor_px = event->pos();
+            QPointF cursor_xy = chart()->mapToPosition(cursor_px);
+
+            for( auto const& [series, gettext] : popup_map )
+            {
+                if (series->isVisible())
+                {
+                    //QList<QPointF> points = qobject_cast<QScatterSeries*>(chart()->series().at(0))->points();
+                    QList<QPointF> points = series->points();
+
+                    for (auto const [index, point_xy] : Utils::enumerate(points))
+                    {
+                        QPointF point_px = chart()->mapToPosition(point_xy);
+                        if (QLineF(cursor_px, point_px).length() < popupDistanceThresholdPX) // less than 10 px
+                        {
+                              QString text = (*gettext)(popup, point_px, point_xy, cursor_px, cursor_xy, index);
+                              popup->setText(text);
+                              proxy->setPos(point_px - QPointF(popup->width() / 2, 10 + popup->height()));
+                              foundsomething = true;
+                        }
+                    }
+                }
+            }
+        }
+        proxy->widget()->setVisible(foundsomething);
+    }
+}
+
+void ChartView::manageClicked(QMouseEvent *event)
+{
+    if (clickable_map.size() > 0)
+    {
+        if (event->buttons() & Qt::LeftButton)
+        {
+            QPointF cursor_px = event->pos();
+            //QPointF cursor_xy = chart()->mapToPosition(cursor_px);
+
+            for( auto const& [series1, series2] : clickable_map )
+            {
+                if (series1->isVisible() || series2->isVisible())
+                {
+                    //QList<QPointF> points = qobject_cast<QScatterSeries*>(chart()->series().at(0))->points();
+                    QList<QPointF> points;
+                    std::optional<QPointF> point;
+                    bool from1to2 = false;
+                    points = series1->points();
+                    for (auto const [index, point1_xy] : Utils::enumerate(points))
+                    {
+                        QPointF point_px = chart()->mapToPosition(point1_xy);
+                        if (QLineF(cursor_px, point_px).length() < clickableDistanceThresholdPX) // less than 10 px
+                        {
+                            point = point1_xy;
+                            from1to2 = true; // found in series 1 so
+                        }
+                    }
+                    if (!point) // not found in series1
+                    {
+                        points = series2->points();
+                        for (auto const [index, point2_xy] : Utils::enumerate(points))
+                        {
+                            QPointF point_px = chart()->mapToPosition(point2_xy);
+                            if (QLineF(cursor_px, point_px).length() < clickableDistanceThresholdPX) // less than 10 px
+                            {
+                                point = point2_xy;
+                                from1to2 = false; // found in series 1 so
+                            }
+                        }
+                    }
+                    if (point) // click close to a point
+                    {
+                        if (from1to2)
+                        {
+                            series1->remove(point.value());
+                            series2->append(point.value());
+                        }
+                        else
+                        {
+                            series1->append(point.value());
+                            series2->remove(point.value());
+                        }
+                        emit clickableEvent(series1, series2, point.value(), from1to2);
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+void ChartView::addTooltip(QScatterSeries * key, TooltipTextFunction * value)
+{
+    popup_map[key] = value;
+}
+
+void ChartView::addToggleable(QScatterSeries * key)
+{
+    // create an empty series for when toggling
+    clickable_map[key] = new QScatterSeries;
+}
+
+void ChartView::addToggleable(QScatterSeries * key, QScatterSeries * value)
+{
+    // create an empty series for when toggling
+    clickable_map[key] = value;
+}
+
+
+QRubberBand *ChartView::getRubberBand() const
+{
+    return rubberBand;
+}
+
+void ChartView::setRubberBand(QRubberBand *value)
+{
+    rubberBand = value;
+}
+
+int ChartView::getClickableDistanceThresholdPX() const
+{
+    return clickableDistanceThresholdPX;
+}
+
+void ChartView::setClickableDistanceThresholdPX(int value)
+{
+    clickableDistanceThresholdPX = value;
+}
+
+int ChartView::getPopupDistanceThresholdPX() const
+{
+    return popupDistanceThresholdPX;
+}
+
+void ChartView::setPopupDistanceThresholdPX(int value)
+{
+    popupDistanceThresholdPX = value;
+}
+
+int ChartView::getPopupPrecision() const
+{
+    return popupPrecision;
+}
+
+void ChartView::setPopupPrecision(int value)
+{
+    popupPrecision = value;
+}
+
+QLabel *ChartView::getPopup() const
+{
+    return popup;
+}
+
+void ChartView::setPopup(QLabel *value)
+{
+    this->popup = value;
+    this->popup->setVisible(false);
+    this->proxy = scene()->addWidget(popup);
 }
 
 bool ChartView::showTooltip() const

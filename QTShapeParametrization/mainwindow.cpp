@@ -8,10 +8,41 @@
 #include <QtCharts>
 #include <QLayoutItem>
 #include <vector>
+#include "Utils.h"
+#include <QDebug>
+#include <QElapsedTimer>
+#include <qtconcurrentrun.h>
+
 //#include <QtQuickControls2>
 
 typedef std::vector<Point> Points;
 typedef std::vector<double> doubles;
+
+
+class CPIndexTooltipText : public TooltipTextFunction {
+    public:
+        CPIndexTooltipText(Bspline &bspline)
+            : bspline(bspline) {}
+
+      virtual QString operator() (QLabel *popup, const QPointF &point_px, const QPointF &point_xy, const QPointF &cursor_px, const QPointF &cursor_xy, int index)
+      {
+            Points CParray = bspline.getCParray();
+            int absolute_index = std::find(CParray.begin(), CParray.end(), Point(point_xy.x(), point_xy.y())) - CParray.begin();
+
+            QColor color = Utils::contains(bspline.getAdjustableIndices(), absolute_index) ? MainWindow::Green() : MainWindow::Red();
+            QString colorstr = QString("rgb(").append(QString::number(color.red())).append(", ").append(QString::number(color.green())).append(", ").append(QString::number(color.blue())).append(")");
+
+            popup->setStyleSheet("QLabel {background: white; color : " + colorstr +"; padding : 4px; border: 2px solid " + colorstr +"; border-radius: 10px;}");
+            popup->setAlignment(Qt::AlignCenter);
+
+            QString text;
+            text.append("CP");
+            text.append(QString::number(absolute_index + 1));
+            return text;
+      }
+
+       Bspline bspline;
+};
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
@@ -43,6 +74,284 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     //delete ui;
+}
+
+void MainWindow::longFunctionStart(const QString progresstext)
+{
+    progressBarLabel->setText(progresstext);
+    progressBar->show();
+    progressBarLabel->show();
+    qDebug() << "longFunctionStart =  " << progresstext << endl;
+}
+
+void MainWindow::longFunctionEnd()
+{
+    progressBar->hide();
+    progressBarLabel->hide();
+    qDebug() << "longFunctionEnd =  " << endl;
+}
+
+void MainWindow::bsplineTaskStarted(const BsplineTask &task)
+{
+    progressBarLabel->setText(task.messange);
+    progressBar->show();
+    progressBarLabel->show();
+    qDebug() << "bsplineTaskStarted =  " << task.messange << endl;
+}
+
+void MainWindow::bsplineTaskFinished(const BsplineTask &task)
+{
+
+}
+
+void MainWindow::bsplineAllTasksFinished()
+{
+    progressBar->hide();
+    progressBarLabel->hide();
+    qDebug() << "bsplineAllTasksFinished =  " << endl;
+}
+
+void MainWindow::optimizationKnotsFinished(const BsplineTask &task, const Bspline &bspline)
+{
+
+}
+
+void MainWindow::interpolationCPFinished(const BsplineTask &task, const Bspline &bspline)
+{
+    this->bspline = new Bspline(bspline);
+}
+
+void MainWindow::evaluationPointsFinished(const BsplineTask &task, const Points &points)
+{
+    if (this->data.getFileName().size() > 0 && bspline && bspline->getCParray().size() > 0)
+    {
+        QElapsedTimer timer;
+        timer.start();
+
+        series_interpolatePoints->clear();
+        series_interpolatedCurve->clear();
+
+        Points controlpoints = bspline->getCParray();
+        QList<QPointF> points_adj = series_CP_adjustable->points();
+        QList<QPointF> points_fix = series_CP_fixed->points();
+
+        series_CP_fixed->clear();
+        series_CP_adjustable->clear();
+
+        for (unsigned int i = 0; i < controlpoints.size(); i++)
+        {
+            if (points_adj.contains(QPointF(controlpoints[i].getx(), controlpoints[i].gety())))
+                series_CP_adjustable->append(controlpoints[i].getx(), controlpoints[i].gety());
+            else // by default fixed
+                series_CP_fixed->append(controlpoints[i].getx(), controlpoints[i].gety());
+        }
+
+        qDebug() << "time 2.1 = " << timer.elapsed() << endl;
+
+        qDebug() << "time 2.2 = " << timer.elapsed() << endl;
+
+        for (unsigned int i = 0; i < points.size(); i++)
+        {
+            Point p = points.operator[](i);
+            series_interpolatePoints->append(p.getx(), p.gety());
+            series_interpolatedCurve->append(p.getx(), p.gety());
+        }
+
+        qDebug() << "time 2.3 = " << timer.elapsed() << endl;
+
+        QPen pen =QPen(Blue());
+        pen.setWidth(2);
+
+        series_CP_fixed->setMarkerSize(10);
+        series_CP_fixed->setColor(Red()); //series->pen().color());
+        series_CP_fixed->setBorderColor(Red()); //series->pen().color());
+
+        series_CP_adjustable->setMarkerSize(10);
+        series_CP_adjustable->setColor(Green()); //series->pen().color());
+        series_CP_adjustable->setBorderColor(Green()); //series->pen().color());
+
+        series_interpolatePoints->setMarkerSize(5);
+        series_interpolatePoints->setColor(Blue()); //series->pen().color());
+        series_interpolatePoints->setBorderColor(Blue()); //series->pen().color());
+
+        series_interpolatedCurve->setPen(pen);
+
+        if (!chartView->chart()->series().contains(series_CP_adjustable))
+            chartView->chart()->addSeries(series_CP_adjustable);
+        if (!chartView->chart()->series().contains(series_CP_fixed))
+            chartView->chart()->addSeries(series_CP_fixed);
+        if (!chartView->chart()->series().contains(series_interpolatePoints))
+            chartView->chart()->addSeries(series_interpolatePoints);
+        if (!chartView->chart()->series().contains(series_interpolatedCurve))
+            chartView->chart()->addSeries(series_interpolatedCurve);
+        chartView->chart()->createDefaultAxes();
+        updateCheckBoxEnable();
+        checkBoxCPChanged(checkBoxCP->isChecked());
+        checkBoxInterpolatedCurveChanged(checkBoxInterpolatedCurve->isChecked());
+        checkBoxInterpolatedPointsChanged(checkBoxInterpolatedPoints->isChecked());
+
+        qDebug() << "time 2.4 = " << timer.elapsed() << endl;
+        // set tooltip
+        chartView->addTooltip(series_CP_fixed, new CPIndexTooltipText(*bspline));
+        chartView->addTooltip(series_CP_adjustable, new CPIndexTooltipText(*bspline));
+    }
+}
+
+void MainWindow::evaluationTEFinished(const BsplineTask &task, const Points &tepoints)
+{
+    if (this->data.getFileName().size() > 0 && bspline && bspline->getCParray().size() > 0)
+    {
+        series_TE->clear();
+        //Points tepoints = bspline->evaluateTE(getTENumPoints(), getTEShape(), true);
+
+        for (unsigned int i = 0; i < tepoints.size(); i++)
+        {
+            Point p = tepoints.operator[](i);
+            series_TE->append(p.getx(), p.gety());
+        }
+        QPen pen =QPen(Blue());
+        pen.setWidth(2);
+
+        series_TE->setPen(pen);
+
+        if (!chartView->chart()->series().contains(series_TE))
+            chartView->chart()->addSeries(series_TE);
+        chartView->chart()->createDefaultAxes();
+        updateCheckBoxEnable();
+        checkBoxTEChanged(checkBoxTE->isChecked());
+    }
+}
+
+void MainWindow::evaluationMinFinished(const BsplineTask &task, const Points & points)
+{
+    if (this->data.getFileName().size() > 0 && bspline && bspline->getCParray().size() > 0)
+    {
+        if (series_minParams->upperSeries())
+        {
+            series_minParams->upperSeries()->clear();
+            series_minParams->lowerSeries()->clear();
+        }
+        bspline->setAdjustableIndices(getAdjustableIndexes());
+        bspline->setTEMotion(getTEMotion());
+        //bspline->fillFixedParams({}, getNumCP());
+        Points minBsplinePoints = bspline->getExtremeMin(getMinParams()).evaluateWithTE(getNumPoints(), getTENumPoints(), getTEShape(), true);
+
+        Points lowermin_p, uppermin_p;
+        QLineSeries *lowermin_s = new QLineSeries;
+        QLineSeries *uppermin_s = new QLineSeries;
+
+        Utils::getupperlowercurves(minBsplinePoints, lowermin_p, uppermin_p);
+
+        appendPointsToSeries(lowermin_s, lowermin_p);
+        appendPointsToSeries(uppermin_s, uppermin_p);
+
+        series_minParams->setLowerSeries(lowermin_s);
+        series_minParams->setUpperSeries(uppermin_s);
+
+        QColor colorfillmin = Orange(); // orange
+        colorfillmin.setAlpha(150);
+
+        QPen penmin =QPen(Orange());
+        penmin.setWidth(2);
+
+        QBrush brushmin = QBrush(colorfillmin);
+
+        series_minParams->setPen(penmin);
+        series_minParams->setBrush(brushmin);
+
+        if (!chartView->chart()->series().contains(series_minParams))
+            chartView->chart()->addSeries(series_minParams);
+        chartView->chart()->createDefaultAxes();
+        updateCheckBoxEnable();
+        checkBoxMinParamsChanged(checkBoxMinParams->isChecked());
+    }
+}
+
+void MainWindow::evaluationMaxFinished(const BsplineTask & task, const Points & points)
+{
+    if (this->data.getFileName().size() > 0 && bspline && bspline->getCParray().size() > 0)
+    {
+        if (series_maxParams->upperSeries())
+        {
+            series_maxParams->upperSeries()->clear();
+            series_maxParams->lowerSeries()->clear();
+        }
+        bspline->setAdjustableIndices(getAdjustableIndexes());
+        bspline->setTEMotion(getTEMotion());
+        //bspline->fillFixedParams({}, getNumCP());
+        Points maxBsplinePoints = bspline->getExtremeMax(getMaxParams()).evaluateWithTE(getNumPoints(), getTENumPoints(), getTEShape(), true);
+
+        Points lowermax_p, uppermax_p;
+        QLineSeries *lowermax_s = new QLineSeries;
+        QLineSeries *uppermax_s = new QLineSeries;
+
+        Utils::getupperlowercurves(maxBsplinePoints, lowermax_p, uppermax_p);
+
+        appendPointsToSeries(lowermax_s, lowermax_p);
+        appendPointsToSeries(uppermax_s, uppermax_p);
+
+        series_maxParams->setLowerSeries(lowermax_s);
+        series_maxParams->setUpperSeries(uppermax_s);
+
+        QColor colorfillmax = Brown(); // brown
+        colorfillmax.setAlpha(150);
+
+        QPen penmax =QPen(Brown());
+        penmax.setWidth(2);
+
+        QBrush brushmax = QBrush(colorfillmax);
+
+        series_maxParams->setPen(penmax);
+        series_maxParams->setBrush(brushmax);
+
+        if (!chartView->chart()->series().contains(series_maxParams))
+            chartView->chart()->addSeries(series_maxParams);
+        chartView->chart()->createDefaultAxes();
+        updateCheckBoxEnable();
+        checkBoxMaxParamsChanged(checkBoxMaxParams->isChecked());
+        // set tooltip
+        //chartView->addTooltip(series_CP_fixed, new CPIndexTooltipText(*bspline));
+        //chartView->addTooltip(series_CP_adjustable, new CPIndexTooltipText(*bspline));
+    }
+}
+
+void MainWindow::evaluationNormalsFinished(const BsplineTask & task,  const Points & normals)
+{
+
+}
+
+void MainWindow::evaluationTangentsFinished(const BsplineTask & task, const Points &tangents)
+{
+
+}
+
+Bspline MainWindow::runLongTask(QFuture<Bspline> future, QString progressMsg)
+{
+    this->longFunctionStart(progressMsg);
+    //connect(&futureWatcherBspline, &QFutureWatcher<void>::started, this, [this, progressMsg]() {this->longFunctionStart(progressMsg); });
+    connect(&futureWatcherBspline, &QFutureWatcher<void>::finished, this, &MainWindow::longFunctionEnd);
+    futureWatcherBspline.setFuture(future);
+    //futureWatcherBspline.waitForFinished();
+    return futureWatcherBspline.result();
+}
+
+Points MainWindow::runLongTask(QFuture<Points> future, QString progressMsg)
+{
+    this->longFunctionStart(progressMsg);
+    //connect(&futureWatcherPoints, &QFutureWatcher<void>::started, this, [this, progressMsg]() {this->longFunctionStart(progressMsg); });
+    connect(&futureWatcherPoints, &QFutureWatcher<void>::finished, this, &MainWindow::longFunctionEnd);
+    futureWatcherPoints.setFuture(future);
+    //futureWatcherPoints.waitForFinished();
+    return futureWatcherPoints.result();
+}
+
+void MainWindow::runLongTask(QFuture<void> future, QString progressMsg, const std::function <void (void)>& resultCallback)
+{
+    this->longFunctionStart(progressMsg);
+    //connect(&futureWatcherVoid, &QFutureWatcher<void>::started, this, [this, progressMsg]() {this->longFunctionStart(progressMsg); });
+    connect(&futureWatcherVoid, &QFutureWatcher<void>::finished, this, [this, resultCallback](){ resultCallback(); longFunctionEnd(); });
+    futureWatcherVoid.setFuture(future);
+    //futureWatcherVoid.waitForFinished();
 }
 
 
@@ -232,10 +541,25 @@ QLayout* MainWindow::generateChartLayout()
        chart->legend()->hide();
        chart->addSeries(series);
        chart->createDefaultAxes();
-    chartView = new ChartView(chart);
+    chartView = new ChartView();
+        chartView->setChart(chart);
         chartView->setRenderHint(QPainter::Antialiasing);
         chartView->setDirectionZoom(ChartView::BothDirectionZoom);
-        chartView->setRubberBand(QChartView::RectangleRubberBand);
+        chartView->setRubberBand(new QRubberBand(QRubberBand::Shape::Rectangle, chartView));
+
+    progressBarLayout = new QHBoxLayout;
+    progressBar = new QProgressBar;
+    progressBarLabel = new QLabel("Computing Bspline...");
+    progressBarLayout->addWidget(progressBarLabel);
+    progressBarLayout->addWidget(progressBar);
+    progressBarLayout->setContentsMargins(QMargins(14, 2 , 14 , 2));
+    progressBar->setRange(0,0);
+    progressBar->setValue(0);
+    progressBarLabel->hide();
+    progressBar->hide();
+    //longFunctionStart("test");
+
+    //QGraphicsProxyWidget *proxy = chart->scene()->addWidget(progressBarRootWidget);
 
     QGroupBox *groupCheckBox = new QGroupBox(tr("Plots visibility"));
     QGridLayout *checkBoxVLayout = new QGridLayout;
@@ -285,14 +609,36 @@ QLayout* MainWindow::generateChartLayout()
 
     chartView->chart()->addSeries(series_maxParams);
     chartView->chart()->addSeries(series_minParams);
-    chartView->chart()->addSeries(series_CP);
+    chartView->chart()->addSeries(series_CP_fixed);
+    chartView->chart()->addSeries(series_CP_adjustable);
     chartView->chart()->addSeries(series_originalPoints);
     chartView->chart()->addSeries(series_interpolatePoints);
     chartView->chart()->addSeries(series_originalCurve);
     chartView->chart()->addSeries(series_TE);
     chartView->chart()->addSeries(series_interpolatedCurve);
 
+    series_maxParams->setUseOpenGL(true);
+    series_minParams->setUseOpenGL(true);
+    series_CP_fixed->setUseOpenGL(false);
+    series_CP_adjustable->setUseOpenGL(false);
+    series_originalPoints->setUseOpenGL(true);
+    series_interpolatePoints->setUseOpenGL(true);
+    series_originalCurve->setUseOpenGL(true);
+    series_TE->setUseOpenGL(true);
+    series_interpolatedCurve->setUseOpenGL(true);
+
+    QString colorstr = QString("rgb(").append(QString::number(Red().red())).append(", ").append(QString::number(Red().green())).append(", ").append(QString::number(Red().blue())).append(")");
+    QLabel *popup = new QLabel("    ");
+    popup->setAlignment(Qt::AlignCenter);
+    popup->setStyleSheet("QLabel {background: white; color : " + colorstr +"; padding : 4px; border: 2px solid " + colorstr +"; border-radius: 10px;}");
+    chartView->setShowTooltip(true);
+    chartView->setPopup(popup);
+    //chartView->addTooltip(series_CP_fixed, new CPIndexTooltipText(bspline));
+    //chartView->addTooltip(series_CP_adjustable, new CPIndexTooltipText(bspline));
+    chartView->addToggleable(series_CP_fixed, series_CP_adjustable);
+
     groupCheckBox->setLayout(checkBoxVLayout);
+    rightLayout->addLayout(progressBarLayout);
     rightLayout->addWidget(chartView);
     rightLayout->addWidget(groupCheckBox);
     return rightLayout;
@@ -326,7 +672,8 @@ QWidget* MainWindow::generateKnotChartLayout()
        //((QValueAxis*)chart->axisX())->applyNiceNumbers();
        //((QValueAxis*)chart->axisX())->setTickType(QValueAxis::TickType::TicksDynamic);
        ((QValueAxis*)chart->axisX())->setTickCount(23);
-    knotsChartView = new ChartView(chart);
+    knotsChartView = new ChartView();
+        knotsChartView->setChart(chart);
         knotsChartView->setRenderHint(QPainter::Antialiasing);
         knotsChartView->setFixedHeight(110);
         knotsChartView->setCanZoom(false);
@@ -338,11 +685,10 @@ QWidget* MainWindow::generateKnotChartLayout()
     QColor blue = QColor(0x1E, 0x90, 0xFF);
     QString bluestr = QString("rgb(").append(QString::number(blue.red())).append(", ").append(QString::number(blue.green())).append(", ").append(QString::number(blue.blue())).append(")");
     QLabel *popup = new QLabel("       ");
-    popup->setAlignment(Qt::AlignCenter);popup->setStyleSheet("QLabel {background: white; color : " + bluestr +"; padding : 4px; border: 2px solid " + bluestr +"; border-radius: 10px;}");
+    popup->setAlignment(Qt::AlignCenter);
+    popup->setStyleSheet("QLabel {background: white; color : " + bluestr +"; padding : 4px; border: 2px solid " + bluestr +"; border-radius: 10px;}");
     knotsChartView->setPopup(popup);
-    knotsChartView->setPopupShowX(true);
-    knotsChartView->setPopupShowY(false);
-    knotsChartView->setPopupPrecision(3);
+    knotsChartView->addTooltip(knotsSeries, new XTooltipText(3));
     return knotsChartView;
 }
 
@@ -400,38 +746,72 @@ void MainWindow::updateBspline()
 {
     if (this->data.getFileName().size() > 0 && bspline && bspline->getCParray().size() > 0)
     {
-        series_CP->clear();
+        QElapsedTimer timer;
+        timer.start();
+
         series_interpolatePoints->clear();
         series_interpolatedCurve->clear();
 
         Points controlpoints = bspline->getCParray();
+        QList<QPointF> points_adj = series_CP_adjustable->points();
+        QList<QPointF> points_fix = series_CP_fixed->points();
+
+        series_CP_fixed->clear();
+        series_CP_adjustable->clear();
+
         for (unsigned int i = 0; i < controlpoints.size(); i++)
         {
-            series_CP->append(controlpoints[i].getx(), controlpoints[i].gety());
+            if (points_adj.contains(QPointF(controlpoints[i].getx(), controlpoints[i].gety())))
+                series_CP_adjustable->append(controlpoints[i].getx(), controlpoints[i].gety());
+            else // by default fixed
+                series_CP_fixed->append(controlpoints[i].getx(), controlpoints[i].gety());
         }
 
-        Points points = bspline->evaluate(bsplineNumPointsEdit->text().toInt());
-        for (unsigned int i = 0; i < points.size(); i++)
-        {
-            series_interpolatePoints->append(points[i].getx(), points[i].gety());
-            series_interpolatedCurve->append(points[i].getx(), points[i].gety());
-        }
+        qDebug() << "time 2.1 = " << timer.elapsed() << endl;
 
-        QPen pen =QPen(QColor(Blue));
+
+        int numsteps = bsplineNumPointsEdit->text().toInt();
+        Points points = runLongTask(QtConcurrent::run([this, numsteps ]() {return this->bspline->evaluate(numsteps);}), "Computing the interpolated curve..");
+
+        //Points points = bspline->evaluate(bsplineNumPointsEdit->text().toInt());
+
+        //cout << Utils::print(points, "  ", true);
+
+        qDebug() << "time 2.2 = " << timer.elapsed() << endl;
+
+//        runLongTask(QtConcurrent::run([this, points ]()
+//        {
+//            QThread::sleep(3);
+            for (unsigned int i = 0; i < points.size(); i++)
+            {
+                series_interpolatePoints->append(points[i].getx(), points[i].gety());
+                series_interpolatedCurve->append(points[i].getx(), points[i].gety());
+            }
+//        }), "Adding points to the chart..");
+
+        qDebug() << "time 2.3 = " << timer.elapsed() << endl;
+
+        QPen pen =QPen(Blue());
         pen.setWidth(2);
 
-        series_CP->setMarkerSize(10);
-        series_CP->setColor(Red); //series->pen().color());
-        series_CP->setBorderColor(Red); //series->pen().color());
+        series_CP_fixed->setMarkerSize(10);
+        series_CP_fixed->setColor(Red()); //series->pen().color());
+        series_CP_fixed->setBorderColor(Red()); //series->pen().color());
+
+        series_CP_adjustable->setMarkerSize(10);
+        series_CP_adjustable->setColor(Green()); //series->pen().color());
+        series_CP_adjustable->setBorderColor(Green()); //series->pen().color());
 
         series_interpolatePoints->setMarkerSize(5);
-        series_interpolatePoints->setColor(Blue); //series->pen().color());
-        series_interpolatePoints->setBorderColor(Blue); //series->pen().color());
+        series_interpolatePoints->setColor(Blue()); //series->pen().color());
+        series_interpolatePoints->setBorderColor(Blue()); //series->pen().color());
 
         series_interpolatedCurve->setPen(pen);
 
-        if (!chartView->chart()->series().contains(series_CP))
-            chartView->chart()->addSeries(series_CP);
+        if (!chartView->chart()->series().contains(series_CP_adjustable))
+            chartView->chart()->addSeries(series_CP_adjustable);
+        if (!chartView->chart()->series().contains(series_CP_fixed))
+            chartView->chart()->addSeries(series_CP_fixed);
         if (!chartView->chart()->series().contains(series_interpolatePoints))
             chartView->chart()->addSeries(series_interpolatePoints);
         if (!chartView->chart()->series().contains(series_interpolatedCurve))
@@ -441,6 +821,8 @@ void MainWindow::updateBspline()
         checkBoxCPChanged(checkBoxCP->isChecked());
         checkBoxInterpolatedCurveChanged(checkBoxInterpolatedCurve->isChecked());
         checkBoxInterpolatedPointsChanged(checkBoxInterpolatedPoints->isChecked());
+
+        qDebug() << "time 2.4 = " << timer.elapsed() << endl;
     }
 }
 
@@ -489,7 +871,7 @@ void MainWindow::updateTangentsNormals(bool changednumcp)
             series_tangents.clear();
         }
 
-        QPen pen =QPen(Red);
+        QPen pen =QPen(Red());
         pen.setWidth(2);
         Point start;
         Point end;
@@ -585,7 +967,7 @@ void MainWindow::updateCheckBoxEnable()
     checkBoxOriginalCurve->setEnabled(series_originalCurve->points().size() > 0);
     checkBoxInterpolatedPoints->setEnabled(series_interpolatePoints->points().size() > 0);
     checkBoxInterpolatedCurve->setEnabled(series_interpolatedCurve->points().size() > 0);
-    checkBoxCP->setEnabled(series_CP->points().size() > 0);
+    checkBoxCP->setEnabled(series_CP_fixed->points().size() + series_CP_adjustable->points().size() > 0);
     checkBoxTE->setEnabled(series_TE->points().size() > 0);
     checkBoxMaxParams->setEnabled(series_maxParams->lowerSeries()); //->pointsVector().size() > 0);
     checkBoxMinParams->setEnabled(series_minParams->lowerSeries()); //->pointsVector().size() > 0);
@@ -619,8 +1001,16 @@ void MainWindow::checkBoxInterpolatedCurveChanged(int state)
 
 void MainWindow::checkBoxCPChanged(int state)
 {
-    if (!state) series_CP->hide();
-    else series_CP->show();
+    if (!state)
+    {
+        series_CP_fixed->hide();
+        series_CP_adjustable->hide();
+    }
+    else
+    {
+        series_CP_fixed->show();
+        series_CP_adjustable->show();
+    }
 }
 
 void MainWindow::checkBoxTEChanged(int state)
@@ -673,8 +1063,9 @@ void MainWindow::updateMINMAX()
             series_maxParams->upperSeries()->clear();
             series_maxParams->lowerSeries()->clear();
         }
+        bspline->setAdjustableIndices(getAdjustableIndexes());
         bspline->setTEMotion(getTEMotion());
-        bspline->fillFixedParams({}, getNumCP());
+        //bspline->fillFixedParams({}, getNumCP());
         Points minBsplinePoints = bspline->getExtremeMin(getMinParams()).evaluateWithTE(getNumPoints(), getTENumPoints(), getTEShape(), true);
         Points maxBsplinePoints = bspline->getExtremeMax(getMaxParams()).evaluateWithTE(getNumPoints(), getTENumPoints(), getTEShape(), true);
 
@@ -698,15 +1089,15 @@ void MainWindow::updateMINMAX()
         series_maxParams->setLowerSeries(lowermax_s);
         series_maxParams->setUpperSeries(uppermax_s);
 
-        QColor colorfillmin = Orange; // orange
-        QColor colorfillmax = Brown; // brown
+        QColor colorfillmin = Orange(); // orange
+        QColor colorfillmax = Brown(); // brown
 
-        colorfillmin.setAlpha(100);
-        colorfillmax.setAlpha(100);
+        colorfillmin.setAlpha(150);
+        colorfillmax.setAlpha(150);
 
-        QPen penmin =QPen(Orange);
+        QPen penmin =QPen(Orange());
         penmin.setWidth(2);
-        QPen penmax =QPen(Brown);
+        QPen penmax =QPen(Brown());
         penmax.setWidth(2);
 
         QBrush brushmin = QBrush(colorfillmin);
@@ -725,6 +1116,9 @@ void MainWindow::updateMINMAX()
         updateCheckBoxEnable();
         checkBoxMinParamsChanged(checkBoxMinParams->isChecked());
         checkBoxMaxParamsChanged(checkBoxMaxParams->isChecked());
+        // set tooltip
+        chartView->addTooltip(series_CP_fixed, new CPIndexTooltipText(*bspline));
+        chartView->addTooltip(series_CP_adjustable, new CPIndexTooltipText(*bspline));
     }
 }
 
@@ -739,7 +1133,7 @@ void MainWindow::updateTE()
         {
             series_TE->append(tepoints[i].getx(), tepoints[i].gety());
         }
-        QPen pen =QPen(Blue);
+        QPen pen =QPen(Blue());
         pen.setWidth(2);
 
         series_TE->setPen(pen);
@@ -752,20 +1146,119 @@ void MainWindow::updateTE()
     }
 }
 
-void MainWindow::computeCP()
+void MainWindow::interpolatebspline()
 {
-    bool changedCPnumber = oldCPnumber != getNumCP();
     Bspline tempbspline = Bspline::interpolate(data.getPoints(), getNumCP(), getN(), getKnotSequence());
     bspline = &tempbspline;
-    updateBspline();
-    updateKnotSeries(getKnotSequence().getSequence({}));
-    if (checkBoxAutoMINMAX->isChecked())
-        updateMINMAX();
+}
+
+
+void MainWindow::computeCP()
+{
+    QElapsedTimer timer;
+    timer.start();
+
+    bool changedCPnumber = oldCPnumber != getNumCP();
+
+    interpolationTask = new BsplineTask(BsplineTaskType::INTERPOLATION_CP, "Computing best CP..");
+    interpolationTask->n = getN();
+    interpolationTask->numCP = getNumCP();
+    interpolationTask->data = &this->data;
+    interpolationTask->knotSequence = getKnotSequence();
+    //interpolationTask->knotSequence = new KnotSequences(getKnotSequence());
+
+    evaluationPointsTask = new BsplineTask(BsplineTaskType::EVALUATION_POINTS, "Evaluating points..");
+    //evaluationPointsTask->bspline = this->bspline;
+    evaluationPointsTask->numPoints = getNumPoints();
+    evaluationPointsTask->importBSplineByPrevious = true;
+
+    evaluationTETask = new BsplineTask(BsplineTaskType::EVALUATION_TE, "Evaluating trailing edge..");
+    //evaluationTETask->bspline = this->bspline;
+    evaluationTETask->TEshape = getTEShape();
+    evaluationTETask->TEnumPoints = getTENumPoints();
+    evaluationTETask->importBSplineByPrevious = true;
+
+    evaluationMINTask = new BsplineTask(BsplineTaskType::EVALUATION_MIN, "Evaluating min range bspline..");
+    //evaluationTETask->bspline = this->bspline;
+    evaluationMINTask->minparams = getMinParams();
+    evaluationMINTask->TEshape = getTEShape();
+    evaluationMINTask->TEnumPoints = getTENumPoints();
+    evaluationMINTask->numPoints = getNumPoints();
+    evaluationMINTask->importBSplineByPrevious = true;
+
+    evaluationMAXTask = new BsplineTask(BsplineTaskType::EVALUATION_MAX, "Evaluating max range bspline..");
+    //evaluationTETask->bspline = this->bspline;
+    evaluationMAXTask->maxparams = getMaxParams();
+    evaluationMAXTask->TEshape = getTEShape();
+    evaluationMAXTask->TEnumPoints = getTENumPoints();
+    evaluationMAXTask->numPoints = getNumPoints();
+    evaluationMAXTask->importBSplineByPrevious = true;
+
+    BsplineTaskManager *bsplinemanager = new BsplineTaskManager;
+    bsplinemanager->addTask(*interpolationTask);
+    bsplinemanager->addTask(*evaluationPointsTask);
     if (checkBoxAutoTE->isChecked())
-        updateTE();
-    updateTangentsNormals(changedCPnumber);
+        bsplinemanager->addTask(*evaluationTETask);
+    if (checkBoxAutoMINMAX->isChecked())
+    {
+        bsplinemanager->addTask(*evaluationMINTask);
+        bsplinemanager->addTask(*evaluationMAXTask);
+    }
+
+    //bsplinemanager->run();
+
+    QThreadPool::globalInstance()->start((QRunnable*)bsplinemanager);
+
+    connect(bsplinemanager, QOverload<const BsplineTask&>::of(&BsplineTaskManager::taskStarted), this, &MainWindow::bsplineTaskStarted);
+    connect(bsplinemanager, &BsplineTaskManager::allTasksFinished, this, &MainWindow::bsplineAllTasksFinished);
+
+    connect(bsplinemanager, QOverload<const BsplineTask&, const Bspline&>::of(&BsplineTaskManager::interpolationCPFinished), this, &MainWindow::interpolationCPFinished);
+    connect(bsplinemanager, QOverload<const BsplineTask&, const Points&>::of(&BsplineTaskManager::evaluationPointsFinished), this, &MainWindow::evaluationPointsFinished);
+    connect(bsplinemanager, QOverload<const BsplineTask&, const Points&>::of(&BsplineTaskManager::evaluationTEFinished), this, &MainWindow::evaluationTEFinished);
+    connect(bsplinemanager, QOverload<const BsplineTask&, const Points&>::of(&BsplineTaskManager::evaluationMinFinished), this, &MainWindow::evaluationMinFinished);
+    connect(bsplinemanager, QOverload<const BsplineTask&, const Points&>::of(&BsplineTaskManager::evaluationMaxFinished), this, &MainWindow::evaluationMaxFinished);
+
     oldCPnumber = getNumCP();
 }
+
+//void MainWindow::computeCP()
+//{
+//    QElapsedTimer timer;
+//    timer.start();
+
+//    bool changedCPnumber = oldCPnumber != getNumCP();
+
+//    runLongTask(QtConcurrent::run(this, &MainWindow::interpolatebspline), "Interpolating the curve..", [] () {});
+
+//    //Bspline tempbspline = runLongTask(QtConcurrent::run(Bspline::interpolate, data.getPoints(), getNumCP(), getN(), getKnotSequence()), "Interpolating the curve..");
+
+//    //Bspline tempbspline = Bspline::interpolate(data.getPoints(), getNumCP(), getN(), getKnotSequence());
+
+//    qDebug() << "time 1 = " << timer.elapsed() << endl;
+
+//    //bspline = &tempbspline;
+
+//    updateBspline();
+
+//    qDebug() << "time 3 = " << timer.elapsed() << endl;
+
+//    updateKnotSeries(getKnotSequence().getSequence({}));
+//    if (checkBoxAutoMINMAX->isChecked())
+//        updateMINMAX();
+
+//    qDebug() << "time 5 = " << timer.elapsed() << endl;
+
+//    if (checkBoxAutoTE->isChecked())
+//        updateTE();
+
+//    qDebug() << "time 6 = " << timer.elapsed() << endl;
+
+//    updateTangentsNormals(changedCPnumber);
+
+//    qDebug() << "time 7 = " << timer.elapsed() << endl;
+
+//    oldCPnumber = getNumCP();
+//}
 
 void MainWindow::optimizeKnots()
 {
@@ -845,6 +1338,22 @@ doubles MainWindow::getMaxParams()
         params.push_back(rangeSliders[i]->GetUpperValue());
     }
     return params;
+}
+
+ints MainWindow::getAdjustableIndexes()
+{
+    if (!bspline)
+        return {};
+
+    Points CParray = bspline->getCParray();
+    ints adjustable_indexes;
+    for (QPointF point : series_CP_adjustable->points())
+    {
+        auto absolute_index = std::find(CParray.begin(), CParray.end(), Point(point.x(), point.y())) - CParray.begin();
+        adjustable_indexes.push_back(absolute_index);
+    }
+    bspline->setAdjustableIndices(adjustable_indexes);
+    return adjustable_indexes;
 }
 
 TEMotion MainWindow::getTEMotion()

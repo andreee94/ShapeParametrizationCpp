@@ -12,6 +12,10 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
+#include <cstdio>
+#include <iterator>
+#include <utility>
+
 
 using namespace std;
 
@@ -35,22 +39,18 @@ class Utils
         static doubles computeCumul(double start, double end, doubles params);
         static void printcout(doubles vector, string separator=" ", bool endline=true);
         static bool eq(double d1, double d2, double threshold=1e-15);
+        static bool eqzero(double d1, double threshold=1e-15);
         static bool lessoreq(double d1, double d2, double threshold=1e-15);
         static bool less(double d1, double d2, double threshold=1e-15);
         static bool greateroreq(double d1, double d2, double threshold=1e-15);
         static bool greater(double d1, double d2, double threshold=1e-15);
         static void getupperlowercurves(const Points &points, Points &lower, Points &upper);
         static void getminmaxindexes(const Points &points, int &minindex, int &maxindex, char XorY);
+        static string fixline(string line);
+        static string tostring( std::ostream& str );
+        static bool getbool(string str);
+        static bool iszeroint(string str);
 
-//        template<class T>
-//        static string print(vector<T> vec, string separator, bool endline=true)
-//         {
-//            string out;
-//            out = pystring::join(separator, Utils::tostrings(vec));
-//            if (endline)
-//                out = out + "\n";
-//            return out;
-//         }
 
         template<class T>
         static string print(vector<T> vec, string separator, bool endline=true)
@@ -63,29 +63,6 @@ class Utils
             return out.str();
 //            return Utils::tostring(out);
         }
-
-        static string fixline(string line);
-        static string tostring( std::ostream& str );
-//        template<class T>
-//        static strings tostrings(vector<T> items)
-//        {
-//            strings res;
-//            res.reserve(items.size());
-//            for (int i = 0; i < items.size(); i++)
-//                res[i] = (string)items[i];
-//            return res;
-//        }
-
-
-        static bool getbool(string str);
-        static bool iszeroint(string str);
-
-//        template<typename T>
-//        static ints find_all(vector<T> items, const T item);
-//
-//        template<typename T>
-//        static bool contains(vector<T> items, const T item);
-
 
         template<class T>
         static bool contains(vector<T> items, const T item)
@@ -109,6 +86,72 @@ class Utils
             }
             return result;
         }
+
+        ///////////////////////////////////////////////////
+        ///////////////////////////////////////////////////
+        ///////////////////////////////////////////////////
+        ///////////////////////////////////////////////////
+        /// ENUMERATE
+
+        template <class Iterator>
+        struct enumerate_iterator {
+          using iterator = Iterator;
+          using index_type = typename std::iterator_traits<iterator>::difference_type;
+          using reference = typename std::iterator_traits<iterator>::reference;
+
+          enumerate_iterator(index_type index, iterator iterator)
+              : index(index), iter(iterator) {}
+
+          enumerate_iterator &operator++() {
+            ++index;
+            ++iter;
+            return *this;
+          }
+
+          bool operator!=(const enumerate_iterator &other) const {
+            return iter != other.iter;
+          }
+
+          std::pair<index_type &, reference> operator*() { return {index, *iter}; }
+
+         private:
+          index_type index;
+          iterator iter;
+        };
+
+        template <class Iterator>
+        struct enumerate_range {
+          using index_type = typename std::iterator_traits<Iterator>::difference_type;
+          using iterator = enumerate_iterator<Iterator>;
+
+          enumerate_range(Iterator first, Iterator last, index_type initial)
+              : first(first), last(last), initial(initial) {}
+
+          iterator begin() const { return iterator(initial, first); }
+
+          iterator end() const { return iterator(0, last); }
+
+         private:
+          Iterator first;
+          Iterator last;
+          index_type initial;
+        };
+
+        template <class Iterator>
+        static decltype(auto) enumerate(
+            Iterator first, Iterator last,
+            typename std::iterator_traits<Iterator>::difference_type initial) {
+          return enumerate_range(first, last, initial);
+        }
+
+        template <class Container>
+        static decltype(auto) enumerate(Container &content) {
+          return enumerate_range(std::begin(content), std::end(content), 0);
+        }
+
+        ///////////////////////////////////////////////////
+        ///////////////////////////////////////////////////
+        ///////////////////////////////////////////////////
 
     protected:
 

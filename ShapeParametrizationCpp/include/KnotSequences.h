@@ -15,7 +15,12 @@ class KnotSequences
 {
     public:
         /** Default constructor */
+        KnotSequences() {}
+        KnotSequences(const KnotSequences &knotSequences);
         KnotSequences(Knots knots);
+
+        KnotSequences& operator=(const KnotSequences& other);
+
         doubles getSequence(doubles params) const;
         int computeNumParams();
 

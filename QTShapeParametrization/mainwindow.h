@@ -8,6 +8,7 @@
 #include "RangeSlider.h"
 #include "rangesliderlayout.h"
 #include "profiledata.h"
+#include "bsplinetask.h"
 
 #include <QDialog>
 #include <QTableView>
@@ -29,19 +30,43 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    QColor Red = QColor("#d84315");
-    QColor Blue = QColor("#1e88e5"); // 2196f3
-    QColor Brown = QColor("#795548");
-    QColor Orange = QColor("#f57c00");
+    static QColor Red() { return QColor("#d84315"); }
+    static QColor Blue() { return QColor("#1e88e5"); } //2196f3
+    static QColor Brown() { return QColor("#795548"); }
+    static QColor Orange() { return QColor("#f57c00"); }
+    static QColor Green() { return QColor("#43a047"); }
+
+public slots:
+        void longFunctionStart(const QString progresstext);
+        void longFunctionEnd();
+
+        void bsplineTaskStarted(const BsplineTask &task);
+        void bsplineTaskFinished(const BsplineTask &task);
+        void bsplineAllTasksFinished();
+
+        void optimizationKnotsFinished(const BsplineTask &task, const Bspline &bspline);
+        void interpolationCPFinished(const BsplineTask &task, const Bspline &bspline);
+        void evaluationPointsFinished(const BsplineTask &task, const Points & points);
+        void evaluationTEFinished(const BsplineTask &task, const Points & points);
+        void evaluationMinFinished(const BsplineTask &task, const Points & points);
+        void evaluationMaxFinished(const BsplineTask &task, const Points & points);
+        void evaluationNormalsFinished(const BsplineTask &task, const Points & normals);
+        void evaluationTangentsFinished(const BsplineTask &task, const Points & tangents);
 
 private:
     Bspline *bspline;
     ProfileData data;
     int oldCPnumber;
+    BsplineTask *interpolationTask;
+    BsplineTask *evaluationPointsTask;
+    BsplineTask *evaluationTETask ;
+    BsplineTask *evaluationMINTask ;
+    BsplineTask *evaluationMAXTask ;
 
     //Ui::MainWindow *ui;
     QTabWidget *tabLayout;
 
+    // chart widgets
     ChartView *chartView;
     // checkboxes of the chart
     QCheckBox *checkBoxOriginalPoints;
@@ -54,12 +79,24 @@ private:
     QCheckBox *checkBoxMinParams;
     QCheckBox *checkBoxNormals;
     QCheckBox *checkBoxTangents;
+    // progressbar
+    QProgressBar *progressBar;
+    QHBoxLayout *progressBarLayout;
+    QLabel *progressBarLabel;
+    QFutureWatcher<Bspline> futureWatcherBspline;
+    QFutureWatcher<Points> futureWatcherPoints;
+    QFutureWatcher<void> futureWatcherVoid;
+    Bspline runLongTask(QFuture<Bspline> future, QString progressMsg);
+    Points runLongTask(QFuture<Points> future, QString progressMsg);
+    void runLongTask(QFuture<void> future, QString progressMsg);
+    void runLongTask(QFuture<void> future, QString progressMsg, const std::function <void (void)>& resultCallback);
 
     QScatterSeries *series_originalPoints = new QScatterSeries();
     QLineSeries *series_originalCurve = new QLineSeries();
     QScatterSeries *series_interpolatePoints = new QScatterSeries();
     QLineSeries *series_interpolatedCurve = new QLineSeries();
-    QScatterSeries *series_CP = new QScatterSeries();
+    QScatterSeries *series_CP_fixed = new QScatterSeries();
+    QScatterSeries *series_CP_adjustable = new QScatterSeries();
     QLineSeries *series_TE = new QLineSeries();
     QAreaSeries *series_maxParams = new QAreaSeries();
     QAreaSeries *series_minParams = new QAreaSeries();
@@ -146,6 +183,7 @@ private:
     void updateChart();
     void updateBspline();
     void updateTangentsNormals(bool changednumcp);
+    void interpolatebspline();
 
     int updateKnotSeries(doubles uarray);
 
@@ -156,8 +194,12 @@ private:
     string getTEShape();
     doubles getMinParams();
     doubles getMaxParams();
+    ints getAdjustableIndexes();
     TEMotion getTEMotion();
     void appendPointsToSeries(QLineSeries *series, const Points &points);
+
+
+
 };
 
 #endif // MAINWINDOW_H

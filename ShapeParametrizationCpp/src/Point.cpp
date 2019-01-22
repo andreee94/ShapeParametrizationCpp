@@ -155,10 +155,14 @@ Point Point::reverse_self()
 }
 Point Point::normalize() const
 {
+    if (this->iszero())
+        return *this; // if the vector is zero lenght would be zero so no meaning to normalize
     return *this / this->length();
 }
 Point Point::normalize_self()
 {
+    if (this->iszero())
+        return *this; // if the vector is zero lenght would be zero so no meaning to normalize
     double len = this->length();
     this->x = this->x / len;
     this->y = this->y / len;
@@ -215,6 +219,16 @@ Point Point::move(const Point& direction, double dist) const
     return *this + direction.normalize() * dist;
 }
 
+bool Point::iszero() const
+{
+    return Utils::eqzero(this->x) && Utils::eqzero(this->y);
+}
+
+bool Point::isversor() const
+{
+    return Utils::eq(this->length(), 1);
+}
+
 Point Point::move_self(const Line& line, double dist)
 {
     this->move_self(line.getdirection(), dist);
@@ -231,6 +245,11 @@ void Point::print() const
 {
     std::cout << "x = " << this->x
               << " y = " << this->y << std::endl;
+}
+
+bool Point::operator==(const Point &b)
+{
+     return Utils::eq(getx(), b.getx()) && Utils::eq(gety(), b.gety());
 }
 
 string Point::to_str() const

@@ -14,6 +14,7 @@ using namespace std;
 
 class Line;
 class Point;
+class Utils;
 
 typedef std::vector<double> doubles;
 typedef std::vector<Point> Points;
@@ -70,6 +71,8 @@ class Point
         Point move(const Line& line, const double dist) const;
         Point move(const Point& direction, const double dist) const;
 
+        bool iszero() const;
+        bool isversor() const;
         double getx() const;
         double gety() const;
         void setx(double x);
@@ -95,6 +98,7 @@ class Point
         {
             return this->to_str();
         }
+        bool operator==(const Point& b);
 
         //friend static double slope(const Point& a, const Point& b);
 
