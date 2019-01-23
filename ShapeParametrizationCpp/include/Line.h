@@ -26,6 +26,8 @@ class Line: public Evaluable
         Point intersection(const Line& other) const;
         double rotateslope(double theta) const;
 
+        double distance(const Point &p);
+
         Point getdirection() const;
         double getm() const;
         double getq() const;

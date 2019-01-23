@@ -21,7 +21,9 @@ enum BsplineTaskType
     EVALUATION_MIN,
     EVALUATION_MAX,
     EVALUATION_NORMALS,
-    EVALUATION_TANGENTS
+    EVALUATION_TANGENTS,
+    EVALUATION_ERRORS_APPROX,
+    EVALUATION_ERRORS_PRECISE
 };
 
 struct BsplineTask
@@ -39,6 +41,7 @@ struct BsplineTask
     QString messange;
     bool background = true;
     bool importBSplineByPrevious = false;
+    bool changedNumCP;
     Bspline *bspline = NULL;
     ProfileData *data = NULL;
     int n = 0;
@@ -82,6 +85,8 @@ signals:
     void evaluationMaxFinished(const BsplineTask &task,const  Points &points);
     void evaluationNormalsFinished(const BsplineTask &task,const  Points &normals);
     void evaluationTangentsFinished(const BsplineTask &task,const  Points &tangents);
+    void evaluationErrorApproxFinished(const BsplineTask &task, const doubles &us, const doubles &error);
+    void evaluationErrorPreciseFinished(const BsplineTask &task, const doubles &us, const doubles &error);
 
 private:
     QQueue<BsplineTask> queuetasks;
@@ -96,6 +101,8 @@ private:
     BsplineTask executeEvaluationMax(BsplineTask &task);
     BsplineTask executeEvaluationNormals(BsplineTask &task);
     BsplineTask executeEvaluationTangents(BsplineTask &task);
+    BsplineTask executeErrorApprox(BsplineTask &task);
+    BsplineTask executeErrorPrecise(BsplineTask &task);
 
 };
 

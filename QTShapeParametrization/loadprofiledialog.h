@@ -50,7 +50,6 @@ private:
     //Ui::LoadProfileDia  log *ui;
     void verticalResizeTableViewToContents(QTableView *tableView, int maxnumrows=MAX_32BIT_INT);
     QStringList getColumnComboBox(int numcolumns);
-    QLayoutItem* separator();
     bool boolFromState(int state) { return state == 2 ? true : false; }
 
     void RadioSelected(FrameOfReference type);

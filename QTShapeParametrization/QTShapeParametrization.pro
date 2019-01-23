@@ -51,7 +51,8 @@ SOURCES += \
     rangesliderlayout.cpp \
     MultiSliderView.cpp \
     code.cpp \
-    bsplinetask.cpp
+    bsplinetask.cpp \
+    qtutils.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -67,7 +68,8 @@ HEADERS += \
     RangeSlider.h \
     rangesliderlayout.h \
     MultiSliderView.h \
-    bsplinetask.h
+    bsplinetask.h \
+    qtutils.h
     mychart.h
 
 

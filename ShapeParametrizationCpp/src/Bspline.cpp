@@ -351,6 +351,32 @@ Points Bspline::evaluateTE(int numpointsTE, string shape, bool tangent_first)
     return tepoints;
 }
 
+doubles Bspline::evaluateError(const Points &original, bool approximated)
+{
+    doubles us = Utils::centripetal(original, 1);
+    Points points = evaluate(us);//task.numPoints);
+    if (approximated) // point by point comparison
+        return Point::distancesSquared(original, points);
+    else
+    {
+        doubles distances(original.size(), 0); // init to 0
+        for (unsigned int i = 0; i < points.size(); i++)
+        {
+            if (i==0 || i == points.size())
+                distances[i] = points[i].distance(original[i]);
+            else
+            {
+                if (points[i].insidesegment(original[i], original[i-1]))
+                    distances[i] = Line(original[i], original[i-1]).distance(points[i]);
+                else if (points[i].insidesegment(original[i], original[i+1]))
+                    distances[i] = Line(original[i], original[i+1]).distance(points[i]);
+                else distances[i] = points[i].distance(original[i]);
+            }
+        }
+        return distances;
+    }
+}
+
 
 
 Bspline Bspline::modifyCP(const doubles &paramsoriginal) const

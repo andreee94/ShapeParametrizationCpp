@@ -1,4 +1,5 @@
 #include "loadprofiledialog.h"
+#include "qtutils.h"
 #include "string"
 //#include "ui_loadprofiledialog.h"
 
@@ -101,7 +102,7 @@ LoadProfileDialog::LoadProfileDialog(QWidget *parent) :
         vbox_reverse->addStretch(1);
         reverseGroupBox->setLayout(vbox_reverse);
 
-    gridColsChoice->addItem(separator(), 0, 0, 2, 2);
+    gridColsChoice->addItem(QTUtils::separator(), 0, 0, 2, 2);
     gridColsChoice->addWidget(colsXLabel, 0, 0, 1, 1); //, Qt::AlignTop);
     gridColsChoice->addWidget(colsYLabel, 1, 0, 1, 1); //, Qt::AlignCenter);
     gridColsChoice->addWidget(comboXcol, 0, 1, 1, 1); //, Qt::AlignTop);
@@ -136,7 +137,7 @@ LoadProfileDialog::LoadProfileDialog(QWidget *parent) :
 
 
     mainLayout->addLayout(loadLayout, Qt::AlignTop);
-    mainLayout->addItem(separator());
+    mainLayout->addItem(QTUtils::separator());
     mainLayout->addWidget(table);
     mainLayout->addLayout(chartLayout, 1);
     //mainLayout->addStretch(1);
@@ -291,16 +292,6 @@ QStringList LoadProfileDialog::getColumnComboBox(int numcolumns)
         list <<  QString("Column ").append(QString::number(i + 1));
     }
     return list;
-}
-
-QLayoutItem* LoadProfileDialog::separator()
-{
-    QSpacerItem* item = new QSpacerItem(10, 10, QSizePolicy::Minimum, QSizePolicy::Expanding);
-    return item;
-//    QFrame* line = new QFrame();
-//    line->setFrameShape(QFrame::HLine);
-//    line->setFrameShadow(QFrame::Sunken);
-//    return line;
 }
 
 void LoadProfileDialog::verticalResizeTableViewToContents(QTableView *tableView, int maxnumrows)

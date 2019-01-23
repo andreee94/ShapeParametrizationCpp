@@ -5,6 +5,7 @@
 
 //Q_DECLARE_METATYPE(BsplineTask)
 Q_DECLARE_METATYPE(Points)
+Q_DECLARE_METATYPE(doubles)
 Q_DECLARE_METATYPE(Bspline)
 
 int main(int argc, char *argv[])
@@ -12,6 +13,7 @@ int main(int argc, char *argv[])
     qRegisterMetaType<BsplineTask>();
     qRegisterMetaType<Points>();
     qRegisterMetaType<Bspline>();
+    qRegisterMetaType<doubles>();
     //main2();
 
     QApplication a(argc, argv);

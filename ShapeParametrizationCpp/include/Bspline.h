@@ -55,6 +55,7 @@ class Bspline: public Evaluable, public Editable<Bspline>
 
         Points evaluateWithTE(int numpoints, int numpointsTE, string shape, bool tangent_first=true);
         Points evaluateTE(int numpointsTE, string shape, bool tangent_first=true);
+        doubles evaluateError(const Points & original, bool approximated=true); // us just for return
 
         Bspline modifyCP(const doubles &params) const;
         Bspline modifyCP_self(const doubles &params);

@@ -49,28 +49,24 @@ BsplineTask BsplineTaskManager::executeTask(BsplineTask &task)
     {
         case OPTIMIZATION_KNOTS:
             return executeOptimizationKnots(task);
-            break;
         case INTERPOLATION_CP:
             return executeInterpolationCP(task);
-            break;
         case EVALUATION_POINTS:
             return executeEvaluationPoints(task);
-            break;
         case EVALUATION_TE:
             return executeEvaluationTE(task);
-            break;
         case EVALUATION_MIN:
             return executeEvaluationMin(task);
-            break;
         case EVALUATION_MAX:
             return executeEvaluationMax(task);
-            break;
         case EVALUATION_NORMALS:
             return executeEvaluationNormals(task);
-            break;
         case EVALUATION_TANGENTS:
-            return executeEvaluationNormals(task);
-            break;
+            return executeEvaluationTangents(task);
+        case EVALUATION_ERRORS_APPROX:
+            return executeErrorApprox(task);
+        case EVALUATION_ERRORS_PRECISE:
+            return executeErrorPrecise(task);
     }
 }
 
@@ -89,7 +85,8 @@ BsplineTask BsplineTaskManager::executeInterpolationCP(BsplineTask &task)
 
 BsplineTask BsplineTaskManager::executeEvaluationPoints(BsplineTask &task)
 {
-    Points points = task.bspline->evaluate(task.numPoints);
+    doubles dd = Utils::centripetal(task.data->getPoints(), 1);
+    Points points = task.bspline->evaluate(dd);//task.numPoints);
     task.points = points;
     emit evaluationPointsFinished(task, points);
     return task;
@@ -130,6 +127,24 @@ BsplineTask BsplineTaskManager::executeEvaluationTangents(BsplineTask &task)
 {
     Points tangents = task.bspline->getTangentsInCP();
     emit evaluationTangentsFinished(task, tangents);
+    return task;
+}
+
+BsplineTask BsplineTaskManager::executeErrorApprox(BsplineTask &task)
+{
+    Points original = task.data->getPoints();
+    doubles us = Utils::centripetal(original, 1);
+    doubles error = task.bspline->evaluateError(original, true);
+    emit evaluationErrorApproxFinished(task, us, error);
+    return task;
+}
+
+BsplineTask BsplineTaskManager::executeErrorPrecise(BsplineTask &task)
+{
+    Points original = task.data->getPoints();
+    doubles us = Utils::centripetal(original, 1);
+    doubles error = task.bspline->evaluateError(original, false);
+    emit evaluationErrorPreciseFinished(task, us, error);
     return task;
 }
 

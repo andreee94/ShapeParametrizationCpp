@@ -71,6 +71,10 @@ class Point
         Point move(const Line& line, const double dist) const;
         Point move(const Point& direction, const double dist) const;
 
+        bool insidesegment(const Point &p1, const Point &p2) const;  // if a point projection is inside a segment
+        double cosangle3points(const Point &p1, const Point &p2) const; // cos of angle between 3 points. current point is center
+        double angle3points(const Point &p1, const Point &p2) const; // angle(RAD) between 3 points. current point is center
+
         bool iszero() const;
         bool isversor() const;
         double getx() const;
@@ -100,11 +104,13 @@ class Point
         }
         bool operator==(const Point& b);
 
-        //friend static double slope(const Point& a, const Point& b);
+        //friend static double slope(const Point& a, con
 
+        static doubles distances(const Points &pA, const Points &pB);
+        static doubles distancesSquared(const Points &pA, const Points &pB);
         static void normalize(Points &points);
         static void normals(Points &points);
-        static Points fromDoubles(doubles &x, doubles &y);
+        static Points fromDoubles(const doubles &x, const doubles &y);
         static void toDoubles(const Points& points, doubles &x, doubles &y);
 
     protected:

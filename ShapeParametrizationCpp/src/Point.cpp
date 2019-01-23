@@ -219,6 +219,26 @@ Point Point::move(const Point& direction, double dist) const
     return *this + direction.normalize() * dist;
 }
 
+bool Point::insidesegment(const Point &p1, const Point &p2) const
+{
+    double cosalpha1 = p1.cosangle3points(*this, p2);
+    double cosalpha2 = p2.cosangle3points(*this, p1);
+    // both angles must be 0<angle<90
+    return cosalpha1 > 0 & cosalpha2 > 0;
+}
+
+double Point::cosangle3points(const Point &p1, const Point &p2) const
+{
+    Point a = p1 - *this;
+    Point b = p2 - *this;
+    return a * b / a.length() / b.length();
+}
+
+double Point::angle3points(const Point &p1, const Point &p2) const
+{
+    return acos(cosangle3points(p1, p2));
+}
+
 bool Point::iszero() const
 {
     return Utils::eqzero(this->x) && Utils::eqzero(this->y);
@@ -249,7 +269,23 @@ void Point::print() const
 
 bool Point::operator==(const Point &b)
 {
-     return Utils::eq(getx(), b.getx()) && Utils::eq(gety(), b.gety());
+    return Utils::eq(getx(), b.getx()) && Utils::eq(gety(), b.gety());
+}
+
+doubles Point::distances(const Points &pA, const Points &pB)
+{
+    doubles result(pA.size(), 0);
+    for (unsigned int i = 0; i < pA.size(); i++)
+        result[i] = pA[i].distance(pB[i]);
+    return result;
+}
+
+doubles Point::distancesSquared(const Points &pA, const Points &pB)
+{
+    doubles result(pA.size(), 0);
+    for (unsigned int i = 0; i < pA.size(); i++)
+        result[i] = pA[i].distancesquared(pB[i]);
+    return result;
 }
 
 string Point::to_str() const
@@ -302,7 +338,7 @@ void Point::sety(double y)
 }
 
 
-Points Point::fromDoubles(doubles &x, doubles &y)
+Points Point::fromDoubles(const doubles &x, const doubles &y)
 {
     Points points;
     points.reserve(x.size());
