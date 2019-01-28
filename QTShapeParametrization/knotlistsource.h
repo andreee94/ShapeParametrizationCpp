@@ -2,7 +2,6 @@
 #define KNOTLISTSOURCE_H
 
 
-
 #include <QListWidget>
 
 class KnotListSource : public QListWidget

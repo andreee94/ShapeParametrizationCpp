@@ -11,17 +11,21 @@ KnotListSource::KnotListSource()
     setDragEnabled(true);
     setViewMode(QListView::ViewMode::ListMode);
     //setSpacing(10);
-    setAcceptDrops(true);
+    //setAcceptDrops(true);
     setDropIndicatorShown(true);
 }
 
 void KnotListSource::addKnot(QString type)
 {
-    QListWidgetItem *pieceItem = new QListWidgetItem(this);
-    pieceItem->setText(type);
+    KnotLabel *label = new KnotLabel(type);
+
+    QListWidgetItem *pieceItem = new QListWidgetItem;
+    //pieceItem->setText(type);
     pieceItem->setData(Qt::UserRole, QVariant(type));
     pieceItem->setData(Qt::UserRole+1, QPoint(0, 0));
     pieceItem->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsDragEnabled);
+    addItem(pieceItem);
+    setItemWidget(pieceItem, label);
 }
 
 void KnotListSource::dragEnterEvent(QDragEnterEvent *event)
@@ -63,7 +67,8 @@ void KnotListSource::dropEvent(QDropEvent *event)
 
 void KnotListSource::mousePressEvent(QMouseEvent *event)
 {
-    KnotLabel *child = static_cast<KnotLabel*>(childAt(event->pos()));
+    QWidget *childWidget = childAt(event->pos());
+    KnotLabel *child = static_cast<KnotLabel*>(childWidget);
     if (!child)
         return;
 
@@ -79,15 +84,18 @@ void KnotListSource::mousePressEvent(QMouseEvent *event)
 
     QDrag *drag = new QDrag(this);
     drag->setMimeData(mimeData);
-    drag->setPixmap(*child->pixmap());
+    //drag->setPixmap(*child->pixmap());
     drag->setHotSpot(hotSpot);
 
-    child->hide();
+    //child->hide();
 
     if (drag->exec(Qt::MoveAction | Qt::CopyAction, Qt::CopyAction) == Qt::MoveAction)
-        child->close();
-    else
         child->show();
+
+//    if (drag->exec(Qt::MoveAction | Qt::CopyAction, Qt::CopyAction) == Qt::MoveAction)
+//        child->close();
+//    else
+//        child->show();
 }
 
 void KnotListSource::startDrag(Qt::DropActions supportedActions)

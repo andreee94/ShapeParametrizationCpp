@@ -10,7 +10,7 @@
 class KnotLabel : public QLabel
 {
     public:
-        KnotLabel(const QString &text, QWidget *parent);
+        KnotLabel(const QString &text, QWidget *parent=0);
 };
 
 #endif // KNOTLABEL_H

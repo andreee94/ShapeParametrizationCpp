@@ -54,7 +54,8 @@ SOURCES += \
     bsplinetask.cpp \
     qtutils.cpp \
     knotlabel.cpp \
-    knotlistsource.cpp
+    knotlistsource.cpp \
+    knotlistdest.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -73,7 +74,8 @@ HEADERS += \
     bsplinetask.h \
     qtutils.h \
     knotlabel.h \
-    knotlistsource.h
+    knotlistsource.h \
+    knotlistdest.h
     mychart.h
 
 

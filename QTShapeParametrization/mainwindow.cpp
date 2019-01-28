@@ -4,6 +4,7 @@
 #include "Bspline.h"
 #include "rangesliderlayout.h"
 #include "knotlistsource.h"
+#include "knotlistdest.h"
 //#include "ui_mainwindow.h"
 #include <QtWidgets>
 #include <QtCharts>
@@ -862,7 +863,7 @@ QLayout* MainWindow::generateChartLayout()
         chartView->setRenderHint(QPainter::Antialiasing);
         chartView->setDirectionScroll(ChartView::BothDirectionScroll);
         chartView->setDirectionZoom(ChartView::BothDirectionZoom);
-        chartView->setRubberBand(new QRubberBand(QRubberBand::Shape::Rectangle, chartView));
+        chartView->setRubberBand(new QRubberBand(QRubberBand::Shape::Rectangle));
         connect(chartView,QOverload<QScatterSeries*, QScatterSeries*, QPointF, bool>::of(&ChartView::clickableEvent),this, &MainWindow::chartViewClicked);
 
     QGroupBox *groupCheckBoxChart = new QGroupBox(tr("Plots visibility"));
@@ -963,7 +964,7 @@ QLayout* MainWindow::generateChartLayout()
     chartErrorView->setRenderHint(QPainter::Antialiasing);
     chartErrorView->setDirectionScroll(ChartView::VerticalScroll);
     chartErrorView->setDirectionZoom(ChartView::VerticalZoom);
-    chartErrorView->setRubberBand(new QRubberBand(QRubberBand::Shape::Rectangle, chartView));
+    chartErrorView->setRubberBand(new QRubberBand(QRubberBand::Shape::Rectangle));
 
     chartErrorView->chart()->addSeries(series_errorApprox);
     chartErrorView->chart()->addSeries(series_errorPrecise);
@@ -1082,11 +1083,11 @@ QLayout *MainWindow::generateKnotListLayout()
     QGridLayout *gridLayout = new QGridLayout;
     QLabel *labelActiveKnots = new QLabel("Knot List");
     QLabel *labelAllKnots = new QLabel("All Knots");
-    KnotListSource *listActiveKnots = new KnotListSource;
-    QListWidget *listAllKnots = new QListWidget;
+    KnotListDest *listActiveKnots = new KnotListDest;
+    KnotListSource *listAllKnots = new KnotListSource;
     for (int i = 0; i < 10; i++)
     {
-        listActiveKnots->addKnot("Item " + QString::number(i));
+        listAllKnots->addKnot("Item " + QString::number(i));
     }
     gridLayout->addWidget(labelActiveKnots, 0, 0, 1, 1);
     gridLayout->addWidget(labelAllKnots, 0, 1, 1, 1);
