@@ -70,7 +70,10 @@ void ChartView::mouseMoveEvent(QMouseEvent *event)
         if (event->buttons() & Qt::MiddleButton)
         {
             auto dPos = event->pos() - m_lastMousePos;
-            chart()->scroll(-dPos.x(), dPos.y());
+            if (canScrollHorizontal())
+                chart()->scroll(-dPos.x(), 0);
+            if (canScrollVertical())
+                chart()->scroll(0, dPos.y());
 
             m_lastMousePos = event->pos();
             event->accept();
@@ -79,7 +82,18 @@ void ChartView::mouseMoveEvent(QMouseEvent *event)
         manageTooltip(event);
     if (rubberBand && rubberBand->isVisible())// && event->button() & Qt::LeftButton)
     {
-        rubberBand->setGeometry(QRect(startingDragPoint, event->pos()).normalized());
+        QRect zoomrect = QRect(startingDragPoint, event->pos()).normalized();
+        if (!canZoomHorizontal())
+        {
+            zoomrect.setX(chart()->plotArea().x());
+            zoomrect.setRight(chart()->plotArea().right());
+        }
+        if (!canZoomVertical())
+        {
+            zoomrect.setY(chart()->plotArea().y());
+            zoomrect.setBottom(chart()->plotArea().bottom());
+        }
+        rubberBand->setGeometry(zoomrect);
     }
     QChartView::mouseMoveEvent(event);
 }
@@ -91,7 +105,9 @@ void ChartView::mouseReleaseEvent(QMouseEvent *event)
     if (rubberBand && rubberBand->isVisible() && event->button() == Qt::LeftButton)
     {
         if (QLineF(event->pos(), startingDragPoint).length() > 10) // zoom only if region is sufficiently big
+        {
             chart()->zoomIn(rubberBand->geometry());
+        }
         rubberBand->hide();
     }
     QChartView::mouseReleaseEvent(event);
@@ -107,22 +123,28 @@ void ChartView::keyPressEvent(QKeyEvent *event)
     }
     switch (event->key()) {
     case Qt::Key_Plus:
-        chart()->zoomIn();
+        if (canZoom())
+            chart()->zoomIn();
         break;
     case Qt::Key_Minus:
-        chart()->zoomOut();
+        if (canZoom())
+            chart()->zoomOut();
         break;
     case Qt::Key_Left:
-        chart()->scroll(10, 0);
+        if (canScrollHorizontal())
+            chart()->scroll(10, 0);
         break;
     case Qt::Key_Right:
-        chart()->scroll(-10, 0);
+        if (canScrollHorizontal())
+            chart()->scroll(-10, 0);
         break;
     case Qt::Key_Up:
-        chart()->scroll(0, -10);
+        if (canScrollVertical())
+            chart()->scroll(0, -10);
         break;
     case Qt::Key_Down:
-        chart()->scroll(0, 10);
+        if (canScrollVertical())
+            chart()->scroll(0, 10);
         break;
     case Qt::Key_0:
     case 96: //numpad 0
@@ -146,9 +168,9 @@ void ChartView::wheelEvent(QWheelEvent *event)
             QRectF r = chart()->plotArea();
             QPointF c = r.center();
             qreal val = std::pow(factor, event->delta());
-            if(mDirectionZoom & VerticalZoom)
+            if(canZoomVertical())
                 r.setHeight(r.height()*val);
-            if (mDirectionZoom & HorizontalZoom) {
+            if (canZoomHorizontal()) {
                 r.setWidth(r.width()*val);
             }
             r.moveCenter(c);
@@ -346,20 +368,46 @@ void ChartView::setCanUseKeys(bool canUseKeys)
 
 bool ChartView::canScroll() const
 {
-    return mCanScroll;
+    return mDirectionScroll != DirectionScroll::NotScroll;
 }
 
-void ChartView::setCanScroll(bool canScroll)
+bool ChartView::canScrollHorizontal() const
 {
-    mCanScroll = canScroll;
+    return mDirectionScroll & HorizontalScroll;
+}
+
+bool ChartView::canScrollVertical() const
+{
+    return mDirectionScroll & VerticalScroll;
+}
+
+bool ChartView::canScrollBoth() const
+{
+    return mDirectionScroll & BothDirectionScroll;
 }
 
 bool ChartView::canZoom() const
 {
-    return mCanZoom;
+    return mDirectionZoom != DirectionZoom::NotZoom;
 }
 
-void ChartView::setCanZoom(bool canZoom)
+bool ChartView::canZoomHorizontal() const
 {
-    mCanZoom = canZoom;
+    return mDirectionZoom & HorizontalZoom;
 }
+
+bool ChartView::canZoomVertical() const
+{
+    return mDirectionZoom & VerticalZoom;
+}
+
+bool ChartView::canZoomBoth() const
+{
+    return mDirectionZoom & BothDirectionZoom;
+}
+
+
+
+
+
+

@@ -47,16 +47,16 @@ RangeSliderLayout::RangeSliderLayout(QWidget *parent) :
 }
 
 
-void RangeSliderLayout::private_lowerValueChanged(double aLowerValue)
+void RangeSliderLayout::private_lowerValueChanged(double aLowerValue, bool isFinished)
 {
     minEdit->setText(QString::number(aLowerValue, 'f', 2));
-    emit lowerValueChanged(aLowerValue);
+    emit lowerValueChanged(aLowerValue, isFinished);
 }
 
-void RangeSliderLayout::private_upperValueChanged(double aUpperValue)
+void RangeSliderLayout::private_upperValueChanged(double aUpperValue, bool isFinished)
 {
     maxEdit->setText(QString::number(aUpperValue, 'f', 2));
-    emit upperValueChanged(aUpperValue);
+    emit upperValueChanged(aUpperValue, isFinished);
 }
 
 void RangeSliderLayout::private_rangeChanged(double aMin, double aMax)

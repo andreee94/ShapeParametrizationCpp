@@ -1,6 +1,8 @@
 
 #include "RangeSlider.h"
 
+#include <Utils.h>
+
 namespace
 {
 
@@ -86,6 +88,8 @@ void RangeSlider::mousePressEvent(QMouseEvent* aEvent)
 {
     if(aEvent->buttons() & Qt::LeftButton)
     {
+        mLowerValueOLD = mLowerValue;
+        mUpperValueOLD = mUpperValue;
         mSecondHandlePressed = secondHandleRect().contains(aEvent->pos());
         mFirstHandlePressed = !mSecondHandlePressed && firstHandleRect().contains(aEvent->pos());
         if(mFirstHandlePressed)
@@ -171,7 +175,10 @@ void RangeSlider::mouseMoveEvent(QMouseEvent* aEvent)
 void RangeSlider::mouseReleaseEvent(QMouseEvent* aEvent)
 {
     Q_UNUSED(aEvent);
-
+    if (Utils::eq(mLowerValueOLD, mLowerValue))
+        setLowerValue(mLowerValue, true);
+    if (Utils::eq(mUpperValueOLD, mUpperValue))
+        setUpperValue(mUpperValue, true);
     mFirstHandlePressed = false;
     mSecondHandlePressed = false;
 }
@@ -237,7 +244,7 @@ void RangeSlider::SetUpperValue(double aUpperValue)
     setUpperValue(aUpperValue);
 }
 
-void RangeSlider::setLowerValue(double aLowerValue)
+void RangeSlider::setLowerValue(double aLowerValue, bool isFinished)
 {
     if(aLowerValue > mMaximum)
     {
@@ -250,12 +257,12 @@ void RangeSlider::setLowerValue(double aLowerValue)
     }
 
     mLowerValue = aLowerValue;
-    emit lowerValueChanged(mLowerValue);
+    emit lowerValueChanged(mLowerValue, isFinished);
 
     update();
 }
 
-void RangeSlider::setUpperValue(double aUpperValue)
+void RangeSlider::setUpperValue(double aUpperValue, bool isFinished)
 {
     if(aUpperValue > mMaximum)
     {
@@ -268,7 +275,7 @@ void RangeSlider::setUpperValue(double aUpperValue)
     }
 
     mUpperValue = aUpperValue;
-    emit upperValueChanged(mUpperValue);
+    emit upperValueChanged(mUpperValue, isFinished);
 
     update();
 }

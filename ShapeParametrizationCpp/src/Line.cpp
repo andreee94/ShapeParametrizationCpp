@@ -61,7 +61,7 @@ double Line::rotateslope(double theta) const
 double Line::distance(const Point &p)
 {
     // abs(aXP + bYP + c) / sqrt(a^2 + b^2)
-    return abs(m * p.getx() + p.gety() + q) / sqrt(m * m + 1);
+    return abs(m * p.getx() - p.gety() + q) / sqrt(m * m + 1);
 }
 
 Point Line::intersection(const Line& l) const

@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_RangeSlider_t {
-    QByteArrayData data[15];
-    char stringdata0[164];
+    QByteArrayData data[16];
+    char stringdata0[175];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -35,24 +35,25 @@ QT_MOC_LITERAL(0, 0, 11), // "RangeSlider"
 QT_MOC_LITERAL(1, 12, 17), // "lowerValueChanged"
 QT_MOC_LITERAL(2, 30, 0), // ""
 QT_MOC_LITERAL(3, 31, 11), // "aLowerValue"
-QT_MOC_LITERAL(4, 43, 17), // "upperValueChanged"
-QT_MOC_LITERAL(5, 61, 11), // "aUpperValue"
-QT_MOC_LITERAL(6, 73, 12), // "rangeChanged"
-QT_MOC_LITERAL(7, 86, 4), // "aMin"
-QT_MOC_LITERAL(8, 91, 4), // "aMax"
-QT_MOC_LITERAL(9, 96, 13), // "setLowerValue"
-QT_MOC_LITERAL(10, 110, 13), // "setUpperValue"
-QT_MOC_LITERAL(11, 124, 10), // "setMinimum"
-QT_MOC_LITERAL(12, 135, 8), // "aMinimum"
-QT_MOC_LITERAL(13, 144, 10), // "setMaximum"
-QT_MOC_LITERAL(14, 155, 8) // "aMaximum"
+QT_MOC_LITERAL(4, 43, 10), // "isFinished"
+QT_MOC_LITERAL(5, 54, 17), // "upperValueChanged"
+QT_MOC_LITERAL(6, 72, 11), // "aUpperValue"
+QT_MOC_LITERAL(7, 84, 12), // "rangeChanged"
+QT_MOC_LITERAL(8, 97, 4), // "aMin"
+QT_MOC_LITERAL(9, 102, 4), // "aMax"
+QT_MOC_LITERAL(10, 107, 13), // "setLowerValue"
+QT_MOC_LITERAL(11, 121, 13), // "setUpperValue"
+QT_MOC_LITERAL(12, 135, 10), // "setMinimum"
+QT_MOC_LITERAL(13, 146, 8), // "aMinimum"
+QT_MOC_LITERAL(14, 155, 10), // "setMaximum"
+QT_MOC_LITERAL(15, 166, 8) // "aMaximum"
 
     },
     "RangeSlider\0lowerValueChanged\0\0"
-    "aLowerValue\0upperValueChanged\0aUpperValue\0"
-    "rangeChanged\0aMin\0aMax\0setLowerValue\0"
-    "setUpperValue\0setMinimum\0aMinimum\0"
-    "setMaximum\0aMaximum"
+    "aLowerValue\0isFinished\0upperValueChanged\0"
+    "aUpperValue\0rangeChanged\0aMin\0aMax\0"
+    "setLowerValue\0setUpperValue\0setMinimum\0"
+    "aMinimum\0setMaximum\0aMaximum"
 };
 #undef QT_MOC_LITERAL
 
@@ -62,34 +63,42 @@ static const uint qt_meta_data_RangeSlider[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-       7,   14, // methods
+      11,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       3,       // signalCount
+       5,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    1,   49,    2, 0x06 /* Public */,
-       4,    1,   52,    2, 0x06 /* Public */,
-       6,    2,   55,    2, 0x06 /* Public */,
+       1,    2,   69,    2, 0x06 /* Public */,
+       1,    1,   74,    2, 0x26 /* Public | MethodCloned */,
+       5,    2,   77,    2, 0x06 /* Public */,
+       5,    1,   82,    2, 0x26 /* Public | MethodCloned */,
+       7,    2,   85,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       9,    1,   60,    2, 0x0a /* Public */,
-      10,    1,   63,    2, 0x0a /* Public */,
-      11,    1,   66,    2, 0x0a /* Public */,
-      13,    1,   69,    2, 0x0a /* Public */,
+      10,    2,   90,    2, 0x0a /* Public */,
+      10,    1,   95,    2, 0x2a /* Public | MethodCloned */,
+      11,    2,   98,    2, 0x0a /* Public */,
+      11,    1,  103,    2, 0x2a /* Public | MethodCloned */,
+      12,    1,  106,    2, 0x0a /* Public */,
+      14,    1,  109,    2, 0x0a /* Public */,
 
  // signals: parameters
+    QMetaType::Void, QMetaType::Double, QMetaType::Bool,    3,    4,
     QMetaType::Void, QMetaType::Double,    3,
-    QMetaType::Void, QMetaType::Double,    5,
-    QMetaType::Void, QMetaType::Double, QMetaType::Double,    7,    8,
+    QMetaType::Void, QMetaType::Double, QMetaType::Bool,    6,    4,
+    QMetaType::Void, QMetaType::Double,    6,
+    QMetaType::Void, QMetaType::Double, QMetaType::Double,    8,    9,
 
  // slots: parameters
+    QMetaType::Void, QMetaType::Double, QMetaType::Bool,    3,    4,
     QMetaType::Void, QMetaType::Double,    3,
-    QMetaType::Void, QMetaType::Double,    5,
-    QMetaType::Void, QMetaType::Double,   12,
-    QMetaType::Void, QMetaType::Double,   14,
+    QMetaType::Void, QMetaType::Double, QMetaType::Bool,    6,    4,
+    QMetaType::Void, QMetaType::Double,    6,
+    QMetaType::Void, QMetaType::Double,   13,
+    QMetaType::Void, QMetaType::Double,   15,
 
        0        // eod
 };
@@ -100,35 +109,39 @@ void RangeSlider::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
         RangeSlider *_t = static_cast<RangeSlider *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
-        case 0: _t->lowerValueChanged((*reinterpret_cast< double(*)>(_a[1]))); break;
-        case 1: _t->upperValueChanged((*reinterpret_cast< double(*)>(_a[1]))); break;
-        case 2: _t->rangeChanged((*reinterpret_cast< double(*)>(_a[1])),(*reinterpret_cast< double(*)>(_a[2]))); break;
-        case 3: _t->setLowerValue((*reinterpret_cast< double(*)>(_a[1]))); break;
-        case 4: _t->setUpperValue((*reinterpret_cast< double(*)>(_a[1]))); break;
-        case 5: _t->setMinimum((*reinterpret_cast< double(*)>(_a[1]))); break;
-        case 6: _t->setMaximum((*reinterpret_cast< double(*)>(_a[1]))); break;
+        case 0: _t->lowerValueChanged((*reinterpret_cast< double(*)>(_a[1])),(*reinterpret_cast< bool(*)>(_a[2]))); break;
+        case 1: _t->lowerValueChanged((*reinterpret_cast< double(*)>(_a[1]))); break;
+        case 2: _t->upperValueChanged((*reinterpret_cast< double(*)>(_a[1])),(*reinterpret_cast< bool(*)>(_a[2]))); break;
+        case 3: _t->upperValueChanged((*reinterpret_cast< double(*)>(_a[1]))); break;
+        case 4: _t->rangeChanged((*reinterpret_cast< double(*)>(_a[1])),(*reinterpret_cast< double(*)>(_a[2]))); break;
+        case 5: _t->setLowerValue((*reinterpret_cast< double(*)>(_a[1])),(*reinterpret_cast< bool(*)>(_a[2]))); break;
+        case 6: _t->setLowerValue((*reinterpret_cast< double(*)>(_a[1]))); break;
+        case 7: _t->setUpperValue((*reinterpret_cast< double(*)>(_a[1])),(*reinterpret_cast< bool(*)>(_a[2]))); break;
+        case 8: _t->setUpperValue((*reinterpret_cast< double(*)>(_a[1]))); break;
+        case 9: _t->setMinimum((*reinterpret_cast< double(*)>(_a[1]))); break;
+        case 10: _t->setMaximum((*reinterpret_cast< double(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
         int *result = reinterpret_cast<int *>(_a[0]);
         {
-            using _t = void (RangeSlider::*)(double );
+            using _t = void (RangeSlider::*)(double , bool );
             if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&RangeSlider::lowerValueChanged)) {
                 *result = 0;
                 return;
             }
         }
         {
-            using _t = void (RangeSlider::*)(double );
+            using _t = void (RangeSlider::*)(double , bool );
             if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&RangeSlider::upperValueChanged)) {
-                *result = 1;
+                *result = 2;
                 return;
             }
         }
         {
             using _t = void (RangeSlider::*)(double , double );
             if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&RangeSlider::rangeChanged)) {
-                *result = 2;
+                *result = 4;
                 return;
             }
         }
@@ -164,36 +177,36 @@ int RangeSlider::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 7)
+        if (_id < 11)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 7;
+        _id -= 11;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 7)
+        if (_id < 11)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 7;
+        _id -= 11;
     }
     return _id;
 }
 
 // SIGNAL 0
-void RangeSlider::lowerValueChanged(double _t1)
+void RangeSlider::lowerValueChanged(double _t1, bool _t2)
 {
-    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
     QMetaObject::activate(this, &staticMetaObject, 0, _a);
 }
 
-// SIGNAL 1
-void RangeSlider::upperValueChanged(double _t1)
-{
-    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
-    QMetaObject::activate(this, &staticMetaObject, 1, _a);
-}
-
 // SIGNAL 2
-void RangeSlider::rangeChanged(double _t1, double _t2)
+void RangeSlider::upperValueChanged(double _t1, bool _t2)
 {
     void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
     QMetaObject::activate(this, &staticMetaObject, 2, _a);
+}
+
+// SIGNAL 4
+void RangeSlider::rangeChanged(double _t1, double _t2)
+{
+    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
+    QMetaObject::activate(this, &staticMetaObject, 4, _a);
 }
 QT_WARNING_POP
 QT_END_MOC_NAMESPACE

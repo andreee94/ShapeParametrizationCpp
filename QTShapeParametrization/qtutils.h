@@ -21,11 +21,13 @@ public:
     static QColor Brown() { return QColor("#795548"); }
     static QColor Orange() { return QColor("#f57c00"); }
     static QColor Green() { return QColor("#43a047"); }
+    static QColor Black() { return QColor(0, 0, 0); }
 
     static QString color2str(QColor color);
 
     static QLayoutItem* separator();
     static void appendPointsToSeries(QLineSeries *series, const Points &points);
-};
+    static void appendPointsToSeries(QScatterSeries *series, const Points &points);
+    static void setRangeIfLarger(QValueAxis *axis, double min, double max);};
 
 #endif // QTUTILS_H

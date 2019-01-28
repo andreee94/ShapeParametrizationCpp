@@ -38,6 +38,7 @@ public slots:
         void optimizationKnotsFinished(const BsplineTask &task, const Bspline &bspline);
         void interpolationCPFinished(const BsplineTask &task, const Bspline &bspline);
         void evaluationPointsFinished(const BsplineTask &task, const Points & points);
+        void evaluationPointsCompareFinished(const BsplineTask &task, const Points & points);
         void evaluationTEFinished(const BsplineTask &task, const Points & points);
         void evaluationMinFinished(const BsplineTask &task, const Points & points);
         void evaluationMaxFinished(const BsplineTask &task, const Points & points);
@@ -48,10 +49,15 @@ public slots:
 
         void showErrorChart();
         void showBsplineChart();
+        void compareButtonClicked();
+        void rangeValueChanged(double value, bool isFinished);
+        void comboBoxTEMotionChanged(int index);
+        void comboBoxTEShapeChanged(int index);
 
 protected:
         BsplineTask *addInterpolationTask(BsplineTaskManager *bsplinemanager) ;
         BsplineTask *addEvaluationPointsTask(BsplineTaskManager *bsplinemanager) ;
+        BsplineTask *addEvaluationPointsCompareTask(BsplineTaskManager *bsplinemanager) ;
         BsplineTask *addEvaluationTETask(BsplineTaskManager *bsplinemanager) ;
         BsplineTask *addEvaluationMINTask(BsplineTaskManager *bsplinemanager) ;
         BsplineTask *addEvaluationMAXTask(BsplineTaskManager *bsplinemanager) ;
@@ -78,6 +84,7 @@ private:
         int oldCPnumber;
         BsplineTask *interpolationTask;
         BsplineTask *evaluationPointsTask;
+        BsplineTask *evaluationPointsCompareTask;
         BsplineTask *evaluationTETask ;
         BsplineTask *evaluationMINTask ;
         BsplineTask *evaluationMAXTask ;
@@ -105,9 +112,16 @@ private:
         QCheckBox *checkBoxNormals;
         QCheckBox *checkBoxTangents;
         QPushButton *showErrorButton;
+        QPushButton *compareErrorButton;
         // widgets of error chart
         ChartView *chartErrorView;
         QPushButton *showBsplineButton;
+        QCheckBox *checkBoxErrorApprox;
+        QCheckBox *checkBoxErrorPrecise;
+        QLabel *labelErrorApproxMax;
+        QLabel *labelErrorApproxAvg;
+        QLabel *labelErrorPreciseMax;
+        QLabel *labelErrorPreciseAvg;
         // progressbar
         QProgressBar *progressBar;
         QHBoxLayout *progressBarLayout;
@@ -125,8 +139,11 @@ private:
         QList<QLineSeries*> series_normals = QList<QLineSeries*>();
         QList<QLineSeries*> series_tangents = QList<QLineSeries*>();
         //
+        QScatterSeries *series_interpolatePointsComparison = new QScatterSeries();
         QLineSeries *series_errorApprox = new QLineSeries();
         QLineSeries *series_errorPrecise = new QLineSeries();
+        QList<bool> series_visibilities;
+        bool isInComparisonMode = false;
 
         // views for range
         QFormLayout *rangesContainerLayout;
@@ -171,13 +188,14 @@ private:
         QWidget* generateTabSettings();
         QLayout* generateChartLayout();
         QWidget* generateKnotChartLayout();
+        QLayout* generateKnotListLayout();
 
         QScatterSeries *knotsSeries;
         ChartView *knotsChartView;
 
         void tabChanged(int index);
         void updateRangesWidgets();
-        void updateCheckBoxEnable();
+        void updateCheckBoxEnableCurve(bool forcedisablecheckbox=false);
         void checkBoxOriginalPointsChanged(int state);
         void checkBoxOriginalCurveChanged(int state);
         void checkBoxInterpolatedPointsChanged(int state);
@@ -189,6 +207,7 @@ private:
         void checkBoxNormalsChanged(int state);
         void checkBoxTangentsChanged(int state);
 
+        void chartViewClicked(QScatterSeries* series1, QScatterSeries* series2, QPointF point, bool from1to2);
         void checkBoxAutoMINMAXChanged(int state);
         void checkBoxAutoTEChanged(int state);
         void updateMINMAX();
@@ -196,6 +215,10 @@ private:
         void computeCP();
         void optimizeKnots();
         void updatePointsChart();
+
+        void updateCheckBoxEnableError();
+        void checkBoxErrorApproxChanged(int state);
+        void checkBoxErrorPreciseChanged(int state);
 
         void applyAllMinRange();
         void applyAllMaxRange();

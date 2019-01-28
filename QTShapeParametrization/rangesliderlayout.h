@@ -44,13 +44,13 @@ public:
     ~RangeSliderLayout();
 
 signals:
-    void lowerValueChanged(double aLowerValue);
-    void upperValueChanged(double aUpperValue);
+    void lowerValueChanged(double aLowerValue, bool isFinished=false);
+    void upperValueChanged(double aUpperValue, bool isFinished=false);
     void rangeChanged(double aMin, double aMax);
 
 private:
-    void private_lowerValueChanged(double aLowerValue);
-    void private_upperValueChanged(double aUpperValue);
+    void private_lowerValueChanged(double aLowerValue, bool isFinished=false);
+    void private_upperValueChanged(double aUpperValue, bool isFinished=false);
     void private_rangeChanged(double aMin, double aMax);
 
     void changedMinMaxValue();

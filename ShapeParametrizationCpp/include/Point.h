@@ -112,6 +112,12 @@ class Point
         static void normals(Points &points);
         static Points fromDoubles(const doubles &x, const doubles &y);
         static void toDoubles(const Points& points, doubles &x, doubles &y);
+        static double minX(const Points &points);
+        static double maxX(const Points &points);
+        static double minY(const Points &points);
+        static double maxY(const Points &points);
+        static double meanX(const Points &points);
+        static double meanY(const Points &points);
 
     protected:
         double x, y;

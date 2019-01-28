@@ -52,7 +52,9 @@ SOURCES += \
     MultiSliderView.cpp \
     code.cpp \
     bsplinetask.cpp \
-    qtutils.cpp
+    qtutils.cpp \
+    knotlabel.cpp \
+    knotlistsource.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -69,7 +71,9 @@ HEADERS += \
     rangesliderlayout.h \
     MultiSliderView.h \
     bsplinetask.h \
-    qtutils.h
+    qtutils.h \
+    knotlabel.h \
+    knotlistsource.h
     mychart.h
 
 

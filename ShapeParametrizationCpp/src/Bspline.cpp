@@ -200,11 +200,11 @@ double Bspline::interpolate_N(int l, int n, doubles uarray, double u)
     {
         double alpha = 0;
         double beta = 0;
-        if ((uarray[l + n - 1] - uarray[l - 1]) != 0)
+        if (!Utils::eq(uarray[l + n - 1],  uarray[l - 1]))
             alpha = (u - uarray[l - 1]) / (uarray[l + n - 1] - uarray[l - 1]);
         //else alpha = 0;
 
-        if ((uarray[l + n] - uarray[l]) != 0)
+        if (!Utils::eq(uarray[l + n],  uarray[l]))
             beta = (uarray[l + n] - u) / (uarray[l + n] - uarray[l]);
         //else beta = 0;
 
@@ -356,7 +356,7 @@ doubles Bspline::evaluateError(const Points &original, bool approximated)
     doubles us = Utils::centripetal(original, 1);
     Points points = evaluate(us);//task.numPoints);
     if (approximated) // point by point comparison
-        return Point::distancesSquared(original, points);
+        return Point::distances(original, points);
     else
     {
         doubles distances(original.size(), 0); // init to 0

@@ -28,3 +28,20 @@ void QTUtils::appendPointsToSeries(QLineSeries *series, const Points &points)
         series->append(p.getx(), p.gety());
     }
 }
+
+
+void QTUtils::appendPointsToSeries(QScatterSeries *series, const Points &points)
+{
+    for (auto p : points)
+    {
+        series->append(p.getx(), p.gety());
+    }
+}
+
+
+void QTUtils::setRangeIfLarger(QValueAxis *axis, double min, double max)
+{
+    min = std::min(axis->min(), min);
+    max = std::max(axis->max(), max);
+    axis->setRange(min, max);
+}

@@ -97,6 +97,13 @@ public:
         HorizontalZoom,
         BothDirectionZoom = VerticalZoom | HorizontalZoom
     };
+    enum DirectionScroll{
+        NotScroll,
+        VerticalScroll,
+        HorizontalScroll,
+        BothDirectionScroll = VerticalScroll | HorizontalScroll
+    };
+
     DirectionZoom directionZoom() const{
         return mDirectionZoom;
     }
@@ -104,11 +111,24 @@ public:
         mDirectionZoom = directionZoom;
     }
 
+    DirectionScroll directionScroll() const{
+        return mDirectionScroll;
+    }
+    void setDirectionScroll(const DirectionScroll &directionScroll){
+        mDirectionScroll = directionScroll;
+    }
+
     bool canZoom() const;
-    void setCanZoom(bool canZoom);
+    bool canZoomHorizontal() const;
+    bool canZoomVertical() const;
+    bool canZoomBoth() const;
+    //void setCanZoom(bool canZoom);
 
     bool canScroll() const;
-    void setCanScroll(bool canScroll);
+    bool canScrollHorizontal() const;
+    bool canScrollVertical() const;
+    bool canScrollBoth() const;
+    //void setCanScroll(bool canScroll);
 
     bool canUseKeys() const;
     void setCanUseKeys(bool canUseKeys);
@@ -152,13 +172,14 @@ protected:
 
 
 private:
-    bool mCanZoom = true;
-    bool mCanScroll = true;
+    //bool mCanZoom = true;
+    //bool mCanScroll = true;
     bool mCanUseKeys = true;
     bool mShowTooltip = false;
 
     bool m_isTouching;
     DirectionZoom mDirectionZoom = NotZoom;
+    DirectionScroll mDirectionScroll = NotScroll;
     QPointF m_lastMousePos;
 
     // tooltip or popup variables

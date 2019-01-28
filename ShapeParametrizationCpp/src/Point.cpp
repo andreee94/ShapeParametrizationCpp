@@ -362,6 +362,58 @@ void Point::toDoubles(const Points& points, doubles &x, doubles &y)
     }
 }
 
+double Point::minX(const Points &points)
+{
+    double min = INT8_MIN;
+    for (unsigned int i = 0; i < points.size(); i++)
+        if (points[i].x < min)
+            min = points[i].x;
+    return min;
+}
+
+double Point::maxX(const Points &points)
+{
+    double max = INT8_MIN;
+    for (unsigned int i = 0; i < points.size(); i++)
+        if (points[i].x > max)
+            max = points[i].x;
+    return max;
+}
+
+double Point::minY(const Points &points)
+{
+    double min = INT8_MIN;
+    for (unsigned int i = 0; i < points.size(); i++)
+        if (points[i].y < min)
+            min = points[i].y;
+    return min;
+}
+
+double Point::maxY(const Points &points)
+{
+    double max = INT8_MIN;
+    for (unsigned int i = 0; i < points.size(); i++)
+        if (points[i].y > max)
+            max = points[i].y;
+    return max;
+}
+
+double Point::meanX(const Points &points)
+{
+    double sum = 0;
+    for (unsigned int i = 0; i < points.size(); i++)
+        sum += points[i].x;
+    return sum / points.size();
+}
+
+double Point::meanY(const Points &points)
+{
+    double sum = 0;
+    for (unsigned int i = 0; i < points.size(); i++)
+        sum += points[i].y;
+    return sum / points.size();
+}
+
 //std::ostream & Point::operator<<(std::ostream & Str) {
 //    // print something from v to str, e.g: Str << v.getX();
 //    std::ostringstream strs;

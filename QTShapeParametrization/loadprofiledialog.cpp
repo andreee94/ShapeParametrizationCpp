@@ -186,8 +186,8 @@ void LoadProfileDialog::updateTableAndChart(bool hasUpdatedFilename)
 //        series->setPointsVisible(true);
 //        series->setPen(QPen(Qt::darkBlue, 2));
         seriesPoints->setMarkerSize(6);
-        seriesPoints->setColor(Qt::blue); //series->pen().color());
-        seriesPoints->setBorderColor(Qt::blue); //series->pen().color());
+        seriesPoints->setColor(QTUtils::Black()); //series->pen().color());
+        seriesPoints->setBorderColor(QTUtils::Black()); //series->pen().color());
         chartView->chart()->removeAllSeries();
         chartView->chart()->addSeries(series);
         chartView->chart()->addSeries(seriesPoints);

@@ -53,6 +53,8 @@ BsplineTask BsplineTaskManager::executeTask(BsplineTask &task)
             return executeInterpolationCP(task);
         case EVALUATION_POINTS:
             return executeEvaluationPoints(task);
+        case EVALUATION_POINTS_COMPARE:
+            return executeEvaluationPointsCompare(task);
         case EVALUATION_TE:
             return executeEvaluationTE(task);
         case EVALUATION_MIN:
@@ -85,10 +87,18 @@ BsplineTask BsplineTaskManager::executeInterpolationCP(BsplineTask &task)
 
 BsplineTask BsplineTaskManager::executeEvaluationPoints(BsplineTask &task)
 {
+    Points points = task.bspline->evaluate(task.numPoints);
+    task.points = points;
+    emit evaluationPointsFinished(task, points);
+    return task;
+}
+
+BsplineTask BsplineTaskManager::executeEvaluationPointsCompare(BsplineTask &task)
+{
     doubles dd = Utils::centripetal(task.data->getPoints(), 1);
     Points points = task.bspline->evaluate(dd);//task.numPoints);
     task.points = points;
-    emit evaluationPointsFinished(task, points);
+    emit evaluationPointsCompareFinished(task, points);
     return task;
 }
 

@@ -39,13 +39,13 @@ protected:
     QRectF handleRect(int aValue) const;
 
 signals:
-    void lowerValueChanged(double aLowerValue);
-    void upperValueChanged(double aUpperValue);
+    void lowerValueChanged(double aLowerValue, bool isFinished=false);
+    void upperValueChanged(double aUpperValue, bool isFinished=false);
     void rangeChanged(double aMin, double aMax);
 
 public slots:
-    void setLowerValue(double aLowerValue);
-    void setUpperValue(double aUpperValue);
+    void setLowerValue(double aLowerValue, bool isFinished=false);
+    void setUpperValue(double aUpperValue, bool isFinished=false);
     void setMinimum(double aMinimum);
     void setMaximum(double aMaximum);
 
@@ -53,6 +53,9 @@ private:
     Q_DISABLE_COPY(RangeSlider)
     float currentPercentage();
     int validWidth() const;
+
+    double mLowerValueOLD;
+    double mUpperValueOLD;
 
     double mMinimum;
     double mMaximum;
