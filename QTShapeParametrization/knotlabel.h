@@ -11,6 +11,7 @@ class KnotLabel : public QLabel
 {
     public:
         KnotLabel(const QString &text, QWidget *parent=0);
+        void setSelected(bool selected);
 };
 
 #endif // KNOTLABEL_H

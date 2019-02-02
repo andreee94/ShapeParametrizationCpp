@@ -283,6 +283,16 @@ Bspline Bspline::interpolate(const Points &points, int numCP, int n, const KnotS
     return Bspline(CParray, uarray, n);
 }
 
+int Bspline::getN() const
+{
+    return n;
+}
+
+void Bspline::setN(int value)
+{
+    n = value;
+}
+
 
 
 Points Bspline::evaluateWithTE(int numpoints, int numpointsTE, string shape, bool tangent_first)

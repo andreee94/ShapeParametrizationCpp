@@ -54,6 +54,8 @@ public slots:
         void comboBoxTEMotionChanged(int index);
         void comboBoxTEShapeChanged(int index);
 
+        void knotSelectedChanged(BaseFixedKnotSequence* knot);
+
 protected:
         BsplineTask *addInterpolationTask(BsplineTaskManager *bsplinemanager) ;
         BsplineTask *addEvaluationPointsTask(BsplineTaskManager *bsplinemanager) ;
@@ -192,6 +194,8 @@ private:
 
         QScatterSeries *knotsSeries;
         ChartView *knotsChartView;
+        QFormLayout *propLayout;
+        QList<QLineEdit*> propLayoutListEdit;
 
         void tabChanged(int index);
         void updateRangesWidgets();

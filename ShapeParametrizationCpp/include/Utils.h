@@ -52,6 +52,12 @@ class Utils
         static bool iszeroint(string str);
 
 
+
+        static constexpr unsigned int str2int(const char* str, int h = 0)
+        {
+            return !str[h] ? 5381 : (str2int(str, h+1) * 33) ^ str[h];
+        }
+
         template<class T>
         static string print(vector<T> vec, string separator, bool endline=true)
         {
@@ -62,6 +68,13 @@ class Utils
                 out << endl;
             return out.str();
 //            return Utils::tostring(out);
+        }
+
+        template<class T>
+        static void move(vector<T> &items, size_t source, size_t dest)
+        {
+            // move item from index source to index dest
+            rotate(items.begin()+dest, items.begin() + source, items.begin() + source+1);
         }
 
         template<class T>
@@ -87,6 +100,15 @@ class Utils
             return result;
         }
 
+        template<typename T>
+        static std::vector<T> slice(std::vector<T> const &v, int start, int end)
+        {
+            auto first = v.cbegin() + start;
+            auto last = v.cbegin() + end;
+
+            std::vector<T> vec(first, last);
+            return vec;
+        }
         ///////////////////////////////////////////////////
         ///////////////////////////////////////////////////
         ///////////////////////////////////////////////////

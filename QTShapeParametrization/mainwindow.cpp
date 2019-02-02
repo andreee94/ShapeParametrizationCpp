@@ -738,6 +738,7 @@ QWidget* MainWindow::generateTabBspline()
     formContainerVLayout->addWidget(groupLayout2);
     formContainerVLayout->addWidget(groupLayout3);
     formContainerVLayout->addLayout(generateKnotListLayout(), 1);
+    formContainerVLayout->addItem(QTUtils::separator());
     //formContainerVLayout->addStretch(1);
     formContainerVLayout->addLayout(updateMINMAX_TEgridLayout);
     formContainerVLayout->addItem(QTUtils::separator());
@@ -1085,14 +1086,36 @@ QLayout *MainWindow::generateKnotListLayout()
     QLabel *labelAllKnots = new QLabel("All Knots");
     KnotListDest *listActiveKnots = new KnotListDest;
     KnotListSource *listAllKnots = new KnotListSource;
-    for (int i = 0; i < 10; i++)
+    listActiveKnots->bspline_n = getN();
+    listActiveKnots->bspline_cpnum = getNumCP();
+    QStringList listknotnames = {"Begin Knots", "End Knots", "Rational Knots", "Value Knot", "Birational Knots", "Uniform Knots", "Multiplicity Knots"};
+    for (int i = 0; i < listknotnames.size(); i++)
     {
-        listAllKnots->addKnot("Item " + QString::number(i));
+        listAllKnots->addKnot(listknotnames[i]);
     }
+
+    QWidget* empty = new QWidget();
+    empty->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    empty->setMinimumWidth(180);
+    //QVBoxLayout *formContainerLayout = new QVBoxLayout;
+    QGroupBox *propGroupBox = new QGroupBox(tr("Parameters"));
+    propLayout = new QFormLayout;
+    propLayout->addRow(new QLabel("Start"), new QLineEdit);
+    propLayout->addRow(new QLabel("End"), new QLineEdit);
+    propLayout->addRow(empty);
+    propGroupBox->setLayout(propLayout);
+    //formContainerLayout->addLayout(propLayout);
+    //formContainerLayout->addStretch(10);
+
+    listActiveKnots->setMinimumWidth(160);
+    listAllKnots->setMinimumWidth(160);
+    connect(listActiveKnots, &KnotListDest::knotChanged, this, &MainWindow::knotSelectedChanged);
+
     gridLayout->addWidget(labelActiveKnots, 0, 0, 1, 1);
     gridLayout->addWidget(labelAllKnots, 0, 1, 1, 1);
     gridLayout->addWidget(listActiveKnots, 1, 0, 1, 1);
     gridLayout->addWidget(listAllKnots, 1, 1, 1, 1);
+    gridLayout->addWidget(propGroupBox, 0, 2, 2, 2);
     return gridLayout;
 }
 
@@ -1426,6 +1449,66 @@ void MainWindow::comboBoxTEShapeChanged(int index)
 {
     if (checkBoxAutoTE->isChecked())
         updateTE();
+}
+
+// //////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////
+
+void MainWindow::knotSelectedChanged(BaseFixedKnotSequence *knot)
+{
+    if (knot)
+    {
+        QPushButton *sendBtn = new QPushButton("Apply");
+        QTUtils::clearLayout(propLayout);
+        propLayoutListEdit.clear();
+        vector<std::variant<int, double>> values = knot->getValues();
+        for (unsigned int i = 0; i < knot->propNames().size(); i++)
+        {
+            string name = knot->propName(i);
+            BaseFixedKnotSequence::ParamType type = knot->propType(i);
+            QLineEdit *qlineedit = new QLineEdit;
+            QString value_str = "";
+            if (type == BaseFixedKnotSequence::ParamType::INT)
+            {
+                value_str = QString::number(std::get<int>(values[i]));
+                qlineedit->setValidator( new QIntValidator(this));
+            }
+            else if (type == BaseFixedKnotSequence::ParamType::DOUBLE)
+            {
+                value_str = QString::number(std::get<double>(values[i]));
+                qlineedit->setValidator( new QDoubleValidator(this));
+            }
+            qlineedit->setText(value_str);
+            propLayout->addRow(new QLabel(QString::fromStdString(name)), qlineedit);
+            propLayoutListEdit.push_back(qlineedit);
+            connect(qlineedit, &QLineEdit::returnPressed, sendBtn, &QPushButton::click);
+        }
+        QWidget* empty = new QWidget();
+        empty->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        empty->setMinimumWidth(180);
+        propLayout->addWidget(empty);
+        propLayout->addWidget(sendBtn);
+
+        connect(sendBtn, &QPushButton::clicked, this, [this, knot] () {
+            vector<std::variant<int, double>> values;
+            for (unsigned int i = 0; i < knot->propNames().size(); i++)
+            {
+                QString text = propLayoutListEdit.at(i)->text(); //static_cast<QLineEdit>(propLayout->itemAt(i, QFormLayout::FieldRole)->widget()).text();
+                cout << "text: " << text.toStdString() << endl;
+                if (knot->propType(i) == BaseFixedKnotSequence::ParamType::INT)
+                {
+                    values.push_back(text.toInt());
+                    //cout << "value: " << text.toInt() << endl;
+                }
+                else if (knot->propType(i) == BaseFixedKnotSequence::ParamType::DOUBLE)
+                {
+                    values.push_back(text.toDouble());
+                    //cout << "value: " << text.toDouble() << endl;
+                }
+            }
+            knot->setValues(values);
+        });
+    }
 }
 
 // //////////////////////////////////////////////////////////////////

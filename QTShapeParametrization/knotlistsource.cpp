@@ -10,9 +10,10 @@ KnotListSource::KnotListSource()
 {
     setDragEnabled(true);
     setViewMode(QListView::ViewMode::ListMode);
-    //setSpacing(10);
+    setSpacing(1);
     //setAcceptDrops(true);
     setDropIndicatorShown(true);
+    setSelectionMode(QAbstractItemView::NoSelection);
 }
 
 void KnotListSource::addKnot(QString type)
@@ -24,6 +25,7 @@ void KnotListSource::addKnot(QString type)
     pieceItem->setData(Qt::UserRole, QVariant(type));
     pieceItem->setData(Qt::UserRole+1, QPoint(0, 0));
     pieceItem->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsDragEnabled);
+    pieceItem->setSizeHint(QSize(pieceItem->sizeHint().width(), label->minimumHeight()));
     addItem(pieceItem);
     setItemWidget(pieceItem, label);
 }
@@ -67,8 +69,7 @@ void KnotListSource::dropEvent(QDropEvent *event)
 
 void KnotListSource::mousePressEvent(QMouseEvent *event)
 {
-    QWidget *childWidget = childAt(event->pos());
-    KnotLabel *child = static_cast<KnotLabel*>(childWidget);
+    KnotLabel *child = static_cast<KnotLabel*>(childAt(event->pos()));
     if (!child)
         return;
 

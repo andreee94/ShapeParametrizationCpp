@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created by: The Qt Meta Object Compiler version 67 (Qt 5.12.1)
+** Created by: The Qt Meta Object Compiler version 67 (Qt 5.12.0)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -12,7 +12,7 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'mainwindow.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
-#error "This file was generated using the moc from 5.12.1. It"
+#error "This file was generated using the moc from 5.12.0. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[36];
-    char stringdata0[583];
+    QByteArrayData data[39];
+    char stringdata0[631];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -66,7 +66,10 @@ QT_MOC_LITERAL(31, 513, 5), // "value"
 QT_MOC_LITERAL(32, 519, 10), // "isFinished"
 QT_MOC_LITERAL(33, 530, 23), // "comboBoxTEMotionChanged"
 QT_MOC_LITERAL(34, 554, 5), // "index"
-QT_MOC_LITERAL(35, 560, 22) // "comboBoxTEShapeChanged"
+QT_MOC_LITERAL(35, 560, 22), // "comboBoxTEShapeChanged"
+QT_MOC_LITERAL(36, 583, 19), // "knotSelectedChanged"
+QT_MOC_LITERAL(37, 603, 22), // "BaseFixedKnotSequence*"
+QT_MOC_LITERAL(38, 626, 4) // "knot"
 
     },
     "MainWindow\0bsplineTaskStarted\0\0"
@@ -84,7 +87,9 @@ QT_MOC_LITERAL(35, 560, 22) // "comboBoxTEShapeChanged"
     "showErrorChart\0showBsplineChart\0"
     "compareButtonClicked\0rangeValueChanged\0"
     "value\0isFinished\0comboBoxTEMotionChanged\0"
-    "index\0comboBoxTEShapeChanged"
+    "index\0comboBoxTEShapeChanged\0"
+    "knotSelectedChanged\0BaseFixedKnotSequence*\0"
+    "knot"
 };
 #undef QT_MOC_LITERAL
 
@@ -94,7 +99,7 @@ static const uint qt_meta_data_MainWindow[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-      20,   14, // methods
+      21,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -102,26 +107,27 @@ static const uint qt_meta_data_MainWindow[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    1,  114,    2, 0x0a /* Public */,
-       5,    1,  117,    2, 0x0a /* Public */,
-       6,    0,  120,    2, 0x0a /* Public */,
-       7,    2,  121,    2, 0x0a /* Public */,
-      10,    2,  126,    2, 0x0a /* Public */,
-      11,    2,  131,    2, 0x0a /* Public */,
-      14,    2,  136,    2, 0x0a /* Public */,
-      15,    2,  141,    2, 0x0a /* Public */,
-      16,    2,  146,    2, 0x0a /* Public */,
-      17,    2,  151,    2, 0x0a /* Public */,
-      18,    2,  156,    2, 0x0a /* Public */,
-      20,    2,  161,    2, 0x0a /* Public */,
-      22,    3,  166,    2, 0x0a /* Public */,
-      26,    3,  173,    2, 0x0a /* Public */,
-      27,    0,  180,    2, 0x0a /* Public */,
-      28,    0,  181,    2, 0x0a /* Public */,
-      29,    0,  182,    2, 0x0a /* Public */,
-      30,    2,  183,    2, 0x0a /* Public */,
-      33,    1,  188,    2, 0x0a /* Public */,
-      35,    1,  191,    2, 0x0a /* Public */,
+       1,    1,  119,    2, 0x0a /* Public */,
+       5,    1,  122,    2, 0x0a /* Public */,
+       6,    0,  125,    2, 0x0a /* Public */,
+       7,    2,  126,    2, 0x0a /* Public */,
+      10,    2,  131,    2, 0x0a /* Public */,
+      11,    2,  136,    2, 0x0a /* Public */,
+      14,    2,  141,    2, 0x0a /* Public */,
+      15,    2,  146,    2, 0x0a /* Public */,
+      16,    2,  151,    2, 0x0a /* Public */,
+      17,    2,  156,    2, 0x0a /* Public */,
+      18,    2,  161,    2, 0x0a /* Public */,
+      20,    2,  166,    2, 0x0a /* Public */,
+      22,    3,  171,    2, 0x0a /* Public */,
+      26,    3,  178,    2, 0x0a /* Public */,
+      27,    0,  185,    2, 0x0a /* Public */,
+      28,    0,  186,    2, 0x0a /* Public */,
+      29,    0,  187,    2, 0x0a /* Public */,
+      30,    2,  188,    2, 0x0a /* Public */,
+      33,    1,  193,    2, 0x0a /* Public */,
+      35,    1,  196,    2, 0x0a /* Public */,
+      36,    1,  199,    2, 0x0a /* Public */,
 
  // slots: parameters
     QMetaType::Void, 0x80000000 | 3,    4,
@@ -144,6 +150,7 @@ static const uint qt_meta_data_MainWindow[] = {
     QMetaType::Void, QMetaType::Double, QMetaType::Bool,   31,   32,
     QMetaType::Void, QMetaType::Int,   34,
     QMetaType::Void, QMetaType::Int,   34,
+    QMetaType::Void, 0x80000000 | 37,   38,
 
        0        // eod
 };
@@ -151,7 +158,7 @@ static const uint qt_meta_data_MainWindow[] = {
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
     if (_c == QMetaObject::InvokeMetaMethod) {
-        auto *_t = static_cast<MainWindow *>(_o);
+        MainWindow *_t = static_cast<MainWindow *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->bsplineTaskStarted((*reinterpret_cast< const BsplineTask(*)>(_a[1]))); break;
@@ -174,6 +181,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 17: _t->rangeValueChanged((*reinterpret_cast< double(*)>(_a[1])),(*reinterpret_cast< bool(*)>(_a[2]))); break;
         case 18: _t->comboBoxTEMotionChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 19: _t->comboBoxTEShapeChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 20: _t->knotSelectedChanged((*reinterpret_cast< BaseFixedKnotSequence*(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
@@ -303,13 +311,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 20)
+        if (_id < 21)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 20;
+        _id -= 21;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 20)
+        if (_id < 21)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 20;
+        _id -= 21;
     }
     return _id;
 }

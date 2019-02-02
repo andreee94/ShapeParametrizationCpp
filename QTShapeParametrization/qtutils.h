@@ -28,6 +28,9 @@ public:
     static QLayoutItem* separator();
     static void appendPointsToSeries(QLineSeries *series, const Points &points);
     static void appendPointsToSeries(QScatterSeries *series, const Points &points);
-    static void setRangeIfLarger(QValueAxis *axis, double min, double max);};
+    static void setRangeIfLarger(QValueAxis *axis, double min, double max);
+    static void clearLayout(QLayout *layout);
+
+};
 
 #endif // QTUTILS_H

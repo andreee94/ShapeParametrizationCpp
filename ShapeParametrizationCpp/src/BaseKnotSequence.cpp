@@ -3,6 +3,8 @@
 #include <cmath>
 #include <Utils.h>
 #include <iostream>
+#include <typeinfo>
+#include <variant>
 
 using namespace std;
 
@@ -24,6 +26,22 @@ BaseKnotSequence::BaseKnotSequence(int  numParams, double start, double end)
 BaseFixedKnotSequence::BaseFixedKnotSequence(double start, double end)
 :BaseKnotSequence(0, start, end)
 {
+}
+
+void BaseFixedKnotSequence::setValues(vector<std::variant<int, double>> values)
+{
+    if (values.size() != 2) // TODO throw error
+        return;
+    static_cast<BaseKnotSequence *>(this)->setStart(std::get<double>(values[0]));
+    static_cast<BaseKnotSequence *>(this)->setEnd(std::get<double>(values[1]));
+}
+
+vector<std::variant<int, double>> BaseFixedKnotSequence::getValues()
+{
+    vector<std::variant<int, double>> values;
+    values.push_back(start);
+    values.push_back(end);
+    return values;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -53,6 +71,8 @@ UniformFixedKS::UniformFixedKS(double start, double end, int steps)
 ,UniformKS(start, end)
 {
     this->steps = steps;
+    this->property_names = {"Start", "End", "Steps"};
+    this->property_types = {ParamType::DOUBLE, ParamType::DOUBLE, ParamType::INT};
 }
 
 doubles UniformFixedKS::getSequence()
@@ -60,6 +80,22 @@ doubles UniformFixedKS::getSequence()
     doubles params = {(double)this->steps};
     return UniformKS::getSequence(params);
 }
+
+void UniformFixedKS::setValues(vector<std::variant<int, double>> values)
+{
+    if (values.size() != 3) // TODO throw error
+        return;
+    static_cast<BaseFixedKnotSequence *>(this)->setValues(Utils::slice(values, 0, 2));
+    this->steps = std::get<int>(values[2]);
+}
+
+vector<std::variant<int, double>> UniformFixedKS::getValues()
+{
+    vector<std::variant<int, double>> values = BaseFixedKnotSequence::getValues();
+    values.push_back(steps);
+    return values;
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
@@ -70,12 +106,29 @@ doubles UniformFixedKS::getSequence()
 ValueFixedKS::ValueFixedKS(double value)
 :BaseFixedKnotSequence(value, value)
 {
+    this->property_names = {"Value"};
+    this->property_types = {ParamType::DOUBLE};
 }
 
 doubles ValueFixedKS::getSequence()
 {
     doubles d = {this->getStart()};
     return d;
+}
+
+void ValueFixedKS::setValues(vector<std::variant<int, double> > values)
+{
+    if (values.size() != 1) // TODO throw error
+        return;
+    this->start = std::get<double>(values[0]);
+    this->end = std::get<double>(values[0]);
+}
+
+vector<std::variant<int, double>> ValueFixedKS::getValues()
+{
+    vector<std::variant<int, double>> values;
+    values.push_back(start);
+    return values;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -87,11 +140,29 @@ doubles ValueFixedKS::getSequence()
 MultiplicityFixedValueKS::MultiplicityFixedValueKS(double value, int multiplicity)
 :UniformFixedKS(value, value, multiplicity)
 {
+    this->property_names = {"Value", "Multiplicity"};
+    this->property_types = {ParamType::DOUBLE, ParamType::INT};
 }
 
 doubles MultiplicityFixedValueKS::getSequence()
 {
     return UniformFixedKS::getSequence();
+}
+
+void MultiplicityFixedValueKS::setValues(vector<std::variant<int, double>> values)
+{
+    if (values.size() != 2) // TODO throw error
+        return;
+    static_cast<BaseFixedKnotSequence *>(this)->setValues({values[0], values[0]});
+    this->steps = std::get<int>(values[1]);
+}
+
+vector<std::variant<int, double>> MultiplicityFixedValueKS::getValues()
+{
+    vector<std::variant<int, double>> values;
+    values.push_back(static_cast<BaseFixedKnotSequence *>(this)->getStart());
+    values.push_back(steps);
+    return values;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -119,11 +190,28 @@ doubles MultiplicityValueKS::getSequence(doubles params)
 BeginKS::BeginKS(int bspline_n)
 :MultiplicityFixedValueKS(0, bspline_n + 1)
 {
+    this->property_names = {"Bspline Degree"};
+    this->property_types = {ParamType::INT};
 }
 
 doubles BeginKS::getSequence()
 {
     return MultiplicityFixedValueKS::getSequence();
+}
+
+void BeginKS::setValues(vector<std::variant<int, double>> values)
+{
+    if (values.size() != 1) // TODO throw error
+        return;
+    static_cast<BaseFixedKnotSequence *>(this)->setValues({0, 0});
+    this->steps = std::get<int>(values[0]) + 1;
+}
+
+vector<std::variant<int, double>> BeginKS::getValues()
+{
+    vector<std::variant<int, double>> values;
+    values.push_back(steps - 1);
+    return values;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -135,11 +223,28 @@ doubles BeginKS::getSequence()
 EndKS::EndKS(int bspline_n)
 :MultiplicityFixedValueKS(1, bspline_n + 1)
 {
+    this->property_names = {"Bspline Degree"};
+    this->property_types = {ParamType::INT};
 }
 
 doubles EndKS::getSequence()
 {
     return MultiplicityFixedValueKS::getSequence();
+}
+
+void EndKS::setValues(vector<std::variant<int, double>> values)
+{
+    if (values.size() != 1) // TODO throw error
+        return;
+    static_cast<BaseFixedKnotSequence *>(this)->setValues({1, 1});
+    this->steps = std::get<int>(values[0]) + 1;
+}
+
+vector<std::variant<int, double>> EndKS::getValues()
+{
+    vector<std::variant<int, double>> values;
+    values.push_back(steps - 1);
+    return values;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -186,7 +291,26 @@ RationalFixedKS::RationalFixedKS(double start, double end, int numpoints, double
 :BaseFixedKnotSequence(start, end)
 ,RationalKS(start, end, numpoints)
 {
+    this->property_names = {"Start", "End", "Points number", "Ratio"};
+    this->property_types = {ParamType::DOUBLE, ParamType::DOUBLE, ParamType::INT, ParamType::DOUBLE};
     this->q = q;
+}
+
+void RationalFixedKS::setValues(vector<std::variant<int, double>> values)
+{
+    if (values.size() != 4) // TODO throw error
+        return;
+    static_cast<BaseFixedKnotSequence *>(this)->setValues(Utils::slice(values, 0, 2));
+    this->numpoints = std::get<int>(values[2]);
+    this->q = std::get<double>(values[3]);
+}
+
+vector<std::variant<int, double>> RationalFixedKS::getValues()
+{
+    vector<std::variant<int, double>> values = BaseFixedKnotSequence::getValues();
+    values.push_back(numpoints);
+    values.push_back(q);
+    return values;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -243,9 +367,32 @@ BiRationalFixedKS::BiRationalFixedKS(double start, double end, int numpoints, do
 :BaseFixedKnotSequence(start, end)
 ,BiRationalKS(start, end, numpoints)
 {
+    this->property_names = {"Start", "End", "Points number", "Ratio 1", "Ratio 2", "Center"};
+    this->property_types = {ParamType::DOUBLE, ParamType::DOUBLE, ParamType::INT, ParamType::DOUBLE, ParamType::DOUBLE, ParamType::DOUBLE};
     this->q1 = q1;
     this->q2 = q2;
     this->center = center;
+}
+
+void BiRationalFixedKS::setValues(vector<std::variant<int, double>> values)
+{
+    if (values.size() != 6) // TODO throw error
+        return;
+    static_cast<BaseFixedKnotSequence *>(this)->setValues(Utils::slice(values, 0, 2));
+    this->numpoints = std::get<int>(values[2]);
+    this->q1 = std::get<double>(values[3]);
+    this->q2 = std::get<double>(values[4]);
+    this->center = std::get<double>(values[5]);
+}
+
+vector<std::variant<int, double>> BiRationalFixedKS::getValues()
+{
+    vector<std::variant<int, double>> values = BaseFixedKnotSequence::getValues();
+    values.push_back(numpoints);
+    values.push_back(q1);
+    values.push_back(q2);
+    values.push_back(center);
+    return values;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -254,15 +401,31 @@ BiRationalFixedKS::BiRationalFixedKS(double start, double end, int numpoints, do
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 
-CustomFixedKS::CustomFixedKS(double start, double end, doubles sequence)
+CustomFixedKS::CustomFixedKS(double start, double end, doubles sequence) // TODO ADD SEQUENCE IN PROPERTIES
 :BaseFixedKnotSequence(start, end)
 {
+    this->property_names = {"Start", "End"};
+    this->property_types = {ParamType::DOUBLE, ParamType::DOUBLE};
     this->sequence = sequence;
 }
 
 doubles CustomFixedKS::getSequence()
 {
     return this->sequence;
+}
+
+void CustomFixedKS::setValues(vector<std::variant<int, double>> values)
+{
+    if (values.size() != 6) // TODO throw error
+        return;
+    static_cast<BaseFixedKnotSequence *>(this)->setValues(Utils::slice(values, 0, 2));
+}
+
+vector<std::variant<int, double>> CustomFixedKS::getValues()
+{
+    vector<std::variant<int, double>> values;
+    values = static_cast<BaseFixedKnotSequence *>(this)->getValues();
+    return values;
 }
 
 //////////////////////////////////////////////////////////////////////////

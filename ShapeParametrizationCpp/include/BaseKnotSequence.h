@@ -3,6 +3,8 @@
 #include <vector>
 #include <cmath>
 #include <Point.h>
+#include <variant>
+#include <typeinfo>
 
 typedef std::vector<double> doubles;
 typedef std::vector<Point> Points;
@@ -35,17 +37,17 @@ class BaseKnotSequence
             this->end = other.end;
         }
 
-
         int getNumParams() const { return numParams;}
         double getStart() const { return start;}
         double getEnd() const { return end;}
+        void setStart(double start) { this->start = start;}
+        void setEnd(double end) { this->end = end;}
 
     protected:
         int numParams;
         //doubles params;
         double start;
         double end;
-
     private:
 };
 
@@ -56,14 +58,26 @@ class BaseKnotSequence
 class BaseFixedKnotSequence: public BaseKnotSequence
 {
     public:
+        enum ParamType { INT, DOUBLE };
+
         BaseFixedKnotSequence(double start, double end);
         virtual doubles getSequence() = 0;
         doubles getSequence(doubles params)
         {
             return this->getSequence();
         }
+        vector<string> propNames(){ return property_names; }
+        vector<ParamType> propTypes(){ return property_types; }
+        string propName(unsigned int i){ return property_names[i]; }
+        ParamType propType(unsigned int i){ return property_types[i]; }
+        virtual void setValues(vector<std::variant<int, double>> values) = 0;
+        virtual vector<std::variant<int, double>> getValues() = 0;
 
     protected:
+        //virtual vector<string> getPropertyNames() { return {}; }
+        //virtual vector<string> getPropertyTypes() { return {}; }
+        vector<string> property_names;
+        vector<ParamType> property_types;
 
     private:
 };
@@ -94,6 +108,8 @@ class UniformFixedKS: public BaseFixedKnotSequence, public UniformKS
         {
             return BaseFixedKnotSequence::getSequence(params);
         }
+        void setValues(vector<std::variant<int, double>> values);
+        vector<std::variant<int, double>> getValues();
 
     protected:
         int steps;
@@ -109,6 +125,8 @@ class ValueFixedKS: public BaseFixedKnotSequence
     public:
         ValueFixedKS(double value);
         doubles getSequence();
+        void setValues(vector<std::variant<int, double>> values);
+        vector<std::variant<int, double>> getValues();
 
     protected:
 
@@ -123,6 +141,8 @@ class MultiplicityFixedValueKS: public UniformFixedKS
     public:
         MultiplicityFixedValueKS(double value, int multiplicity);
         doubles getSequence();
+        void setValues(vector<std::variant<int, double>> values);
+        vector<std::variant<int, double>> getValues();
 
     protected:
 
@@ -152,6 +172,8 @@ class BeginKS: public MultiplicityFixedValueKS // initial zeros
     public:
         BeginKS(int bspline_n);
         doubles getSequence();
+        void setValues(vector<std::variant<int, double>> values);
+        vector<std::variant<int, double>> getValues();
 
     protected:
 
@@ -166,6 +188,8 @@ class EndKS: public MultiplicityFixedValueKS // final zeros
     public:
         EndKS(int bspline_n);
         doubles getSequence();
+        void setValues(vector<std::variant<int, double>> values);
+        vector<std::variant<int, double>> getValues();
 
     protected:
 
@@ -198,6 +222,8 @@ class RationalFixedKS: public BaseFixedKnotSequence, public RationalKS
             doubles params = {(double)this->q};
             return RationalKS::getSequence(params);
         }
+        void setValues(vector<std::variant<int, double>> values);
+        vector<std::variant<int, double>> getValues();
 
     protected:
         double q;
@@ -236,6 +262,8 @@ class BiRationalFixedKS: public BaseFixedKnotSequence, public BiRationalKS
             return BiRationalKS::getSequence(params);
         }
 
+        void setValues(vector<std::variant<int, double>> values);
+        vector<std::variant<int, double>> getValues();
     protected:
         double q1, q2;
         double center;
@@ -250,6 +278,8 @@ class CustomFixedKS: public BaseFixedKnotSequence
     public:
         CustomFixedKS(double start, double end, doubles sequence);
         doubles getSequence();
+        void setValues(vector<std::variant<int, double>> values);
+        vector<std::variant<int, double>> getValues();
 
     protected:
         doubles sequence;

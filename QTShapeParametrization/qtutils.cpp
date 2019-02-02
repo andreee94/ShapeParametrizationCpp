@@ -45,3 +45,18 @@ void QTUtils::setRangeIfLarger(QValueAxis *axis, double min, double max)
     max = std::max(axis->max(), max);
     axis->setRange(min, max);
 }
+
+void QTUtils::clearLayout(QLayout *layout)
+{
+    QLayoutItem *item;
+    while((item = layout->takeAt(0))) {
+        if (item->layout()) {
+            clearLayout(item->layout());
+            delete item->layout();
+        }
+        if (item->widget()) {
+            delete item->widget();
+        }
+        delete item;
+    }
+}
