@@ -17,6 +17,7 @@ class KnotListDest : public QListWidget
 
         int bspline_n;
         int bspline_cpnum;
+        KnotSequences getKnotSequence();
 
     signals:
         void knotChanged(BaseFixedKnotSequence* knot);

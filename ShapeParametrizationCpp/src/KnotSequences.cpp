@@ -22,6 +22,12 @@ KnotSequences::KnotSequences(Knots knots)
     this->knots = knots;
 }
 
+KnotSequences::KnotSequences(std::vector<BaseFixedKnotSequence *> knots)
+{
+    for (auto & knot : knots)
+        this->knots.push_back(knot);
+}
+
 KnotSequences &KnotSequences::operator=(const KnotSequences &other)
 {
     if (this == &other) return *this; // handle self assignment
@@ -66,6 +72,11 @@ int KnotSequences::computeNumParams()
     for (auto item : this->knots)
         numParams += item->getNumParams();
     return numParams;
+}
+
+size_t KnotSequences::count() const
+{
+    return knots.size();
 }
 
 

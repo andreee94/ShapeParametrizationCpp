@@ -1043,15 +1043,13 @@ QWidget* MainWindow::generateKnotChartLayout()
     knotsSeries->setColor(QColor(0x1E, 0x90, 0xFF)); //series->pen().color());
     knotsSeries->setBorderColor(QColor(0x1E, 0x90, 0xFF)); //series->pen().color());
 
-    doubles values = getKnotSequence().getSequence({});
-    int maxmultiplicity = updateKnotSeries(values);
 
     Chart *chart = new Chart();
        chart->legend()->hide();
        chart->addSeries(knotsSeries);
        chart->createDefaultAxes();
        chart->axisY()->setMin(-0.05);
-       chart->axisY()->setMax(0.05 * (maxmultiplicity + 1));
+       //chart->axisY()->setMax(0.05 * (maxmultiplicity + 1));
        chart->removeAxis(chart->axisY());
        chart->setMargins(QMargins(2, 2, 2, 2));
        chart->axisX()->setRange(0-0.05, 1+0.05);
@@ -1062,12 +1060,14 @@ QWidget* MainWindow::generateKnotChartLayout()
     knotsChartView = new ChartView();
         knotsChartView->setChart(chart);
         knotsChartView->setRenderHint(QPainter::Antialiasing);
-        knotsChartView->setFixedHeight(110);
+        //knotsChartView->resize(knotsChartView->width(), max(2*10+30+14*maxmultiplicity, 2*10+30+2*14));
+        //knotsChartView->setFixedHeight(max(2*10+30+14*maxmultiplicity, 2*10+30+2*14));
         knotsChartView->setDirectionZoom(ChartView::NotZoom);
         knotsChartView->setDirectionScroll(ChartView::NotScroll);
         knotsChartView->setCanUseKeys(false);
         knotsChartView->setShowTooltip(true);
 
+    int maxmultiplicity = updateKnotSeries();
 
     QColor blue = QColor(0x1E, 0x90, 0xFF);
     QString bluestr = QString("rgb(").append(QString::number(blue.red())).append(", ").append(QString::number(blue.green())).append(", ").append(QString::number(blue.blue())).append(")");
@@ -1084,8 +1084,8 @@ QLayout *MainWindow::generateKnotListLayout()
     QGridLayout *gridLayout = new QGridLayout;
     QLabel *labelActiveKnots = new QLabel("Knot List");
     QLabel *labelAllKnots = new QLabel("All Knots");
-    KnotListDest *listActiveKnots = new KnotListDest;
-    KnotListSource *listAllKnots = new KnotListSource;
+    listActiveKnots = new KnotListDest;
+    listAllKnots = new KnotListSource;
     listActiveKnots->bspline_n = getN();
     listActiveKnots->bspline_cpnum = getNumCP();
     QStringList listknotnames = {"Begin Knots", "End Knots", "Rational Knots", "Value Knot", "Birational Knots", "Uniform Knots", "Multiplicity Knots"};
@@ -1368,9 +1368,10 @@ void MainWindow::updatePointsChart()
     }
 }
 
-int MainWindow::updateKnotSeries(doubles uarray)
+int MainWindow::updateKnotSeries()
 {
     knotsSeries->clear();
+    doubles uarray = getKnotSequence().getSequence({});
     int maxmultiplicity = 0;
     for (unsigned int i = 0; i < uarray.size(); i++)
     {
@@ -1383,6 +1384,18 @@ int MainWindow::updateKnotSeries(doubles uarray)
         }
         knotsSeries->append(uarray[i], 0.05 * multiplicity);
         maxmultiplicity = max(multiplicity, maxmultiplicity);
+    }
+    if (knotsChartView)
+    {
+        knotsChartView->setFixedHeight(max(2*10+30+14*maxmultiplicity+14, 2*10+30+2*14));
+        //knotsChartView->resize(knotsChartView->width(), max(2*10+30+14*maxmultiplicity, 2*10+30+2*14));
+        knotsChartView->chart()->createDefaultAxes();
+        knotsChartView->chart()->axisX()->setRange(0-0.05, 1+0.05);
+        ((QValueAxis*)knotsChartView->chart()->axisX())->setLabelFormat("%1.2f");
+        ((QValueAxis*)knotsChartView->chart()->axisX())->setTickCount(23);
+        knotsChartView->chart()->axisY()->setMin(-0.05);
+        knotsChartView->chart()->axisY()->setMax(0.05 * (maxmultiplicity + 1));
+        knotsChartView->chart()->removeAxis(knotsChartView->chart()->axisY());
     }
     return maxmultiplicity;
 }
@@ -1460,53 +1473,75 @@ void MainWindow::knotSelectedChanged(BaseFixedKnotSequence *knot)
     {
         QPushButton *sendBtn = new QPushButton("Apply");
         QTUtils::clearLayout(propLayout);
-        propLayoutListEdit.clear();
-        vector<std::variant<int, double>> values = knot->getValues();
+        propLayoutListWidgets.clear();
+        vector<std::variant<int, double, bool>> values = knot->getValues();
         for (unsigned int i = 0; i < knot->propNames().size(); i++)
         {
             string name = knot->propName(i);
             BaseFixedKnotSequence::ParamType type = knot->propType(i);
-            QLineEdit *qlineedit = new QLineEdit;
-            QString value_str = "";
-            if (type == BaseFixedKnotSequence::ParamType::INT)
+            QWidget *qwidget;
+            if (knot->propType(i) == BaseFixedKnotSequence::ParamType::INT || knot->propType(i) == BaseFixedKnotSequence::ParamType::DOUBLE)
             {
-                value_str = QString::number(std::get<int>(values[i]));
-                qlineedit->setValidator( new QIntValidator(this));
+                QLineEdit *qlineedit = new QLineEdit;
+                QString value_str = "";
+                if (type == BaseFixedKnotSequence::ParamType::INT)
+                {
+                    value_str = QString::number(std::get<int>(values[i]));
+                    qlineedit->setValidator( new QIntValidator(this));
+                }
+                else if (type == BaseFixedKnotSequence::ParamType::DOUBLE)
+                {
+                    value_str = QString::number(std::get<double>(values[i]));
+                    qlineedit->setValidator( new QDoubleValidator(this));
+                }
+                qlineedit->setText(value_str);
+                connect(qlineedit, &QLineEdit::returnPressed, sendBtn, &QPushButton::click);
+                qwidget = qlineedit;
             }
-            else if (type == BaseFixedKnotSequence::ParamType::DOUBLE)
+            else if (knot->propType(i) == BaseFixedKnotSequence::ParamType::BOOL)
             {
-                value_str = QString::number(std::get<double>(values[i]));
-                qlineedit->setValidator( new QDoubleValidator(this));
+                QCheckBox *qcheckbox = new QCheckBox;
+                qcheckbox->setChecked(std::get<bool>(values[i]));
+                connect(qcheckbox, &QCheckBox::stateChanged, sendBtn, &QPushButton::click);
+                qwidget = qcheckbox;
             }
-            qlineedit->setText(value_str);
-            propLayout->addRow(new QLabel(QString::fromStdString(name)), qlineedit);
-            propLayoutListEdit.push_back(qlineedit);
-            connect(qlineedit, &QLineEdit::returnPressed, sendBtn, &QPushButton::click);
+            propLayout->addRow(new QLabel(QString::fromStdString(name)), qwidget);
+            propLayoutListWidgets.push_back(qwidget);
         }
         QWidget* empty = new QWidget();
         empty->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         empty->setMinimumWidth(180);
         propLayout->addWidget(empty);
         propLayout->addWidget(sendBtn);
+        this->updateKnotSeries();
 
         connect(sendBtn, &QPushButton::clicked, this, [this, knot] () {
-            vector<std::variant<int, double>> values;
-            for (unsigned int i = 0; i < knot->propNames().size(); i++)
+            vector<std::variant<int, double, bool>> values;
+            for (size_t i = 0; i < knot->propNames().size(); i++)
             {
-                QString text = propLayoutListEdit.at(i)->text(); //static_cast<QLineEdit>(propLayout->itemAt(i, QFormLayout::FieldRole)->widget()).text();
-                cout << "text: " << text.toStdString() << endl;
-                if (knot->propType(i) == BaseFixedKnotSequence::ParamType::INT)
+                if (knot->propType(i) == BaseFixedKnotSequence::ParamType::INT || knot->propType(i) == BaseFixedKnotSequence::ParamType::DOUBLE)
                 {
-                    values.push_back(text.toInt());
-                    //cout << "value: " << text.toInt() << endl;
+                    QString text = static_cast<QLineEdit*>(propLayoutListWidgets.at(i))->text(); //static_cast<QLineEdit>(propLayout->itemAt(i, QFormLayout::FieldRole)->widget()).text();
+                    cout << "text: " << text.toStdString() << endl;
+                    if (knot->propType(i) == BaseFixedKnotSequence::ParamType::INT)
+                    {
+                        values.push_back(text.toInt());
+                        //cout << "value: " << text.toInt() << endl;
+                    }
+                    else if (knot->propType(i) == BaseFixedKnotSequence::ParamType::DOUBLE)
+                    {
+                        values.push_back(text.toDouble());
+                        //cout << "value: " << text.toDouble() << endl;
+                    }
                 }
-                else if (knot->propType(i) == BaseFixedKnotSequence::ParamType::DOUBLE)
+                else if (knot->propType(i) == BaseFixedKnotSequence::ParamType::BOOL)
                 {
-                    values.push_back(text.toDouble());
-                    //cout << "value: " << text.toDouble() << endl;
+                    bool checked = static_cast<QCheckBox*>(propLayoutListWidgets.at(i))->isChecked();
+                    values.push_back(checked);
                 }
             }
             knot->setValues(values);
+            this->updateKnotSeries();
         });
     }
 }
@@ -1729,7 +1764,11 @@ TEMotion MainWindow::getTEMotion()
 
 KnotSequences MainWindow::getKnotSequence()
 {
-    return KnotSequences::getCompleteBirationalFixedKS(getN(), getNumCP(), 1.2, 1.0/1.2, 0.7);
+    KnotSequences sequence = listActiveKnots->getKnotSequence();
+    if (sequence.count() > 0)
+        return sequence;
+    else
+        return KnotSequences::getCompleteBirationalFixedKS(getN(), getNumCP(), 1.2, 1.0/1.2, 0.5);
 }
 
 bool MainWindow::isNumCPChanged(bool updateOld)

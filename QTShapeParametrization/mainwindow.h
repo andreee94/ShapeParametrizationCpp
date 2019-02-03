@@ -9,6 +9,8 @@
 #include "rangesliderlayout.h"
 #include "profiledata.h"
 #include "bsplinetask.h"
+#include "knotlistdest.h"
+#include "knotlistsource.h"
 
 #include <QDialog>
 #include <QTableView>
@@ -195,7 +197,9 @@ private:
         QScatterSeries *knotsSeries;
         ChartView *knotsChartView;
         QFormLayout *propLayout;
-        QList<QLineEdit*> propLayoutListEdit;
+        QList<QWidget*> propLayoutListWidgets;
+        KnotListDest *listActiveKnots;
+        KnotListSource *listAllKnots;
 
         void tabChanged(int index);
         void updateRangesWidgets();
@@ -234,7 +238,7 @@ private:
         void updateBspline();
         void updateTangentsNormals(bool changednumcp);
 
-        int updateKnotSeries(doubles uarray);
+        int updateKnotSeries();
 
 };
 

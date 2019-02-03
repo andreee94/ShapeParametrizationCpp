@@ -23,24 +23,37 @@ BaseKnotSequence::BaseKnotSequence(int  numParams, double start, double end)
     this->end = end;
 }
 
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+
 BaseFixedKnotSequence::BaseFixedKnotSequence(double start, double end)
 :BaseKnotSequence(0, start, end)
 {
 }
 
-void BaseFixedKnotSequence::setValues(vector<std::variant<int, double>> values)
+void BaseFixedKnotSequence::setValues(vector<std::variant<int, double, bool>> values)
 {
-    if (values.size() != 2) // TODO throw error
+    if (values.size() != 2 && values.size() != 4) // TODO throw error
         return;
-    static_cast<BaseKnotSequence *>(this)->setStart(std::get<double>(values[0]));
-    static_cast<BaseKnotSequence *>(this)->setEnd(std::get<double>(values[1]));
+    BaseKnotSequence::setStart(std::get<double>(values[0]));
+    BaseKnotSequence::setEnd(std::get<double>(values[1]));
+    if (values.size() == 4)
+    {
+        BaseKnotSequence::setStartIncluded(std::get<bool>(values[2]));
+        BaseKnotSequence::setEndIncluded(std::get<bool>(values[3]));
+    }
 }
 
-vector<std::variant<int, double>> BaseFixedKnotSequence::getValues()
+vector<std::variant<int, double, bool>> BaseFixedKnotSequence::getValues()
 {
-    vector<std::variant<int, double>> values;
+    vector<std::variant<int, double, bool>> values;
     values.push_back(start);
     values.push_back(end);
+    //values.push_back(startIncluded);
+    //values.push_back(endIncluded);
     return values;
 }
 
@@ -57,7 +70,7 @@ UniformKS::UniformKS(double start, double end)
 
 doubles UniformKS::getSequence(doubles params)
 {
-    return Utils::linspace(this->start, this->end, (int)params[0]);
+    return Utils::linspace(this->start, this->end, (int)params[0], startIncluded, endIncluded);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -70,9 +83,11 @@ UniformFixedKS::UniformFixedKS(double start, double end, int steps)
 :BaseFixedKnotSequence(start, end)
 ,UniformKS(start, end)
 {
+    this->UniformKS::start = start;
+    this->UniformKS::end = end;
     this->steps = steps;
-    this->property_names = {"Start", "End", "Steps"};
-    this->property_types = {ParamType::DOUBLE, ParamType::DOUBLE, ParamType::INT};
+    this->property_names = {"Start", "End", "Include Start", "Include End", "Steps"};
+    this->property_types = {ParamType::DOUBLE, ParamType::DOUBLE, ParamType::BOOL, ParamType::BOOL, ParamType::INT};
 }
 
 doubles UniformFixedKS::getSequence()
@@ -81,17 +96,23 @@ doubles UniformFixedKS::getSequence()
     return UniformKS::getSequence(params);
 }
 
-void UniformFixedKS::setValues(vector<std::variant<int, double>> values)
+void UniformFixedKS::setValues(vector<std::variant<int, double, bool>> values)
 {
-    if (values.size() != 3) // TODO throw error
+    if (values.size() != 5) // TODO throw error
         return;
-    static_cast<BaseFixedKnotSequence *>(this)->setValues(Utils::slice(values, 0, 2));
-    this->steps = std::get<int>(values[2]);
+    BaseFixedKnotSequence::setValues(Utils::slice(values, 0, 4));
+    UniformKS::start = BaseFixedKnotSequence::start;
+    UniformKS::end = BaseFixedKnotSequence::end;
+    UniformKS::startIncluded = BaseFixedKnotSequence::startIncluded;
+    UniformKS::endIncluded = BaseFixedKnotSequence::endIncluded;
+    this->steps = std::get<int>(values[4]);
 }
 
-vector<std::variant<int, double>> UniformFixedKS::getValues()
+vector<std::variant<int, double, bool>> UniformFixedKS::getValues()
 {
-    vector<std::variant<int, double>> values = BaseFixedKnotSequence::getValues();
+    vector<std::variant<int, double, bool>> values = BaseFixedKnotSequence::getValues();
+    values.push_back(BaseFixedKnotSequence::startIncluded);
+    values.push_back(BaseFixedKnotSequence::endIncluded);
     values.push_back(steps);
     return values;
 }
@@ -116,7 +137,7 @@ doubles ValueFixedKS::getSequence()
     return d;
 }
 
-void ValueFixedKS::setValues(vector<std::variant<int, double> > values)
+void ValueFixedKS::setValues(vector<std::variant<int, double, bool> > values)
 {
     if (values.size() != 1) // TODO throw error
         return;
@@ -124,9 +145,9 @@ void ValueFixedKS::setValues(vector<std::variant<int, double> > values)
     this->end = std::get<double>(values[0]);
 }
 
-vector<std::variant<int, double>> ValueFixedKS::getValues()
+vector<std::variant<int, double, bool>> ValueFixedKS::getValues()
 {
-    vector<std::variant<int, double>> values;
+    vector<std::variant<int, double, bool>> values;
     values.push_back(start);
     return values;
 }
@@ -149,17 +170,19 @@ doubles MultiplicityFixedValueKS::getSequence()
     return UniformFixedKS::getSequence();
 }
 
-void MultiplicityFixedValueKS::setValues(vector<std::variant<int, double>> values)
+void MultiplicityFixedValueKS::setValues(vector<std::variant<int, double, bool>> values)
 {
     if (values.size() != 2) // TODO throw error
         return;
-    static_cast<BaseFixedKnotSequence *>(this)->setValues({values[0], values[0]});
+    BaseFixedKnotSequence::setValues({values[0], values[0]});
+    UniformKS::start = BaseFixedKnotSequence::start;
+    UniformKS::end = BaseFixedKnotSequence::end;
     this->steps = std::get<int>(values[1]);
 }
 
-vector<std::variant<int, double>> MultiplicityFixedValueKS::getValues()
+vector<std::variant<int, double, bool>> MultiplicityFixedValueKS::getValues()
 {
-    vector<std::variant<int, double>> values;
+    vector<std::variant<int, double, bool>> values;
     values.push_back(static_cast<BaseFixedKnotSequence *>(this)->getStart());
     values.push_back(steps);
     return values;
@@ -199,17 +222,17 @@ doubles BeginKS::getSequence()
     return MultiplicityFixedValueKS::getSequence();
 }
 
-void BeginKS::setValues(vector<std::variant<int, double>> values)
+void BeginKS::setValues(vector<std::variant<int, double, bool>> values)
 {
     if (values.size() != 1) // TODO throw error
         return;
-    static_cast<BaseFixedKnotSequence *>(this)->setValues({0, 0});
+    BaseFixedKnotSequence::setValues({0.0, 0.0});
     this->steps = std::get<int>(values[0]) + 1;
 }
 
-vector<std::variant<int, double>> BeginKS::getValues()
+vector<std::variant<int, double, bool>> BeginKS::getValues()
 {
-    vector<std::variant<int, double>> values;
+    vector<std::variant<int, double, bool>> values;
     values.push_back(steps - 1);
     return values;
 }
@@ -232,17 +255,18 @@ doubles EndKS::getSequence()
     return MultiplicityFixedValueKS::getSequence();
 }
 
-void EndKS::setValues(vector<std::variant<int, double>> values)
+void EndKS::setValues(vector<std::variant<int, double, bool>> values)
 {
     if (values.size() != 1) // TODO throw error
         return;
-    static_cast<BaseFixedKnotSequence *>(this)->setValues({1, 1});
+    //static_cast<BaseFixedKnotSequence *>(this)->setValues({1.0, 1.0});
+    BaseFixedKnotSequence::setValues({1.0, 1.0});
     this->steps = std::get<int>(values[0]) + 1;
 }
 
-vector<std::variant<int, double>> EndKS::getValues()
+vector<std::variant<int, double, bool>> EndKS::getValues()
 {
-    vector<std::variant<int, double>> values;
+    vector<std::variant<int, double, bool>> values;
     values.push_back(steps - 1);
     return values;
 }
@@ -291,23 +315,32 @@ RationalFixedKS::RationalFixedKS(double start, double end, int numpoints, double
 :BaseFixedKnotSequence(start, end)
 ,RationalKS(start, end, numpoints)
 {
-    this->property_names = {"Start", "End", "Points number", "Ratio"};
-    this->property_types = {ParamType::DOUBLE, ParamType::DOUBLE, ParamType::INT, ParamType::DOUBLE};
+    this->RationalKS::start = start;
+    this->RationalKS::end = end;
+    this->property_names = {"Start", "End", "Include Start", "Include End", "Points number", "Ratio"};
+    this->property_types = {ParamType::DOUBLE, ParamType::DOUBLE, ParamType::BOOL, ParamType::BOOL, ParamType::INT, ParamType::DOUBLE};
     this->q = q;
 }
 
-void RationalFixedKS::setValues(vector<std::variant<int, double>> values)
+void RationalFixedKS::setValues(vector<std::variant<int, double, bool>> values)
 {
-    if (values.size() != 4) // TODO throw error
+    if (values.size() != 6) // TODO throw error
         return;
-    static_cast<BaseFixedKnotSequence *>(this)->setValues(Utils::slice(values, 0, 2));
-    this->numpoints = std::get<int>(values[2]);
-    this->q = std::get<double>(values[3]);
+
+    BaseFixedKnotSequence::setValues(Utils::slice(values, 0, 4));
+    RationalKS::start = BaseFixedKnotSequence::start;
+    RationalKS::end = BaseFixedKnotSequence::end;
+    RationalKS::startIncluded = BaseFixedKnotSequence::startIncluded;
+    RationalKS::endIncluded = BaseFixedKnotSequence::endIncluded;
+    this->numpoints = std::get<int>(values[4]);
+    this->q = std::get<double>(values[5]);
 }
 
-vector<std::variant<int, double>> RationalFixedKS::getValues()
+vector<std::variant<int, double, bool>> RationalFixedKS::getValues()
 {
-    vector<std::variant<int, double>> values = BaseFixedKnotSequence::getValues();
+    vector<std::variant<int, double, bool>> values = BaseFixedKnotSequence::getValues();
+    values.push_back(BaseFixedKnotSequence::startIncluded);
+    values.push_back(BaseFixedKnotSequence::endIncluded);
     values.push_back(numpoints);
     values.push_back(q);
     return values;
@@ -367,27 +400,36 @@ BiRationalFixedKS::BiRationalFixedKS(double start, double end, int numpoints, do
 :BaseFixedKnotSequence(start, end)
 ,BiRationalKS(start, end, numpoints)
 {
-    this->property_names = {"Start", "End", "Points number", "Ratio 1", "Ratio 2", "Center"};
-    this->property_types = {ParamType::DOUBLE, ParamType::DOUBLE, ParamType::INT, ParamType::DOUBLE, ParamType::DOUBLE, ParamType::DOUBLE};
+    this->BiRationalKS::start = start;
+    this->BiRationalKS::end = end;
+    this->property_names = {"Start", "End", "Include Start", "Include End", "Points number", "Ratio 1", "Ratio 2", "Center"};
+    this->property_types = {ParamType::DOUBLE, ParamType::DOUBLE, ParamType::BOOL, ParamType::BOOL, ParamType::INT, ParamType::DOUBLE, ParamType::DOUBLE, ParamType::DOUBLE};
     this->q1 = q1;
     this->q2 = q2;
     this->center = center;
 }
 
-void BiRationalFixedKS::setValues(vector<std::variant<int, double>> values)
+void BiRationalFixedKS::setValues(vector<std::variant<int, double, bool>> values)
 {
-    if (values.size() != 6) // TODO throw error
+    if (values.size() != 8) // TODO throw error
         return;
-    static_cast<BaseFixedKnotSequence *>(this)->setValues(Utils::slice(values, 0, 2));
-    this->numpoints = std::get<int>(values[2]);
-    this->q1 = std::get<double>(values[3]);
-    this->q2 = std::get<double>(values[4]);
-    this->center = std::get<double>(values[5]);
+
+    BaseFixedKnotSequence::setValues(Utils::slice(values, 0, 4));
+    BiRationalKS::start = BaseFixedKnotSequence::start;
+    BiRationalKS::end = BaseFixedKnotSequence::end;
+    BiRationalKS::startIncluded = BaseFixedKnotSequence::startIncluded;
+    BiRationalKS::endIncluded = BaseFixedKnotSequence::endIncluded;
+    this->numpoints = std::get<int>(values[4]);
+    this->q1 = std::get<double>(values[5]);
+    this->q2 = std::get<double>(values[6]);
+    this->center = std::get<double>(values[7]);
 }
 
-vector<std::variant<int, double>> BiRationalFixedKS::getValues()
+vector<std::variant<int, double, bool>> BiRationalFixedKS::getValues()
 {
-    vector<std::variant<int, double>> values = BaseFixedKnotSequence::getValues();
+    vector<std::variant<int, double, bool>> values = BaseFixedKnotSequence::getValues();
+    values.push_back(BaseFixedKnotSequence::startIncluded);
+    values.push_back(BaseFixedKnotSequence::endIncluded);
     values.push_back(numpoints);
     values.push_back(q1);
     values.push_back(q2);
@@ -414,16 +456,17 @@ doubles CustomFixedKS::getSequence()
     return this->sequence;
 }
 
-void CustomFixedKS::setValues(vector<std::variant<int, double>> values)
+void CustomFixedKS::setValues(vector<std::variant<int, double, bool>> values)
 {
-    if (values.size() != 6) // TODO throw error
+    if (values.size() != 2) // TODO throw error
         return;
-    static_cast<BaseFixedKnotSequence *>(this)->setValues(Utils::slice(values, 0, 2));
+    //static_cast<BaseFixedKnotSequence *>(this)->setValues(Utils::slice(values, 0, 2));
+    BaseFixedKnotSequence::setValues(Utils::slice(values, 0, 2));
 }
 
-vector<std::variant<int, double>> CustomFixedKS::getValues()
+vector<std::variant<int, double, bool>> CustomFixedKS::getValues()
 {
-    vector<std::variant<int, double>> values;
+    vector<std::variant<int, double, bool>> values;
     values = static_cast<BaseFixedKnotSequence *>(this)->getValues();
     return values;
 }
@@ -454,6 +497,8 @@ CumulFixedKS::CumulFixedKS(double start, double end, doubles params)
 :BaseFixedKnotSequence(start, end)
 ,CumulKS(start, end, params.size())
 {
+    this->CumulKS::start = start;
+    this->CumulKS::end = end;
     this->params = params;
 }
 

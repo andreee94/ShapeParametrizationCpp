@@ -15,9 +15,8 @@ typedef std::vector<bool> bools;
 typedef std::vector<string> strings;
 typedef std::vector<Point> Points;
 
-doubles Utils::linspace(double start_in, double end_in, int num_in)
+doubles Utils::linspace(double start_in, double end_in, int num_in, bool includeFirst, bool includeLast)
 {
-
   doubles linspaced;
 
   double start = static_cast<double>(start_in);
@@ -33,11 +32,13 @@ doubles Utils::linspace(double start_in, double end_in, int num_in)
 
   double delta = (end - start) / (num - 1);
 
-  for(int i=0; i < num-1; ++i)
+  int offset = includeFirst ? 0 : 1;
+  for(int i=offset; i < num-1; ++i)
     {
       linspaced.push_back(start + delta * i);
     }
-  linspaced.push_back(end); // I want to ensure that start and end
+  if (includeLast)
+    linspaced.push_back(end); // I want to ensure that start and end
                             // are exactly the same as the input
   return linspaced;
 }

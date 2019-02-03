@@ -30,7 +30,7 @@ typedef std::vector<Point> Points;
 class Utils
 {
     public:
-        static doubles linspace(double start_in, double end_in, int num_in);
+        static doubles linspace(double start_in, double end_in, int num_in, bool includeFirst=true, bool includeLast=true);
         static doubles extractmid(const doubles &items, int offset=1);
         static doubles centripetal(const Points &points, double alpha=0.5);
         static doubles chordlength(const Points &points);

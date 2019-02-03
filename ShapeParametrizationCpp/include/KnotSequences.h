@@ -18,11 +18,13 @@ class KnotSequences
         KnotSequences() {}
         KnotSequences(const KnotSequences &knotSequences);
         KnotSequences(Knots knots);
+        KnotSequences(std::vector<BaseFixedKnotSequence*> knots);
 
         KnotSequences& operator=(const KnotSequences& other);
 
         doubles getSequence(doubles params) const;
         int computeNumParams();
+        size_t count() const;
 
         static KnotSequences getCompleteBirationalFixedKS(int bspline_n, int bspline_numCP, double q1, double q2, double center);
         static KnotSequences getCompleteBirationalFixedKS(int bspline_n, int bspline_numCP, double q, double center){

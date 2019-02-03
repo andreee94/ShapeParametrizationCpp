@@ -258,6 +258,11 @@ vector<BaseFixedKnotSequence *> KnotListDest::getKnots()
     return knots;
 }
 
+KnotSequences KnotListDest::getKnotSequence()
+{
+     return KnotSequences(knots);
+}
+
 BaseFixedKnotSequence *KnotListDest::getKnotFromName(QString name)
 {
     QByteArray nameba = name.toLocal8Bit();
