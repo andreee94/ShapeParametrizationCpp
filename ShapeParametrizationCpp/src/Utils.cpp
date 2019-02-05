@@ -45,8 +45,13 @@ doubles Utils::linspace(double start_in, double end_in, int num_in, bool include
 
 doubles Utils::extractmid(const doubles &items, int offset)
 {
-    doubles::const_iterator first = items.begin() + offset;
-    doubles::const_iterator last = items.end() - offset;
+    return Utils::extract(items, offset, offset);
+}
+
+doubles Utils::extract(const doubles &items, int offsetstart, int offsetend)
+{
+    doubles::const_iterator first = items.begin() + offsetstart;
+    doubles::const_iterator last = items.end() - offsetend;
     doubles newitems(first, last);
     return newitems;
 }

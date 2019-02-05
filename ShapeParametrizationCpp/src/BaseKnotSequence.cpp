@@ -387,6 +387,7 @@ doubles BiRationalKS::getSequence(doubles params)
     // concatenate left and right
     doubles uarray(uarray_left);
     uarray.insert(uarray.end(), uarray_right.begin(), uarray_right.end());
+    uarray = Utils::extract(uarray, startIncluded ? 0 : 1, endIncluded ? 0 : 1);
     return uarray;
 }
 
@@ -419,6 +420,8 @@ void BiRationalFixedKS::setValues(vector<std::variant<int, double, bool>> values
     BiRationalKS::end = BaseFixedKnotSequence::end;
     BiRationalKS::startIncluded = BaseFixedKnotSequence::startIncluded;
     BiRationalKS::endIncluded = BaseFixedKnotSequence::endIncluded;
+    BiRationalKS::numpoints = std::get<int>(values[4]);
+    RationalKS::numpoints = std::get<int>(values[4]);
     this->numpoints = std::get<int>(values[4]);
     this->q1 = std::get<double>(values[5]);
     this->q2 = std::get<double>(values[6]);

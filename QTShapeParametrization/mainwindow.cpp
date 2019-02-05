@@ -1103,6 +1103,7 @@ QLayout *MainWindow::generateKnotListLayout()
     propLayout->addRow(new QLabel("Start"), new QLineEdit);
     propLayout->addRow(new QLabel("End"), new QLineEdit);
     propLayout->addRow(empty);
+    propLayout->setFormAlignment(Qt::AlignRight);
     propGroupBox->setLayout(propLayout);
     //formContainerLayout->addLayout(propLayout);
     //formContainerLayout->addStretch(10);
@@ -1111,11 +1112,23 @@ QLayout *MainWindow::generateKnotListLayout()
     listAllKnots->setMinimumWidth(160);
     connect(listActiveKnots, &KnotListDest::knotChanged, this, &MainWindow::knotSelectedChanged);
 
+    knotCountLabel = new QLabel;
+    QLabel *knotCountLabelLabel = new QLabel("(CP<sub>num</sub> + Degree + 1 = Knots<sub>num</sub>)");
+    knotCountOKWidget = new QWidget;
+    //knotCountOKWidget->setFixedSize(20, 20);
+    //knotCountOKWidget->setStyleSheet("QWidget {background: " + QTUtils::color2str(QTUtils::Red()) +"; padding : 4px; border: 2px solid " + QTUtils::color2str(QTUtils::Red()) +"; border-radius: " + QString::number(10) + "px;}");
+    QHBoxLayout *knotHBox = new QHBoxLayout;
+    knotHBox->addWidget(knotCountOKWidget);
+    knotHBox->addWidget(knotCountLabel);
+    knotHBox->addWidget(knotCountLabelLabel);
+    updateKnotCount();
+
     gridLayout->addWidget(labelActiveKnots, 0, 0, 1, 1);
     gridLayout->addWidget(labelAllKnots, 0, 1, 1, 1);
     gridLayout->addWidget(listActiveKnots, 1, 0, 1, 1);
     gridLayout->addWidget(listAllKnots, 1, 1, 1, 1);
-    gridLayout->addWidget(propGroupBox, 0, 2, 2, 2);
+    gridLayout->addWidget(propGroupBox, 0, 2, 4, 3);
+    gridLayout->addLayout(knotHBox, 3, 0, 1, 2);
     return gridLayout;
 }
 
@@ -1400,6 +1413,18 @@ int MainWindow::updateKnotSeries()
     return maxmultiplicity;
 }
 
+int MainWindow::updateKnotCount()
+{
+    int numcp = getNumCP();
+    int n = getN();
+    int knotscount = getKnotsCount();
+    knotCountLabel->setText(QString::number(numcp) + " + " + QString::number(n) + " + 1 = " + QString::number(knotscount));
+    bool are_equal = numcp + n + 1 == knotscount;
+    QColor color = are_equal ? QTUtils::Green() : QTUtils::Red();
+    knotCountOKWidget->setFixedSize(20, 20);
+    knotCountOKWidget->setStyleSheet("QWidget {background: " + QTUtils::color2str(color) +"; padding : 4px; border: 2px solid " + QTUtils::color2str(color) +"; border-radius: " + QString::number(10) + "px;}");
+}
+
 // //////////////////////////////////////////////////////////////////
 // //////////////////////////////////////////////////////////////////
 
@@ -1502,6 +1527,7 @@ void MainWindow::knotSelectedChanged(BaseFixedKnotSequence *knot)
             {
                 QCheckBox *qcheckbox = new QCheckBox;
                 qcheckbox->setChecked(std::get<bool>(values[i]));
+                qcheckbox->setLayoutDirection(Qt::LayoutDirection::RightToLeft);
                 connect(qcheckbox, &QCheckBox::stateChanged, sendBtn, &QPushButton::click);
                 qwidget = qcheckbox;
             }
@@ -1514,6 +1540,7 @@ void MainWindow::knotSelectedChanged(BaseFixedKnotSequence *knot)
         propLayout->addWidget(empty);
         propLayout->addWidget(sendBtn);
         this->updateKnotSeries();
+        this->updateKnotCount();
 
         connect(sendBtn, &QPushButton::clicked, this, [this, knot] () {
             vector<std::variant<int, double, bool>> values;
@@ -1542,6 +1569,7 @@ void MainWindow::knotSelectedChanged(BaseFixedKnotSequence *knot)
             }
             knot->setValues(values);
             this->updateKnotSeries();
+            this->updateKnotCount();
         });
     }
 }
@@ -1769,6 +1797,11 @@ KnotSequences MainWindow::getKnotSequence()
         return sequence;
     else
         return KnotSequences::getCompleteBirationalFixedKS(getN(), getNumCP(), 1.2, 1.0/1.2, 0.5);
+}
+
+int MainWindow::getKnotsCount()
+{
+    return getKnotSequence().getSequence({}).size();
 }
 
 bool MainWindow::isNumCPChanged(bool updateOld)

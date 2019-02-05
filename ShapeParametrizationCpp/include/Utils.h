@@ -32,6 +32,9 @@ class Utils
     public:
         static doubles linspace(double start_in, double end_in, int num_in, bool includeFirst=true, bool includeLast=true);
         static doubles extractmid(const doubles &items, int offset=1);
+        //static doubles extractmid_self(doubles &items, int offset=1);
+        static doubles extract(const doubles &items, int offsetstart, int offsetend);
+        //static doubles extract_self(doubles &items, int offsetstart, int offsetend);
         static doubles centripetal(const Points &points, double alpha=0.5);
         static doubles chordlength(const Points &points);
         static doubles interp1(const doubles &x, const doubles &y, const doubles &x_new );

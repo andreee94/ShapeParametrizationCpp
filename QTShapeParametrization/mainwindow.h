@@ -80,6 +80,7 @@ protected:
         ints getAdjustableIndexes();
         TEMotion getTEMotion();
         KnotSequences getKnotSequence();
+        int getKnotsCount();
         bool isNumCPChanged(bool updateOld=true);
 
 private:
@@ -200,6 +201,8 @@ private:
         QList<QWidget*> propLayoutListWidgets;
         KnotListDest *listActiveKnots;
         KnotListSource *listAllKnots;
+        QWidget *knotCountOKWidget;
+        QLabel *knotCountLabel;
 
         void tabChanged(int index);
         void updateRangesWidgets();
@@ -224,6 +227,9 @@ private:
         void optimizeKnots();
         void updatePointsChart();
 
+        int updateKnotSeries();
+        int updateKnotCount();
+
         void updateCheckBoxEnableError();
         void checkBoxErrorApproxChanged(int state);
         void checkBoxErrorPreciseChanged(int state);
@@ -238,7 +244,6 @@ private:
         void updateBspline();
         void updateTangentsNormals(bool changednumcp);
 
-        int updateKnotSeries();
 
 };
 
