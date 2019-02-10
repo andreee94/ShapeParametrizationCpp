@@ -82,6 +82,12 @@ protected:
         KnotSequences getKnotSequence();
         int getKnotsCount();
         bool isNumCPChanged(bool updateOld=true);
+        double getMachineRadiusHub();
+        double getMachineRadiusTip();
+        string getMachineAxisType();
+        string getAnalysisType();
+        doubles getMinParamsRange();
+        doubles getMaxParamsRange();
 
 private:
         Bspline *bspline;
@@ -244,6 +250,10 @@ private:
         void updateBspline();
         void updateTangentsNormals(bool changednumcp);
 
+        void createMenu();
+
+        void loadSettings(string filename);
+        void saveSettings(string filename);
 
 };
 

@@ -66,6 +66,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(tabLayout ,QOverload<int>::of(&QTabWidget::currentChanged),this, &MainWindow::tabChanged);
 
+    createMenu();
+
     QWidget *widget = new QWidget(this);
     setCentralWidget(widget);
     widget->setLayout(mainVLayout);
@@ -1818,3 +1820,64 @@ bool MainWindow::isNumCPChanged(bool updateOld)
 // //////////////////////////////////////////////////////////////////
 // //////////////////////////////////////////////////////////////////
 
+
+void MainWindow::createMenu()
+{
+    QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
+
+    QAction *newAct = new QAction(tr("&New"), this);
+    newAct->setShortcuts(QKeySequence::New);
+    newAct->setStatusTip(tr("Create a new file"));
+    //connect(newAct, &QAction::triggered, this, &MainWindow::newFile);
+
+    QAction *openAct = new QAction(tr("&Open..."), this);
+    openAct->setShortcuts(QKeySequence::Open);
+    openAct->setStatusTip(tr("Open an existing file"));
+    //connect(openAct, &QAction::triggered, this, &MainWindow::open);
+
+    QAction *saveAct = new QAction(tr("&Save"), this);
+    saveAct->setShortcuts(QKeySequence::Save);
+    saveAct->setStatusTip(tr("Save the document to disk"));
+    //connect(saveAct, &QAction::triggered, this, &MainWindow::save);
+
+    QAction *printAct = new QAction(tr("&Print..."), this);
+    printAct->setShortcuts(QKeySequence::Print);
+    printAct->setStatusTip(tr("Print the document"));
+    //connect(printAct, &QAction::triggered, this, &MainWindow::print);
+
+    QAction *exitAct = new QAction(tr("E&xit"), this);
+    exitAct->setShortcuts(QKeySequence::Quit);
+    exitAct->setStatusTip(tr("Exit the application"));
+    connect(exitAct, &QAction::triggered, this, &QWidget::close);
+
+    fileMenu->addAction(newAct);
+    fileMenu->addAction(openAct);
+    fileMenu->addAction(saveAct);
+    fileMenu->addAction(exitAct);
+
+    QMenu *editMenu = menuBar()->addMenu(tr("&Edit"));
+    QMenu *helpMenu = menuBar()->addMenu(tr("&Help"));
+
+
+}
+
+void MainWindow::loadSettings(string filename)
+{
+    Settings settings(filename);
+}
+
+void MainWindow::saveSettings(string filename)
+{
+    Settings settings;
+    settings.setvalue("bspline-numcp", getNumCP());
+    settings.setvalue("bspline-degree", getN());
+    settings.setvalue("bspline-numpoints", getNumPoints());
+    settings.setvalue("bspline-te-shape", getTEShape());
+    settings.setvalue("bspline-te-numpoints", getTENumPoints());
+    settings.setvalue("bspline-te-motion", getTEMotion());
+    settings.setvalue("machine-radius-hub", getMachineRadiusHub());
+    settings.setvalue("machine-radius-tip", getMachineRadiusTip());
+    settings.setvalue("machine-axis-type", getMachineAxisType());
+    settings.setvalue("analysis-type", getAnalysisType());
+    //settings.setvalue("knots-1", getKnotSequence());
+}

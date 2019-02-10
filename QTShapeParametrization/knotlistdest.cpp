@@ -99,6 +99,7 @@ void KnotListDest::currentItemChanged(QListWidgetItem *current, QListWidgetItem 
 
 void KnotListDest::dragEnterEvent(QDragEnterEvent *event)
 {
+    cout << "dragEnterEvent" << endl;
     if (event->mimeData()->hasFormat(KnotListSource::knotMimeType()))
         event->accept();
     else
@@ -107,6 +108,7 @@ void KnotListDest::dragEnterEvent(QDragEnterEvent *event)
 
 void KnotListDest::dragMoveEvent(QDragMoveEvent *event)
 {
+    //cout << "dragMoveEvent" << endl;
     if (event->mimeData()->hasFormat(KnotListSource::knotMimeType())) {
         event->setDropAction(Qt::MoveAction);
         event->accept();
@@ -152,6 +154,22 @@ void KnotListDest::dropEvent(QDropEvent *event)
     } else {
         event->ignore();
     }
+}
+
+void KnotListDest::dragLeaveEvent(QDragLeaveEvent *event)
+{
+    if (is_sorting) // it comes from inside this list
+    {
+        knots.erase(knots.begin() + sorting_index_start);
+        is_sorting = false;
+        event->accept();
+    }
+    else
+    {
+        event->ignore();
+    }
+    cout << "dragLeaveEvent" << endl;
+    event->accept();
 }
 
 //void KnotListDest::startDrag(Qt::DropActions supportedActions)
@@ -221,6 +239,11 @@ void KnotListDest::mousePressEvent(QMouseEvent *event)
         ////    else
         ////        child->show();
     }
+}
+
+void KnotListDest::mouseReleaseEvent(QMouseEvent *event)
+{
+    cout << "mouseReleaseEvent" << endl;
 }
 
 void KnotListDest::mouseDoubleClickEvent( QMouseEvent *event )

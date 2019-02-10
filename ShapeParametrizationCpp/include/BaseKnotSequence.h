@@ -47,6 +47,7 @@ class BaseKnotSequence
         bool isEndIncluded() const { return endIncluded; }
         void setEndIncluded(bool value) { endIncluded = value; }
 
+        static BaseKnotSequence *fromClass(string classname);
 
     protected:
         int numParams;
@@ -65,7 +66,7 @@ class BaseKnotSequence
 class BaseFixedKnotSequence: public BaseKnotSequence
 {
     public:
-        enum ParamType { INT, DOUBLE, BOOL };
+        enum ParamType { INT = 1, DOUBLE = 2, BOOL = 3 };
 
         BaseFixedKnotSequence(double start, double end);
         virtual doubles getSequence() = 0;
@@ -79,6 +80,7 @@ class BaseFixedKnotSequence: public BaseKnotSequence
         ParamType propType(size_t i){ return property_types[i]; }
         virtual void setValues(vector<std::variant<int, double, bool>> values) = 0;
         virtual vector<std::variant<int, double, bool>> getValues() = 0;
+        strings getValuesStrings();
 
 protected:
         //virtual vector<string> getPropertyNames() { return {}; }
@@ -247,9 +249,12 @@ class BiRationalKS: public RationalKS
     public:
         BiRationalKS(double start, double end, int numpoints);
         doubles getSequence(doubles params);
+        bool isCenterIncluded() const { return centerIncluded; }
+        void setCenterIncluded(bool value) { centerIncluded = value; }
 
     protected:
         int numpoints;
+        bool centerIncluded = true;
     private:
 };
 

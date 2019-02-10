@@ -23,6 +23,12 @@ BaseKnotSequence::BaseKnotSequence(int  numParams, double start, double end)
     this->end = end;
 }
 
+BaseKnotSequence *BaseKnotSequence::fromClass(string classname)
+{
+//    if (classname == typeid(UniformFixedKS).name())
+//        return new UniformFixedKS(0, 1, 10);
+}
+
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
@@ -33,6 +39,23 @@ BaseFixedKnotSequence::BaseFixedKnotSequence(double start, double end)
 :BaseKnotSequence(0, start, end)
 {
 }
+
+strings BaseFixedKnotSequence::getValuesStrings()
+{
+    vector<std::variant<int, double, bool>> values = getValues();
+    strings ss(values.size());
+    for (auto const [index, value] : Utils::enumerate(values))
+    {
+        if (property_types[index] == ParamType::INT)
+            ss.push_back(std::to_string(std::get<int>(value)));
+        else if (property_types[index] == ParamType::DOUBLE)
+            ss.push_back(std::to_string(std::get<double>(value)));
+        else if (property_types[index] == ParamType::BOOL)
+            ss.push_back(std::to_string(std::get<bool>(value)));
+    }
+    return ss;
+}
+
 
 void BaseFixedKnotSequence::setValues(vector<std::variant<int, double, bool>> values)
 {
@@ -301,6 +324,7 @@ doubles RationalKS::getSequence(doubles params)
     {
         uarray[i] = uarray[i - 1] + a / pow(q, i - 1);
     }
+    uarray = Utils::extract(uarray, startIncluded ? 0 : 1, endIncluded ? 0 : 1);
     //uarray.insert(uarray.begin(), this->start);
     return uarray;
 }
@@ -368,21 +392,30 @@ doubles BiRationalKS::getSequence(doubles params)
     // backup start and end values
     double bkp_start = this->BaseKnotSequence::getStart();
     double bkp_end = this->getEnd();
+    bool bkp_startincluded = startIncluded;
+    bool bkp_endincluded = endIncluded;
 
     // call rational getsequence for the left range:
     this->start = bkp_start;
     this->end = center;
+    RationalKS::startIncluded = true;
+    RationalKS::endIncluded = centerIncluded;
     doubles uarray_left = RationalKS::getSequence({q1});
 
     // call rational getsequence for the right range:
     this->start = center;
     this->end = bkp_end;
+    RationalKS::startIncluded = centerIncluded;
+    RationalKS::endIncluded = true;
     doubles uarray_right = RationalKS::getSequence({q2});
-    uarray_left.pop_back(); // the center element is inserted 2 times so we remove one occurrence
+    if (centerIncluded)
+        uarray_left.pop_back(); // the center element is inserted 2 times so we remove one occurrence
 
     //restore start and end values
     this->start = bkp_start;
     this->end = bkp_end;
+    this->startIncluded = bkp_startincluded;
+    this->endIncluded = bkp_endincluded;
 
     // concatenate left and right
     doubles uarray(uarray_left);
@@ -403,8 +436,8 @@ BiRationalFixedKS::BiRationalFixedKS(double start, double end, int numpoints, do
 {
     this->BiRationalKS::start = start;
     this->BiRationalKS::end = end;
-    this->property_names = {"Start", "End", "Include Start", "Include End", "Points number", "Ratio 1", "Ratio 2", "Center"};
-    this->property_types = {ParamType::DOUBLE, ParamType::DOUBLE, ParamType::BOOL, ParamType::BOOL, ParamType::INT, ParamType::DOUBLE, ParamType::DOUBLE, ParamType::DOUBLE};
+    this->property_names = {"Start", "End", "Include Start", "Include End", "Include Center", "Points number", "Ratio 1", "Ratio 2", "Center"};
+    this->property_types = {ParamType::DOUBLE, ParamType::DOUBLE, ParamType::BOOL, ParamType::BOOL,ParamType::BOOL, ParamType::INT, ParamType::DOUBLE, ParamType::DOUBLE, ParamType::DOUBLE};
     this->q1 = q1;
     this->q2 = q2;
     this->center = center;
@@ -412,7 +445,7 @@ BiRationalFixedKS::BiRationalFixedKS(double start, double end, int numpoints, do
 
 void BiRationalFixedKS::setValues(vector<std::variant<int, double, bool>> values)
 {
-    if (values.size() != 8) // TODO throw error
+    if (values.size() != 9) // TODO throw error
         return;
 
     BaseFixedKnotSequence::setValues(Utils::slice(values, 0, 4));
@@ -420,12 +453,14 @@ void BiRationalFixedKS::setValues(vector<std::variant<int, double, bool>> values
     BiRationalKS::end = BaseFixedKnotSequence::end;
     BiRationalKS::startIncluded = BaseFixedKnotSequence::startIncluded;
     BiRationalKS::endIncluded = BaseFixedKnotSequence::endIncluded;
-    BiRationalKS::numpoints = std::get<int>(values[4]);
-    RationalKS::numpoints = std::get<int>(values[4]);
-    this->numpoints = std::get<int>(values[4]);
-    this->q1 = std::get<double>(values[5]);
-    this->q2 = std::get<double>(values[6]);
-    this->center = std::get<double>(values[7]);
+    this->centerIncluded = std::get<bool>(values[4]);
+    BiRationalKS::centerIncluded = centerIncluded;
+    BiRationalKS::numpoints = std::get<int>(values[5]);
+    RationalKS::numpoints = std::get<int>(values[5]);
+    this->numpoints = std::get<int>(values[5]);
+    this->q1 = std::get<double>(values[6]);
+    this->q2 = std::get<double>(values[7]);
+    this->center = std::get<double>(values[8]);
 }
 
 vector<std::variant<int, double, bool>> BiRationalFixedKS::getValues()
@@ -433,6 +468,7 @@ vector<std::variant<int, double, bool>> BiRationalFixedKS::getValues()
     vector<std::variant<int, double, bool>> values = BaseFixedKnotSequence::getValues();
     values.push_back(BaseFixedKnotSequence::startIncluded);
     values.push_back(BaseFixedKnotSequence::endIncluded);
+    values.push_back(centerIncluded);
     values.push_back(numpoints);
     values.push_back(q1);
     values.push_back(q2);

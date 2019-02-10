@@ -26,7 +26,8 @@ doubles Utils::linspace(double start_in, double end_in, int num_in, bool include
   if (num == 0) { return linspaced; }
   if (num == 1)
     {
-      linspaced.push_back(start);
+      if (includeFirst)
+        linspaced.push_back(start);
       return linspaced;
     }
 
@@ -278,6 +279,30 @@ string Utils::tostring( std::ostream& str )
     std::ostringstream ss;
     ss << str.rdbuf();
     return ss.str();
+}
+
+strings Utils::tostring( const doubles &values )
+{
+    strings ss(values.size());
+    for (auto d : values)
+        ss.push_back(std::to_string(d));
+    return ss;
+}
+
+strings Utils::tostring( const ints &values )
+{
+    strings ss(values.size());
+    for (auto d : values)
+        ss.push_back(std::to_string(d));
+    return ss;
+}
+
+strings Utils::tostring( const bools &values )
+{
+    strings ss(values.size());
+    for (auto d : values)
+        ss.push_back(std::to_string(d));
+    return ss;
 }
 
 //template<class T>

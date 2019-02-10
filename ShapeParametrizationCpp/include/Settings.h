@@ -1,6 +1,8 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+#include "BaseKnotSequence.h"
+
 #include <vector>
 #include <cmath>
 #include <Utils.h>
@@ -15,6 +17,7 @@ typedef std::vector<float> floats;
 typedef std::vector<bool> bools;
 typedef std::vector<string> strings;
 typedef std::vector<Point> Points;
+typedef std::vector<BaseKnotSequence*> Knots;
 
 
 class Settings
@@ -50,9 +53,21 @@ class Settings
         doubles getdoubles(string key);
         bools getbools(string key);
         Points getpoints(string key);
+        Knots getknots(string key);
 
         void setvalue(string key, string value);
-        void setvalues(string key, strings values);
+        void setvalue(string key, bool value);
+        void setvalue(string key, int value);
+        void setvalue(string key, size_t value);
+        void setvalue(string key, float value);
+        void setvalue(string key, double value);
+        void setvalue(string key, BaseFixedKnotSequence::ParamType value);
+        void setvalues(string key, const strings &values);
+        void setvalues(string key, const doubles &values);
+        void setvalues(string key, const ints &values);
+        void setvalues(string key, const bools &values);
+        void setvalues(string key, const Knots &values);
+        void setvalues(string key, const vector<BaseFixedKnotSequence::ParamType> &values);
 
         // IO methods
         Settings save(string filename);

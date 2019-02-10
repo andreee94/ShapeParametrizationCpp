@@ -23,6 +23,7 @@ class Point;
 
 typedef std::vector<double> doubles;
 typedef std::vector<int> ints;
+typedef std::vector<bool> bools;
 typedef std::vector<string> strings;
 typedef std::vector<Point> Points;
 
@@ -51,6 +52,9 @@ class Utils
         static void getminmaxindexes(const Points &points, int &minindex, int &maxindex, char XorY);
         static string fixline(string line);
         static string tostring( std::ostream& str );
+        static strings tostring(const doubles &values);
+        static strings tostring(const ints &values);
+        static strings tostring(const bools &values);
         static bool getbool(string str);
         static bool iszeroint(string str);
 
