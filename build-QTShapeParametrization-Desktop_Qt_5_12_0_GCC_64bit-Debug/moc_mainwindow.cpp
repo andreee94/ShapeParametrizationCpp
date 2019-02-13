@@ -22,7 +22,7 @@ QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_MainWindow_t {
     QByteArrayData data[39];
-    char stringdata0[631];
+    char stringdata0[626];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -68,8 +68,8 @@ QT_MOC_LITERAL(33, 530, 23), // "comboBoxTEMotionChanged"
 QT_MOC_LITERAL(34, 554, 5), // "index"
 QT_MOC_LITERAL(35, 560, 22), // "comboBoxTEShapeChanged"
 QT_MOC_LITERAL(36, 583, 19), // "knotSelectedChanged"
-QT_MOC_LITERAL(37, 603, 22), // "BaseFixedKnotSequence*"
-QT_MOC_LITERAL(38, 626, 4) // "knot"
+QT_MOC_LITERAL(37, 603, 17), // "BaseKnotSequence*"
+QT_MOC_LITERAL(38, 621, 4) // "knot"
 
     },
     "MainWindow\0bsplineTaskStarted\0\0"
@@ -88,7 +88,7 @@ QT_MOC_LITERAL(38, 626, 4) // "knot"
     "compareButtonClicked\0rangeValueChanged\0"
     "value\0isFinished\0comboBoxTEMotionChanged\0"
     "index\0comboBoxTEShapeChanged\0"
-    "knotSelectedChanged\0BaseFixedKnotSequence*\0"
+    "knotSelectedChanged\0BaseKnotSequence*\0"
     "knot"
 };
 #undef QT_MOC_LITERAL
@@ -181,7 +181,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 17: _t->rangeValueChanged((*reinterpret_cast< double(*)>(_a[1])),(*reinterpret_cast< bool(*)>(_a[2]))); break;
         case 18: _t->comboBoxTEMotionChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 19: _t->comboBoxTEShapeChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 20: _t->knotSelectedChanged((*reinterpret_cast< BaseFixedKnotSequence*(*)>(_a[1]))); break;
+        case 20: _t->knotSelectedChanged((*reinterpret_cast< BaseKnotSequence*(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {

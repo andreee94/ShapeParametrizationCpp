@@ -168,11 +168,7 @@ Knots Settings::getknots(string key)
     Knots knots(knotsnum);
     for (int i = 0; i < knotsnum; i++)
     {
-        BaseKnotSequence * knot = BaseKnotSequence::fromClass(getstring(key + std::to_string(i) + "-class"));
-        if (BaseFixedKnotSequence *fixed_item = dynamic_cast<BaseFixedKnotSequence*>((knot)))
-        {
-
-        }
+        BaseKnotSequence * knot = BaseKnotSequence::makeKnot(getstring(key + std::to_string(i) + "-class"));
         knots.push_back(knot);
     }
     return knots;
@@ -213,7 +209,7 @@ void Settings::setvalue(string key, double value)
     this->dict[key] = std::to_string(value);
 }
 
-void Settings::setvalue(string key, BaseFixedKnotSequence::ParamType value)
+void Settings::setvalue(string key, BaseKnotSequence::ParamType value)
 {
     this->dict[key] = std::to_string((int)value);
 }
@@ -243,23 +239,23 @@ void Settings::setvalues(string key, const Knots &knots)
     setvalue(key + "-num", knots.size());
     for (auto const [index, knot] : Utils::enumerate(knots))
     {
-        if (BaseFixedKnotSequence *fixed_item = dynamic_cast<BaseFixedKnotSequence*>((knot)))
+        if (knot->isFixed())
         {
-            setvalue(key + std::to_string(index) + "-class", typeid(fixed_item).name()); // save the knot type
-            strings knot_values = fixed_item->getValuesStrings(); // extract all the properties values as strings
+            setvalue(key + std::to_string(index) + "-class", typeid(knot).name()); // save the knot type
+            strings knot_values = knot->getValuesStrings(); // extract all the properties values as strings
             for (auto const [kindex, kvalue] : Utils::enumerate(knot_values))
                 setvalue(key + std::to_string(index) + "-prop" + std::to_string(kindex), kvalue);
 
-            setvalues(key + std::to_string(index) + "-prop-types", fixed_item->propTypes());
+            setvalues(key + std::to_string(index) + "-prop-types", knot->propTypes());
         }
         else
         {
-            setvalue(key + std::to_string(index) + "-class", typeid(fixed_item).name()); // save the knot type
+            setvalue(key + std::to_string(index) + "-class", typeid(knot).name()); // save the knot type
         }
     }
 }
 
-void Settings::setvalues(string key, const vector<BaseFixedKnotSequence::ParamType> &values)
+void Settings::setvalues(string key, const vector<BaseKnotSequence::ParamType> &values)
 {
     ints enumints(values.size());
     for (auto v : values)

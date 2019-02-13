@@ -22,12 +22,6 @@ KnotSequences::KnotSequences(Knots knots)
     this->knots = knots;
 }
 
-KnotSequences::KnotSequences(std::vector<BaseFixedKnotSequence *> knots)
-{
-    for (auto & knot : knots)
-        this->knots.push_back(knot);
-}
-
 KnotSequences &KnotSequences::operator=(const KnotSequences &other)
 {
     if (this == &other) return *this; // handle self assignment
@@ -46,21 +40,31 @@ doubles KnotSequences::getSequence(doubles params) const
     for (unsigned int i = 0; i < this->knots.size(); i++)
     {
         // extract params
-
-        if (BaseFixedKnotSequence *fixed_item = dynamic_cast<BaseFixedKnotSequence*>((knots[i])))
+        doubles sequence;
+        if (knots[i]->isFixed())
         {
-            //BaseFixedKnotSequence* fixed_item = dynamic_cast<BaseFixedKnotSequence*>(this->knots[i] );
-            doubles sequence = fixed_item->getSequence();
-            uarray.insert(uarray.end(), sequence.begin(), sequence.end());
+            sequence = knots[i]->getSequence();
         }
         else
-        //if (typeid(item) != typeid(BaseFixedKnotSequence) && item->getNumParams() > 0)
         {
             doubles item_params(params.begin() + StartIndex, params.begin() + StartIndex + this->knots[i]->getNumParams());
-            doubles sequence = this->knots[i]->getSequence(item_params);
-            uarray.insert(uarray.end(), sequence.begin(), sequence.end());
+            sequence = this->knots[i]->getSequence(item_params);
         }
+//        if (BaseFixedKnotSequence *fixed_item = dynamic_cast<BaseFixedKnotSequence*>((knots[i])))
+//        {
+//            //BaseFixedKnotSequence* fixed_item = dynamic_cast<BaseFixedKnotSequence*>(this->knots[i] );
+//            doubles sequence = fixed_item->getSequence();
+//            uarray.insert(uarray.end(), sequence.begin(), sequence.end());
+//        }
+//        else
+//        //if (typeid(item) != typeid(BaseFixedKnotSequence) && item->getNumParams() > 0)
+//        {
+//            doubles item_params(params.begin() + StartIndex, params.begin() + StartIndex + this->knots[i]->getNumParams());
+//            doubles sequence = this->knots[i]->getSequence(item_params);
+//            uarray.insert(uarray.end(), sequence.begin(), sequence.end());
+//        }
 
+        uarray.insert(uarray.end(), sequence.begin(), sequence.end());
         StartIndex += this->knots[i]->getNumParams();
     }
     return uarray;
@@ -95,9 +99,13 @@ KnotSequences KnotSequences::getCompleteBirationalFixedKS(int bspline_n, int bsp
     int numpoints = bspline_numCP + bspline_n + 1 - 2 * (bspline_n + 1); // number of knots not 0 and 1
     numpoints = (int)((numpoints + 1) / 2); // birational generates 2n + 1 values
 
-    BaseFixedKnotSequence* beginKS = new BeginKS(bspline_n-1); // n-1 since we include the point also into the birational
-    BaseFixedKnotSequence* endKS = new EndKS(bspline_n-1); // n-1 since we include the point also into the birational
-    BaseFixedKnotSequence* midKS = new BiRationalFixedKS(0, 1, numpoints, q1, q2, center);
+//    BaseFixedKnotSequence* beginKS = new BeginKS(bspline_n-1); // n-1 since we include the point also into the birational
+//    BaseFixedKnotSequence* endKS = new EndKS(bspline_n-1); // n-1 since we include the point also into the birational
+//    BaseFixedKnotSequence* midKS = new BiRationalFixedKS(0, 1, numpoints, q1, q2, center);
+
+    BaseKnotSequence* beginKS = new BeginKS(bspline_n-1); // n-1 since we include the point also into the birational
+    BaseKnotSequence* endKS = new EndKS(bspline_n-1); // n-1 since we include the point also into the birational
+    BaseKnotSequence* midKS = new BiRationalKS(0, 1, numpoints, q1, q2, center);
 
     Knots knots;
     knots.push_back(static_cast<BaseKnotSequence *>(beginKS));
@@ -122,8 +130,8 @@ KnotSequences KnotSequences::getCompleteBirationalKS(int bspline_n, int bspline_
     int numpoints = bspline_numCP + bspline_n + 1 - 2 * (bspline_n + 1); // number of knots not 0 and 1
     numpoints = (int)((numpoints + 1) / 2); // birational generates 2n + 1 values
 
-    BaseFixedKnotSequence* beginKS = new BeginKS(bspline_n-1); // n-1 since we include the point also into the birational
-    BaseFixedKnotSequence* endKS = new EndKS(bspline_n-1); // n-1 since we include the point also into the birational
+    BaseKnotSequence* beginKS = new BeginKS(bspline_n-1); // n-1 since we include the point also into the birational
+    BaseKnotSequence* endKS = new EndKS(bspline_n-1); // n-1 since we include the point also into the birational
     BaseKnotSequence* midKS = new BiRationalKS(0, 1, numpoints);
 
     Knots knots;
@@ -146,9 +154,9 @@ KnotSequences KnotSequences::getKSFromParameters(int bspline_n, int bspline_numC
     // extract uniform data from centripetal parametrization
     uarray = Utils::interp1(t, Utils::linspace(0, 1, t.size()), Utils::linspace(0, 1, uarray.size()));
 
-    BaseFixedKnotSequence* beginKS = new BeginKS(bspline_n-1); // n-1 since we include the point also into the birational
-    BaseFixedKnotSequence* endKS = new EndKS(bspline_n-1); // n-1 since we include the point also into the birational
-    BaseFixedKnotSequence* midKS = new CustomFixedKS(0, 1, uarray);
+    BaseKnotSequence* beginKS = new BeginKS(bspline_n-1); // n-1 since we include the point also into the birational
+    BaseKnotSequence* endKS = new EndKS(bspline_n-1); // n-1 since we include the point also into the birational
+    BaseKnotSequence* midKS = new CustomKS(0, 1, uarray);
 
     Knots knots;
     knots.push_back(static_cast<BaseKnotSequence *>(beginKS));

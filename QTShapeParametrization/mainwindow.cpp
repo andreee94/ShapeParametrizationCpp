@@ -1494,7 +1494,7 @@ void MainWindow::comboBoxTEShapeChanged(int index)
 // //////////////////////////////////////////////////////////////////
 // //////////////////////////////////////////////////////////////////
 
-void MainWindow::knotSelectedChanged(BaseFixedKnotSequence *knot)
+void MainWindow::knotSelectedChanged(BaseKnotSequence *knot)
 {
     if (knot)
     {
@@ -1505,18 +1505,18 @@ void MainWindow::knotSelectedChanged(BaseFixedKnotSequence *knot)
         for (unsigned int i = 0; i < knot->propNames().size(); i++)
         {
             string name = knot->propName(i);
-            BaseFixedKnotSequence::ParamType type = knot->propType(i);
+            BaseKnotSequence::ParamType type = knot->propType(i);
             QWidget *qwidget;
-            if (knot->propType(i) == BaseFixedKnotSequence::ParamType::INT || knot->propType(i) == BaseFixedKnotSequence::ParamType::DOUBLE)
+            if (knot->propType(i) == BaseKnotSequence::ParamType::INT || knot->propType(i) == BaseKnotSequence::ParamType::DOUBLE)
             {
                 QLineEdit *qlineedit = new QLineEdit;
                 QString value_str = "";
-                if (type == BaseFixedKnotSequence::ParamType::INT)
+                if (type == BaseKnotSequence::ParamType::INT)
                 {
                     value_str = QString::number(std::get<int>(values[i]));
                     qlineedit->setValidator( new QIntValidator(this));
                 }
-                else if (type == BaseFixedKnotSequence::ParamType::DOUBLE)
+                else if (type == BaseKnotSequence::ParamType::DOUBLE)
                 {
                     value_str = QString::number(std::get<double>(values[i]));
                     qlineedit->setValidator( new QDoubleValidator(this));
@@ -1525,7 +1525,7 @@ void MainWindow::knotSelectedChanged(BaseFixedKnotSequence *knot)
                 connect(qlineedit, &QLineEdit::returnPressed, sendBtn, &QPushButton::click);
                 qwidget = qlineedit;
             }
-            else if (knot->propType(i) == BaseFixedKnotSequence::ParamType::BOOL)
+            else if (knot->propType(i) == BaseKnotSequence::ParamType::BOOL)
             {
                 QCheckBox *qcheckbox = new QCheckBox;
                 qcheckbox->setChecked(std::get<bool>(values[i]));
@@ -1548,22 +1548,22 @@ void MainWindow::knotSelectedChanged(BaseFixedKnotSequence *knot)
             vector<std::variant<int, double, bool>> values;
             for (size_t i = 0; i < knot->propNames().size(); i++)
             {
-                if (knot->propType(i) == BaseFixedKnotSequence::ParamType::INT || knot->propType(i) == BaseFixedKnotSequence::ParamType::DOUBLE)
+                if (knot->propType(i) == BaseKnotSequence::ParamType::INT || knot->propType(i) == BaseKnotSequence::ParamType::DOUBLE)
                 {
                     QString text = static_cast<QLineEdit*>(propLayoutListWidgets.at(i))->text(); //static_cast<QLineEdit>(propLayout->itemAt(i, QFormLayout::FieldRole)->widget()).text();
                     cout << "text: " << text.toStdString() << endl;
-                    if (knot->propType(i) == BaseFixedKnotSequence::ParamType::INT)
+                    if (knot->propType(i) == BaseKnotSequence::ParamType::INT)
                     {
                         values.push_back(text.toInt());
                         //cout << "value: " << text.toInt() << endl;
                     }
-                    else if (knot->propType(i) == BaseFixedKnotSequence::ParamType::DOUBLE)
+                    else if (knot->propType(i) == BaseKnotSequence::ParamType::DOUBLE)
                     {
                         values.push_back(text.toDouble());
                         //cout << "value: " << text.toDouble() << endl;
                     }
                 }
-                else if (knot->propType(i) == BaseFixedKnotSequence::ParamType::BOOL)
+                else if (knot->propType(i) == BaseKnotSequence::ParamType::BOOL)
                 {
                     bool checked = static_cast<QCheckBox*>(propLayoutListWidgets.at(i))->isChecked();
                     values.push_back(checked);
@@ -1812,6 +1812,36 @@ bool MainWindow::isNumCPChanged(bool updateOld)
     if (updateOld)
         oldCPnumber = getNumCP();
     return changedCPnumber;
+}
+
+double MainWindow::getMachineRadiusHub()
+{
+
+}
+
+double MainWindow::getMachineRadiusTip()
+{
+
+}
+
+string MainWindow::getMachineAxisType()
+{
+
+}
+
+string MainWindow::getAnalysisType()
+{
+
+}
+
+doubles MainWindow::getMinParamsRange()
+{
+
+}
+
+doubles MainWindow::getMaxParamsRange()
+{
+
 }
 
 // //////////////////////////////////////////////////////////////////

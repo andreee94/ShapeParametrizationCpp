@@ -1415,6 +1415,9 @@ moc_mainwindow.cpp: /opt/qt/5.12.0/gcc_64/include/QtWidgets/QMainWindow \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/QMutex \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/QQueue \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/QRunnable \
+		../QTShapeParametrization/knotlistdest.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QListWidget \
+		../QTShapeParametrization/knotlistsource.h \
 		../QTShapeParametrization/mainwindow.h \
 		moc_predefs.h \
 		/opt/qt/5.12.0/gcc_64/bin/moc
@@ -2553,6 +2556,9 @@ moc_mainwindow.cpp: /opt/qt/5.12.0/gcc_64/include/QtWidgets/QMainWindow \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/QMutex \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/QQueue \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/QRunnable \
+		../QTShapeParametrization/knotlistdest.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QListWidget \
+		../QTShapeParametrization/knotlistsource.h \
 		../QTShapeParametrization/mainwindow.h \
 		moc_predefs.h \
 		/opt/qt/5.12.0/gcc_64/bin/moc
@@ -4106,7 +4112,17 @@ moc_knotlistsource.cpp: /opt/qt/5.12.0/gcc_64/include/QtWidgets/QListWidget \
 		/opt/qt/5.12.0/gcc_64/bin/moc
 	/opt/qt/5.12.0/gcc_64/bin/moc $(DEFINES) --include /home/andrea/Documents/ShapeParametrizationCpp/build-QTShapeParametrization-Desktop_Qt_5_12_0_GCC_64bit-Debug/moc_predefs.h -I/opt/qt/5.12.0/gcc_64/mkspecs/linux-g++ -I/home/andrea/Documents/ShapeParametrizationCpp/QTShapeParametrization -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src -I/opt/qt/5.12.0/gcc_64/include -I/opt/qt/5.12.0/gcc_64/include/QtCharts -I/opt/qt/5.12.0/gcc_64/include/QtWidgets -I/opt/qt/5.12.0/gcc_64/include/QtQuickControls2 -I/opt/qt/5.12.0/gcc_64/include/QtQuick -I/opt/qt/5.12.0/gcc_64/include/QtGui -I/opt/qt/5.12.0/gcc_64/include/QtConcurrent -I/opt/qt/5.12.0/gcc_64/include/QtQml -I/opt/qt/5.12.0/gcc_64/include/QtNetwork -I/opt/qt/5.12.0/gcc_64/include/QtCore -I. -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../QTShapeParametrization/knotlistsource.h -o moc_knotlistsource.cpp
 
-moc_knotlistdest.cpp: /opt/qt/5.12.0/gcc_64/include/QtWidgets/QListWidget \
+moc_knotlistdest.cpp: ../ShapeParametrizationCpp/include/BaseKnotSequence.h \
+		../ShapeParametrizationCpp/include/Point.h \
+		../ShapeParametrizationCpp/include/Utils.h \
+		../ShapeParametrizationCpp/include/pystring.h \
+		../ShapeParametrizationCpp/include/Bspline.h \
+		../ShapeParametrizationCpp/include/Line.h \
+		../ShapeParametrizationCpp/include/Evaluable.h \
+		../ShapeParametrizationCpp/include/Editable.h \
+		../ShapeParametrizationCpp/include/Settings.h \
+		../ShapeParametrizationCpp/include/KnotSequences.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QListWidget \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qlistwidget.h \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qtwidgetsglobal.h \
 		/opt/qt/5.12.0/gcc_64/include/QtGui/qtguiglobal.h \
@@ -4844,6 +4860,9 @@ main.o: ../QTShapeParametrization/main.cpp ../QTShapeParametrization/loadprofile
 		/opt/qt/5.12.0/gcc_64/include/QtCore/QMutex \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/QQueue \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/QRunnable \
+		../QTShapeParametrization/knotlistdest.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QListWidget \
+		../QTShapeParametrization/knotlistsource.h \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QApplication \
 		../QTShapeParametrization/code.cpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../QTShapeParametrization/main.cpp
@@ -5423,9 +5442,9 @@ mainwindow.o: ../QTShapeParametrization/mainwindow.cpp ../QTShapeParametrization
 		/opt/qt/5.12.0/gcc_64/include/QtCore/QMutex \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/QQueue \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/QRunnable \
-		../QTShapeParametrization/knotlistsource.h \
-		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QListWidget \
 		../QTShapeParametrization/knotlistdest.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QListWidget \
+		../QTShapeParametrization/knotlistsource.h \
 		../QTShapeParametrization/qtutils.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/QDebug \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/QElapsedTimer \
@@ -6100,8 +6119,9 @@ pystring.o: ../ShapeParametrizationCpp/src/pystring.cpp ../ShapeParametrizationC
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o pystring.o ../ShapeParametrizationCpp/src/pystring.cpp
 
 Settings.o: ../ShapeParametrizationCpp/src/Settings.cpp ../ShapeParametrizationCpp/include/Settings.h \
-		../ShapeParametrizationCpp/include/Utils.h \
+		../ShapeParametrizationCpp/include/BaseKnotSequence.h \
 		../ShapeParametrizationCpp/include/Point.h \
+		../ShapeParametrizationCpp/include/Utils.h \
 		../ShapeParametrizationCpp/include/pystring.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Settings.o ../ShapeParametrizationCpp/src/Settings.cpp
 
@@ -9011,7 +9031,235 @@ knotlabel.o: ../QTShapeParametrization/knotlabel.cpp ../QTShapeParametrization/k
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QWidget \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QLabel \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qlabel.h \
-		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qframe.h
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qframe.h \
+		../QTShapeParametrization/qtutils.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QDialog \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qdialog.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QTableView \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qtableview.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qabstractitemview.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qabstractscrollarea.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qabstractitemdelegate.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qstyleoption.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qabstractspinbox.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qslider.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qabstractslider.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qstyle.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qtabbar.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qrubberband.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QLayoutItem \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qlayoutitem.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QtWidgets \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QtWidgetsDepends \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qabstractbutton.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qaccessiblewidget.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qaction.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qactiongroup.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qapplication.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qdesktopwidget.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qboxlayout.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qlayout.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgridlayout.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qbuttongroup.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qcalendarwidget.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qcheckbox.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qcolordialog.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qcolormap.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qcolumnview.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qcombobox.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qcommandlinkbutton.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qpushbutton.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qcommonstyle.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qcompleter.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qdatawidgetmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qdatetimeedit.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qdial.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qdialogbuttonbox.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qdirmodel.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qfileiconprovider.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qdockwidget.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qdrawutil.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qerrormessage.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qfiledialog.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qfilesystemmodel.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qfocusframe.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qfontcombobox.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qfontdialog.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qformlayout.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QLayout \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgesture.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgesturerecognizer.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgraphicsanchorlayout.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgraphicsitem.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgraphicslayout.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgraphicslayoutitem.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgraphicseffect.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgraphicsgridlayout.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgraphicsitemanimation.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgraphicslinearlayout.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgraphicsproxywidget.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgraphicswidget.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgraphicsscene.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgraphicssceneevent.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgraphicstransform.h \
+		/opt/qt/5.12.0/gcc_64/include/QtGui/QVector3D \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgraphicsview.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qscrollarea.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgroupbox.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qheaderview.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qinputdialog.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qlineedit.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qitemdelegate.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qitemeditorfactory.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qkeyeventtransition.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qkeysequenceedit.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qlcdnumber.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qlistview.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qlistwidget.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qmdiarea.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qmdisubwindow.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qmenu.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qmenubar.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qmessagebox.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qmouseeventtransition.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qopenglwidget.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qplaintextedit.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qtextedit.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qprogressbar.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qprogressdialog.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qproxystyle.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QCommonStyle \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qradiobutton.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qscrollbar.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qscroller.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/QPointF \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QScrollerProperties \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qscrollerproperties.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/QMetaType \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/QVariant \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qshortcut.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qsizegrip.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qspinbox.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qsplashscreen.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qsplitter.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qstackedlayout.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qstackedwidget.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qstatusbar.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qstyleditemdelegate.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qstylefactory.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qstylepainter.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qstyleplugin.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qsystemtrayicon.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qtablewidget.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qtextbrowser.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qtoolbar.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qtoolbox.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qtoolbutton.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qtooltip.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qtreeview.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qtreewidget.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qtreewidgetitemiterator.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qundogroup.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qundostack.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qundoview.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qwhatsthis.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qwidgetaction.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qwizard.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qtwidgetsversion.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QtCharts \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QtChartsDepends \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qchartglobal.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/QtGlobal \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/chartsnamespace.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qabstractaxis.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QChartGlobal \
+		/opt/qt/5.12.0/gcc_64/include/QtGui/QPen \
+		/opt/qt/5.12.0/gcc_64/include/QtGui/QFont \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qabstractbarseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QAbstractSeries \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qabstractseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QAbstractAxis \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qarealegendmarker.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QLegendMarker \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qlegendmarker.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QLegend \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qlegend.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QGraphicsWidget \
+		/opt/qt/5.12.0/gcc_64/include/QtGui/QBrush \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QAreaSeries \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qareaseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qbarcategoryaxis.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qbarlegendmarker.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QAbstractBarSeries \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QBarSet \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qbarset.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qbarmodelmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qbarseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qboxplotlegendmarker.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QBoxPlotSeries \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qboxplotseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QBoxSet \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qboxset.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qboxplotmodelmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qcandlesticklegendmarker.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QCandlestickSeries \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qcandlestickseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qcandlestickmodelmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qcandlestickset.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qcategoryaxis.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QValueAxis \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qvalueaxis.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qchart.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qchartview.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QChart \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QGraphicsView \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qdatetimeaxis.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qhbarmodelmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QBarModelMapper \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qhboxplotmodelmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QBoxPlotModelMapper \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qhcandlestickmodelmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QCandlestickModelMapper \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qhorizontalbarseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qhorizontalpercentbarseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qhorizontalstackedbarseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qhpiemodelmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QPieModelMapper \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qpiemodelmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qhxymodelmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QXYModelMapper \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qxymodelmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qlineseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QXYSeries \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qxyseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qlogvalueaxis.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qpercentbarseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qpielegendmarker.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QPieSeries \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qpieseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QPieSlice \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qpieslice.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qpolarchart.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qscatterseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qsplineseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qstackedbarseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qvbarmodelmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qvboxplotmodelmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qvcandlestickmodelmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qvpiemodelmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qvxymodelmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qxylegendmarker.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qtchartsversion.h \
+		../ShapeParametrizationCpp/include/Bspline.h \
+		../ShapeParametrizationCpp/include/Point.h \
+		../ShapeParametrizationCpp/include/Utils.h \
+		../ShapeParametrizationCpp/include/pystring.h \
+		../ShapeParametrizationCpp/include/Line.h \
+		../ShapeParametrizationCpp/include/Evaluable.h \
+		../ShapeParametrizationCpp/include/Editable.h \
+		../ShapeParametrizationCpp/include/Settings.h \
+		../ShapeParametrizationCpp/include/BaseKnotSequence.h \
+		../ShapeParametrizationCpp/include/KnotSequences.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o knotlabel.o ../QTShapeParametrization/knotlabel.cpp
 
 knotlistsource.o: ../QTShapeParametrization/knotlistsource.cpp ../QTShapeParametrization/knotlabel.h \
@@ -9702,6 +9950,16 @@ knotlistdest.o: ../QTShapeParametrization/knotlistdest.cpp ../QTShapeParametriza
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qlabel.h \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qframe.h \
 		../QTShapeParametrization/knotlistdest.h \
+		../ShapeParametrizationCpp/include/BaseKnotSequence.h \
+		../ShapeParametrizationCpp/include/Point.h \
+		../ShapeParametrizationCpp/include/Utils.h \
+		../ShapeParametrizationCpp/include/pystring.h \
+		../ShapeParametrizationCpp/include/Bspline.h \
+		../ShapeParametrizationCpp/include/Line.h \
+		../ShapeParametrizationCpp/include/Evaluable.h \
+		../ShapeParametrizationCpp/include/Editable.h \
+		../ShapeParametrizationCpp/include/Settings.h \
+		../ShapeParametrizationCpp/include/KnotSequences.h \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QListWidget \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qlistwidget.h \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qlistview.h \
@@ -9716,10 +9974,212 @@ knotlistdest.o: ../QTShapeParametrization/knotlistdest.cpp ../QTShapeParametriza
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qtabbar.h \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qrubberband.h \
 		../QTShapeParametrization/knotlistsource.h \
-		../ShapeParametrizationCpp/include/BaseKnotSequence.h \
-		../ShapeParametrizationCpp/include/Point.h \
-		../ShapeParametrizationCpp/include/Utils.h \
-		../ShapeParametrizationCpp/include/pystring.h \
+		../QTShapeParametrization/qtutils.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QDialog \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qdialog.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QTableView \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qtableview.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QLayoutItem \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qlayoutitem.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QtWidgets \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QtWidgetsDepends \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qabstractbutton.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qaccessiblewidget.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qaction.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qactiongroup.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qapplication.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qdesktopwidget.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qboxlayout.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qlayout.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgridlayout.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qbuttongroup.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qcalendarwidget.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qcheckbox.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qcolordialog.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qcolormap.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qcolumnview.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qcombobox.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qcommandlinkbutton.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qpushbutton.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qcommonstyle.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qcompleter.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qdatawidgetmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qdatetimeedit.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qdial.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qdialogbuttonbox.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qdirmodel.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qfileiconprovider.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qdockwidget.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qdrawutil.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qerrormessage.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qfiledialog.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qfilesystemmodel.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qfocusframe.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qfontcombobox.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qfontdialog.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qformlayout.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QLayout \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgesture.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgesturerecognizer.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgraphicsanchorlayout.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgraphicsitem.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgraphicslayout.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgraphicslayoutitem.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgraphicseffect.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgraphicsgridlayout.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgraphicsitemanimation.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgraphicslinearlayout.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgraphicsproxywidget.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgraphicswidget.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgraphicsscene.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgraphicssceneevent.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgraphicstransform.h \
+		/opt/qt/5.12.0/gcc_64/include/QtGui/QVector3D \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgraphicsview.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qscrollarea.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qgroupbox.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qheaderview.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qinputdialog.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qlineedit.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qitemdelegate.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qitemeditorfactory.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qkeyeventtransition.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qkeysequenceedit.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qlcdnumber.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qmdiarea.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qmdisubwindow.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qmenu.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qmenubar.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qmessagebox.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qmouseeventtransition.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qopenglwidget.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qplaintextedit.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qtextedit.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qprogressbar.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qprogressdialog.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qproxystyle.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QCommonStyle \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qradiobutton.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qscrollbar.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qscroller.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/QPointF \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QScrollerProperties \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qscrollerproperties.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/QMetaType \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/QVariant \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qshortcut.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qsizegrip.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qspinbox.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qsplashscreen.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qsplitter.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qstackedlayout.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qstackedwidget.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qstatusbar.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qstyleditemdelegate.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qstylefactory.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qstylepainter.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qstyleplugin.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qsystemtrayicon.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qtablewidget.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qtextbrowser.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qtoolbar.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qtoolbox.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qtoolbutton.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qtooltip.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qtreeview.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qtreewidget.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qtreewidgetitemiterator.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qundogroup.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qundostack.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qundoview.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qwhatsthis.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qwidgetaction.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qwizard.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qtwidgetsversion.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QtCharts \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QtChartsDepends \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qchartglobal.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/QtGlobal \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/chartsnamespace.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qabstractaxis.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QChartGlobal \
+		/opt/qt/5.12.0/gcc_64/include/QtGui/QPen \
+		/opt/qt/5.12.0/gcc_64/include/QtGui/QFont \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qabstractbarseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QAbstractSeries \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qabstractseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QAbstractAxis \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qarealegendmarker.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QLegendMarker \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qlegendmarker.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QLegend \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qlegend.h \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QGraphicsWidget \
+		/opt/qt/5.12.0/gcc_64/include/QtGui/QBrush \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QAreaSeries \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qareaseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qbarcategoryaxis.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qbarlegendmarker.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QAbstractBarSeries \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QBarSet \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qbarset.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qbarmodelmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qbarseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qboxplotlegendmarker.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QBoxPlotSeries \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qboxplotseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QBoxSet \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qboxset.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qboxplotmodelmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qcandlesticklegendmarker.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QCandlestickSeries \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qcandlestickseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qcandlestickmodelmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qcandlestickset.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qcategoryaxis.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QValueAxis \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qvalueaxis.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qchart.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qchartview.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QChart \
+		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QGraphicsView \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qdatetimeaxis.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qhbarmodelmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QBarModelMapper \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qhboxplotmodelmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QBoxPlotModelMapper \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qhcandlestickmodelmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QCandlestickModelMapper \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qhorizontalbarseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qhorizontalpercentbarseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qhorizontalstackedbarseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qhpiemodelmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QPieModelMapper \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qpiemodelmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qhxymodelmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QXYModelMapper \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qxymodelmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qlineseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QXYSeries \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qxyseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qlogvalueaxis.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qpercentbarseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qpielegendmarker.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QPieSeries \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qpieseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QPieSlice \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qpieslice.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qpolarchart.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qscatterseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qsplineseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qstackedbarseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qvbarmodelmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qvboxplotmodelmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qvcandlestickmodelmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qvpiemodelmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qvxymodelmapper.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qxylegendmarker.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qtchartsversion.h \
 		/opt/qt/5.12.0/gcc_64/include/QtGui/QDrag \
 		/opt/qt/5.12.0/gcc_64/include/QtGui/QDragEnterEvent \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/QMimeData

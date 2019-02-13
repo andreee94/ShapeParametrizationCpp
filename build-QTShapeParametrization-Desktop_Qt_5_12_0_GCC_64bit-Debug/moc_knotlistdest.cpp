@@ -22,7 +22,7 @@ QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_KnotListDest_t {
     QByteArrayData data[9];
-    char stringdata0[107];
+    char stringdata0[102];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -34,17 +34,16 @@ static const qt_meta_stringdata_KnotListDest_t qt_meta_stringdata_KnotListDest =
 QT_MOC_LITERAL(0, 0, 12), // "KnotListDest"
 QT_MOC_LITERAL(1, 13, 11), // "knotChanged"
 QT_MOC_LITERAL(2, 25, 0), // ""
-QT_MOC_LITERAL(3, 26, 22), // "BaseFixedKnotSequence*"
-QT_MOC_LITERAL(4, 49, 4), // "knot"
-QT_MOC_LITERAL(5, 54, 18), // "currentItemChanged"
-QT_MOC_LITERAL(6, 73, 16), // "QListWidgetItem*"
-QT_MOC_LITERAL(7, 90, 7), // "current"
-QT_MOC_LITERAL(8, 98, 8) // "previous"
+QT_MOC_LITERAL(3, 26, 17), // "BaseKnotSequence*"
+QT_MOC_LITERAL(4, 44, 4), // "knot"
+QT_MOC_LITERAL(5, 49, 18), // "currentItemChanged"
+QT_MOC_LITERAL(6, 68, 16), // "QListWidgetItem*"
+QT_MOC_LITERAL(7, 85, 7), // "current"
+QT_MOC_LITERAL(8, 93, 8) // "previous"
 
     },
-    "KnotListDest\0knotChanged\0\0"
-    "BaseFixedKnotSequence*\0knot\0"
-    "currentItemChanged\0QListWidgetItem*\0"
+    "KnotListDest\0knotChanged\0\0BaseKnotSequence*\0"
+    "knot\0currentItemChanged\0QListWidgetItem*\0"
     "current\0previous"
 };
 #undef QT_MOC_LITERAL
@@ -83,14 +82,14 @@ void KnotListDest::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
         KnotListDest *_t = static_cast<KnotListDest *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
-        case 0: _t->knotChanged((*reinterpret_cast< BaseFixedKnotSequence*(*)>(_a[1]))); break;
+        case 0: _t->knotChanged((*reinterpret_cast< BaseKnotSequence*(*)>(_a[1]))); break;
         case 1: _t->currentItemChanged((*reinterpret_cast< QListWidgetItem*(*)>(_a[1])),(*reinterpret_cast< QListWidgetItem*(*)>(_a[2]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
         int *result = reinterpret_cast<int *>(_a[0]);
         {
-            using _t = void (KnotListDest::*)(BaseFixedKnotSequence * );
+            using _t = void (KnotListDest::*)(BaseKnotSequence * );
             if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&KnotListDest::knotChanged)) {
                 *result = 0;
                 return;
@@ -140,7 +139,7 @@ int KnotListDest::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 }
 
 // SIGNAL 0
-void KnotListDest::knotChanged(BaseFixedKnotSequence * _t1)
+void KnotListDest::knotChanged(BaseKnotSequence * _t1)
 {
     void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 0, _a);

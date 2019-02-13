@@ -56,7 +56,7 @@ public slots:
         void comboBoxTEMotionChanged(int index);
         void comboBoxTEShapeChanged(int index);
 
-        void knotSelectedChanged(BaseFixedKnotSequence* knot);
+        void knotSelectedChanged(BaseKnotSequence* knot);
 
 protected:
         BsplineTask *addInterpolationTask(BsplineTaskManager *bsplinemanager) ;

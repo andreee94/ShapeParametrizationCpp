@@ -57,6 +57,8 @@ class Utils
         static strings tostring(const bools &values);
         static bool getbool(string str);
         static bool iszeroint(string str);
+        static doubles rational(double start, double end, double q, int numpoints, bool startIncluded = true, bool endIncluded = true);
+        static doubles birational(double start, double end, double q1, double q2, double center, int numpoints, bool startIncluded = true, bool endIncluded = true, bool centerIncluded = true);
 
 
 

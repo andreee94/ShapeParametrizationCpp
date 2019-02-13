@@ -268,7 +268,7 @@ Qt::DropAction KnotListDest::supportedDropActions()
     return Qt::MoveAction;
 }
 
-vector<BaseFixedKnotSequence *> KnotListDest::getKnots()
+vector<BaseKnotSequence *> KnotListDest::getKnots()
 {
     knots.clear();
     for(int i = 0; i < count(); ++i)
@@ -286,7 +286,7 @@ KnotSequences KnotListDest::getKnotSequence()
      return KnotSequences(knots);
 }
 
-BaseFixedKnotSequence *KnotListDest::getKnotFromName(QString name)
+BaseKnotSequence *KnotListDest::getKnotFromName(QString name)
 {
     QByteArray nameba = name.toLocal8Bit();
     const char *namechars = nameba.data();
@@ -296,15 +296,15 @@ BaseFixedKnotSequence *KnotListDest::getKnotFromName(QString name)
         case Utils::str2int("End Knots"):
             return  new EndKS(bspline_n);
         case Utils::str2int("Rational Knots"):
-            return  new RationalFixedKS(0, 1, 10, 1.5);
+            return  new RationalKS(0, 1, 10, 1.5);
         case Utils::str2int("Value Knot"):
-            return  new ValueFixedKS(0.5);
+            return  new ValueKS(0.5);
         case Utils::str2int("Birational Knots"):
-            return  new BiRationalFixedKS(0, 1, 10, 1.5, 0.7, 0.5);
+            return  new BiRationalKS(0, 1, 10, 1.5, 0.7, 0.5);
         case Utils::str2int("Uniform Knots"):
-            return  new UniformFixedKS(0, 1, 10);
+            return  new UniformKS(0, 1, 10);
         case Utils::str2int("Multiplicity Knots"):
-            return  new MultiplicityFixedValueKS(0.5, 2);
+            return  new MultiplicityValueKS(0.5, 2);
     }
 }
 

@@ -61,13 +61,13 @@ class Settings
         void setvalue(string key, size_t value);
         void setvalue(string key, float value);
         void setvalue(string key, double value);
-        void setvalue(string key, BaseFixedKnotSequence::ParamType value);
+        void setvalue(string key, BaseKnotSequence::ParamType value);
         void setvalues(string key, const strings &values);
         void setvalues(string key, const doubles &values);
         void setvalues(string key, const ints &values);
         void setvalues(string key, const bools &values);
         void setvalues(string key, const Knots &values);
-        void setvalues(string key, const vector<BaseFixedKnotSequence::ParamType> &values);
+        void setvalues(string key, const vector<BaseKnotSequence::ParamType> &values);
 
         // IO methods
         Settings save(string filename);

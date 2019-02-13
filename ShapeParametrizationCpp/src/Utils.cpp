@@ -341,6 +341,41 @@ bool Utils::iszeroint(string str)
     }
 }
 
+doubles Utils::rational(double start, double end, double q, int numpoints, bool startIncluded, bool endIncluded)
+{
+    double b = end - start;
+    double a = b / numpoints;
+    if (q != 1.0)
+        a = b / (1.0 - pow( 1.0 / q, numpoints)) * (1.0 - 1.0 / q);
+
+    doubles uarray(numpoints + 1);
+
+    // add one more index which is the start point
+    uarray[0] = start;
+    for (int i = 1; i < numpoints + 1; i++)
+    {
+        uarray[i] = uarray[i - 1] + a / pow(q, i - 1);
+    }
+    uarray = Utils::extract(uarray, startIncluded ? 0 : 1, endIncluded ? 0 : 1);
+    //uarray.insert(uarray.begin(), this->start);
+    return uarray;
+}
+
+doubles Utils::birational(double start, double end, double q1, double q2, double center, int numpoints, bool startIncluded, bool endIncluded, bool centerIncluded)
+{
+    doubles uarray_left = Utils::rational(start, center, q1, numpoints, true, centerIncluded);
+    doubles uarray_right = Utils::rational(center, end, q2, numpoints, centerIncluded, true);
+
+    if (centerIncluded)
+        uarray_left.pop_back(); // the center element is inserted 2 times so we remove one occurrence
+
+    // concatenate left and right
+    doubles uarray(uarray_left);
+    uarray.insert(uarray.end(), uarray_right.begin(), uarray_right.end());
+    uarray = Utils::extract(uarray, startIncluded ? 0 : 1, endIncluded ? 0 : 1);
+    return uarray;
+}
+
 
 //template<typename T>
 //bool Utils::contains(vector<T> items, const T item)

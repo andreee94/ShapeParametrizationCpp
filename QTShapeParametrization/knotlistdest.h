@@ -20,15 +20,15 @@ class KnotListDest : public QListWidget
         KnotSequences getKnotSequence();
 
     signals:
-        void knotChanged(BaseFixedKnotSequence* knot);
+        void knotChanged(BaseKnotSequence* knot);
 
     protected slots:
         void currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
 
     protected:
         Bspline * bspline;
-        vector<BaseFixedKnotSequence*> knots;
-        BaseFixedKnotSequence* dragging_knot;
+        vector<BaseKnotSequence*> knots;
+        BaseKnotSequence* dragging_knot;
 
         bool is_sorting = false;
         QModelIndex sorting_modelindex_start;
@@ -44,8 +44,8 @@ class KnotListDest : public QListWidget
         void mouseDoubleClickEvent( QMouseEvent * e) override;
         Qt::DropAction supportedDropActions();
 
-        vector<BaseFixedKnotSequence*> getKnots();
-        BaseFixedKnotSequence* getKnotFromName(QString name);
+        vector<BaseKnotSequence*> getKnots();
+        BaseKnotSequence* getKnotFromName(QString name);
 };
 
 #endif // KNOTLISTDEST_H

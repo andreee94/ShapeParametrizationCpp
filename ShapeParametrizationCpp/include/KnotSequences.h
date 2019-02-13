@@ -18,7 +18,6 @@ class KnotSequences
         KnotSequences() {}
         KnotSequences(const KnotSequences &knotSequences);
         KnotSequences(Knots knots);
-        KnotSequences(std::vector<BaseFixedKnotSequence*> knots);
 
         KnotSequences& operator=(const KnotSequences& other);
 

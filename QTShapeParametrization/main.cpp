@@ -10,6 +10,16 @@ Q_DECLARE_METATYPE(Bspline)
 
 int main(int argc, char *argv[])
 {
+    MAKE_PROTOTYPE(UniformKS)
+    MAKE_PROTOTYPE(ValueKS)
+    MAKE_PROTOTYPE(MultiplicityValueKS)
+    MAKE_PROTOTYPE(BeginKS)
+    MAKE_PROTOTYPE(EndKS)
+    MAKE_PROTOTYPE(RationalKS)
+    MAKE_PROTOTYPE(BiRationalKS)
+    MAKE_PROTOTYPE(CumulKS)
+    MAKE_PROTOTYPE(CustomKS)
+
     qRegisterMetaType<BsplineTask>();
     qRegisterMetaType<Points>();
     qRegisterMetaType<Bspline>();
