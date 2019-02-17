@@ -188,6 +188,50 @@ void Utils::getminmaxindexes(const Points &points, int &minindex, int &maxindex,
     }
 }
 
+void Utils::splitcurve(const Points &points, int indexfirst, int indexlast, Points &curve1, Points &curve2)
+{
+    curve1.clear();
+    curve2.clear();
+    int index1, index2;
+    if (indexfirst >= indexlast)
+    {
+        index1 = indexlast;
+        index2 = indexfirst;
+    }
+    else //if (indexfirst < indexlast)
+    {
+        index1 = indexfirst;
+        index2 = indexlast;
+    }
+    // from index1 to index2
+    curve1 = vector<Point>(points.begin() + index1, points.begin() + index2);
+    // (from index2 to end) + (from 0 to index1)
+    curve2 = vector<Point>(points.begin() + index2, points.end());
+    curve2.insert(curve2.end(), points.begin(), points.begin() + index1);
+}
+
+Points Utils::getpointswithoutTE(const Points &curve1, const Points &curve2, const Point &first, const Point &last, Points &TEPoints)
+{
+    TEPoints.clear();
+    double len1 = Point::lengthsquared(curve1);
+    double len2 = Point::lengthsquared(curve2);
+    Points points = len1 >= len2 ? curve1 : curve2;
+    TEPoints = len1 >= len2 ? curve2 : curve1;
+    if (points.at(0) == last) // wrong orientation, so reverse
+        std::reverse(points.begin(), points.end());
+    if (TEPoints.at(0) == first) // TEpoints are from last to first, so if wrong orientation, so reverse
+        std::reverse(TEPoints.begin(), TEPoints.end());
+    return points;
+}
+
+Points Utils::getpointswithoutTE(const Points &points, int indexfirst, int indexlast, Points &TEPoints)
+{
+    Points curve1;
+    Points curve2;
+    Utils::splitcurve(points, indexfirst, indexlast, curve1, curve2);
+    return Utils::getpointswithoutTE(curve1, curve2, points.at(indexfirst), points.at(indexlast), TEPoints);
+}
+
 void Utils::getupperlowercurves(const Points &points, Points &lower, Points &upper)
 {
     int index_minX;

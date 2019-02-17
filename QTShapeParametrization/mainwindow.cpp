@@ -867,7 +867,7 @@ QLayout* MainWindow::generateChartLayout()
         chartView->setDirectionScroll(ChartView::BothDirectionScroll);
         chartView->setDirectionZoom(ChartView::BothDirectionZoom);
         chartView->setRubberBand(new QRubberBand(QRubberBand::Shape::Rectangle));
-        connect(chartView,QOverload<QScatterSeries*, QScatterSeries*, QPointF, bool>::of(&ChartView::clickableEvent),this, &MainWindow::chartViewClicked);
+        connect(chartView,QOverload<QScatterSeries*, QScatterSeries*, QPointF, bool>::of(&ChartView::clickableEventMap),this, &MainWindow::chartViewClicked);
 
     QGroupBox *groupCheckBoxChart = new QGroupBox(tr("Plots visibility"));
     QHBoxLayout *checkBoxHLayout = new QHBoxLayout;

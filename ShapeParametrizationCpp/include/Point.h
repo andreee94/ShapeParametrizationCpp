@@ -108,6 +108,8 @@ class Point
 
         static doubles distances(const Points &pA, const Points &pB);
         static doubles distancesSquared(const Points &pA, const Points &pB);
+        static double length(const Points &points);
+        static double lengthsquared(const Points &points);
         static void normalize(Points &points);
         static void normals(Points &points);
         static Points fromDoubles(const doubles &x, const doubles &y);

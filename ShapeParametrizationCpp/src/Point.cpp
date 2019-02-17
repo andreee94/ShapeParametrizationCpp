@@ -288,6 +288,30 @@ doubles Point::distancesSquared(const Points &pA, const Points &pB)
     return result;
 }
 
+double Point::length(const Points &points)
+{
+    double len = 0;
+    if (points.size() < 2)
+        return 0.0;
+    for (unsigned int i = 1; i < points.size(); i++)
+    {
+        len += (points.at(i) - points.at(i - 1)).length();
+    }
+    return len;
+}
+
+double Point::lengthsquared(const Points &points)
+{
+    double len = 0;
+    if (points.size() < 2)
+        return 0.0;
+    for (unsigned int i = 1; i < points.size(); i++)
+    {
+        len += (points.at(i) - points.at(i - 1)).lengthsquared();
+    }
+    return len;
+}
+
 string Point::to_str() const
 {
     std::ostringstream strs;

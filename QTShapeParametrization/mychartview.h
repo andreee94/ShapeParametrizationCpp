@@ -152,12 +152,14 @@ public:
     void setRubberBand(QRubberBand *value);
 
     void addTooltip(QScatterSeries*, TooltipTextFunction*);
+    void addClickable(QScatterSeries*);
     void addToggleable(QScatterSeries*);
     void addToggleable(QScatterSeries*, QScatterSeries*);
 
 
 signals:
-    void clickableEvent(QScatterSeries* series1, QScatterSeries* series2, QPointF point, bool from1to2);
+    void clickableEventMap(QScatterSeries* series1, QScatterSeries* series2, QPointF point, bool from1to2);
+    void clickableEventList(QScatterSeries* series, QPointF point, int index);
 
 protected:
     bool viewportEvent(QEvent *event);
@@ -168,7 +170,8 @@ protected:
     void wheelEvent(QWheelEvent *event);
 
     void manageTooltip(QMouseEvent * event);
-    void manageClicked(QMouseEvent * event);
+    void manageClickedMap(QMouseEvent * event);
+    void manageClickedList(QMouseEvent * event);
 
 
 private:
@@ -191,7 +194,8 @@ private:
 
     // toggle between two series clicking a point
     int clickableDistanceThresholdPX = 12;
-    std::map<QScatterSeries*, QScatterSeries*> clickable_map;
+    std::map<QScatterSeries*, QScatterSeries*> clickable_map; // toggle between the two series clicked point
+    QList<QScatterSeries*> clickable_list; // let the user choose what to do with the clicked point
 
     // prevent rubberband when rectangle is too small
     QPoint startingDragPoint;

@@ -59,7 +59,8 @@ void ChartView::mousePressEvent(QMouseEvent *event)
         rubberBand->show();
     }
 
-    manageClicked(event);
+    manageClickedMap(event);
+    manageClickedList(event);
     QChartView::mousePressEvent(event);
 }
 
@@ -215,7 +216,7 @@ void ChartView::manageTooltip(QMouseEvent * event)
     }
 }
 
-void ChartView::manageClicked(QMouseEvent *event)
+void ChartView::manageClickedMap(QMouseEvent *event)
 {
     if (clickable_map.size() > 0)
     {
@@ -267,7 +268,46 @@ void ChartView::manageClicked(QMouseEvent *event)
                             series1->append(point.value());
                             series2->remove(point.value());
                         }
-                        emit clickableEvent(series1, series2, point.value(), from1to2);
+                        emit clickableEventMap(series1, series2, point.value(), from1to2);
+                    }
+                }
+            }
+        }
+    }
+}
+
+void ChartView::manageClickedList(QMouseEvent *event)
+{
+    if (clickable_list.size() > 0)
+    {
+        if (event->buttons() & Qt::LeftButton)
+        {
+            QPointF cursor_px = event->pos();
+            //QPointF cursor_xy = chart()->mapToPosition(cursor_px);
+
+            for( auto const& series : clickable_list )
+            {
+                if (series->isVisible())
+                {
+                    //QList<QPointF> points = qobject_cast<QScatterSeries*>(chart()->series().at(0))->points();
+                    QList<QPointF> points;
+                    std::optional<QPointF> point;
+                    int index = -1;
+                    points = series->points();
+                    for (auto const [i, point_xy] : Utils::enumerate(points))
+                    {
+                        QPointF point_px = chart()->mapToPosition(point_xy);
+                        if (QLineF(cursor_px, point_px).length() < clickableDistanceThresholdPX) // less than 10 px
+                        {
+                            point = point_xy;
+                            index = i;
+                            break; // points loop
+                        }
+                    }
+                    if (point) // click close to a point
+                    {
+                        emit clickableEventList(series, point.value(), index);
+                        break; // series loop
                     }
                 }
             }
@@ -279,6 +319,11 @@ void ChartView::manageClicked(QMouseEvent *event)
 void ChartView::addTooltip(QScatterSeries * key, TooltipTextFunction * value)
 {
     popup_map[key] = value;
+}
+
+void ChartView::addClickable(QScatterSeries * series)
+{
+    clickable_list.append(series);
 }
 
 void ChartView::addToggleable(QScatterSeries * key)

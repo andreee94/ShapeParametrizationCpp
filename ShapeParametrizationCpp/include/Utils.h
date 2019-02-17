@@ -50,6 +50,9 @@ class Utils
         static bool greater(double d1, double d2, double threshold=1e-15);
         static void getupperlowercurves(const Points &points, Points &lower, Points &upper);
         static void getminmaxindexes(const Points &points, int &minindex, int &maxindex, char XorY);
+        static void splitcurve(const Points &points, int indexfirst, int indexlast, Points &curve1, Points &curve2);
+        static Points getpointswithoutTE(const Points &curve1, const Points &curve2, const Point &first, const Point &last, Points &TEPoints);
+        static Points getpointswithoutTE(const Points &points, int indexfirst, int indexlast, Points &TEPoints); // call together split curve and getpointswithoutTE
         static string fixline(string line);
         static string tostring( std::ostream& str );
         static strings tostring(const doubles &values);
@@ -107,6 +110,22 @@ class Utils
                 }
             }
             return result;
+        }
+
+        template<class T>
+        static int indexof(vector<T> items, const T item)
+        {
+            auto begin = items.begin();
+            auto end = items.end();
+
+            for(int index = 0; begin != end; ++begin, ++index)
+            {
+                if ((*begin) == item)
+                {
+                    return index;
+                }
+            }
+            return -1;
         }
 
         template<typename T>
