@@ -32,6 +32,7 @@ class Utils
 {
     public:
         static doubles linspace(double start_in, double end_in, int num_in, bool includeFirst=true, bool includeLast=true);
+        static ints range(int start_in, int end_in, bool includeFirst=true, bool includeLast=false);
         static doubles extractmid(const doubles &items, int offset=1);
         //static doubles extractmid_self(doubles &items, int offset=1);
         static doubles extract(const doubles &items, int offsetstart, int offsetend);
@@ -51,8 +52,10 @@ class Utils
         static void getupperlowercurves(const Points &points, Points &lower, Points &upper);
         static void getminmaxindexes(const Points &points, int &minindex, int &maxindex, char XorY);
         static void splitcurve(const Points &points, int indexfirst, int indexlast, Points &curve1, Points &curve2);
+        static void splitcurve(const Points &points, int indexfirst, int indexlast, ints &curve1index, ints &curve2index);
         static Points getpointswithoutTE(const Points &curve1, const Points &curve2, const Point &first, const Point &last, Points &TEPoints);
         static Points getpointswithoutTE(const Points &points, int indexfirst, int indexlast, Points &TEPoints); // call together split curve and getpointswithoutTE
+        static void getpointswithoutTE(const Points &points, int indexfirst, int indexlast, ints &curveindex, ints &teindex);
         static string fixline(string line);
         static string tostring( std::ostream& str );
         static strings tostring(const doubles &values);
@@ -61,8 +64,7 @@ class Utils
         static bool getbool(string str);
         static bool iszeroint(string str);
         static doubles rational(double start, double end, double q, int numpoints, bool startIncluded = true, bool endIncluded = true);
-        static doubles birational(double start, double end, double q1, double q2, double center, int numpoints, bool startIncluded = true, bool endIncluded = true, bool centerIncluded = true);
-
+        static doubles birational(double start, double end, double q1, double q2, double center, int numpoints, bool startIncluded = true, bool endIncluded = true, bool centerIncluded = true); 
 
 
         static constexpr unsigned int str2int(const char* str, int h = 0)
@@ -135,6 +137,28 @@ class Utils
             auto last = v.cbegin() + end;
 
             std::vector<T> vec(first, last);
+            return vec;
+        }
+
+        template<typename T>
+        static std::vector<T> merge(const std::vector<T> &v1, const std::vector<T> &v2)
+        {
+            std::vector<T> vec(v1.size() + v2.size());
+            for (auto item : v1)
+                vec.push_back(item);
+            for (auto item : v2)
+                vec.push_back(item);
+            //vec.insert(vec.end(), v1.begin(), v1.end());
+            //vec.insert(vec.end(), v2.begin(), v2.end());
+            return vec;
+        }
+
+        template<typename T>
+        static std::vector<T> extract(const std::vector<T> &v, const ints & indexes)
+        {
+            std::vector<T> vec(indexes.size());
+            for (auto ind : indexes)
+                vec.push_back(v[ind]);
             return vec;
         }
         ///////////////////////////////////////////////////

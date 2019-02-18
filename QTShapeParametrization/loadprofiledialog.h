@@ -108,7 +108,7 @@ private:
     QScatterSeries *seriesTE = new QScatterSeries();
     QScatterSeries *seriesFirst = new QScatterSeries();
     QScatterSeries *seriesLast = new QScatterSeries();
-    std::optional<QPointF> firstPoint, lastPoint;
+    //std::optional<QPointF> firstPoint, lastPoint;
 
     QWidget *generateChartLayout();
     QLayout *generateLoadLayout();

@@ -44,6 +44,16 @@ doubles Utils::linspace(double start_in, double end_in, int num_in, bool include
   return linspaced;
 }
 
+ints Utils::range(int start_in, int end_in, bool includeFirst, bool includeLast)
+{
+    ints res;
+    int startoffset = includeFirst ? 0 : 1;
+    int endoffset = includeLast ? 0 : 1;
+    for (int i = start_in + startoffset; i <= end_in - endoffset; i++)
+        res.push_back(i);
+    return res;
+}
+
 doubles Utils::extractmid(const doubles &items, int offset)
 {
     return Utils::extract(items, offset, offset);
@@ -190,6 +200,8 @@ void Utils::getminmaxindexes(const Points &points, int &minindex, int &maxindex,
 
 void Utils::splitcurve(const Points &points, int indexfirst, int indexlast, Points &curve1, Points &curve2)
 {
+    if (indexlast == -1 || indexfirst == -1)
+        return;
     curve1.clear();
     curve2.clear();
     int index1, index2;
@@ -208,6 +220,28 @@ void Utils::splitcurve(const Points &points, int indexfirst, int indexlast, Poin
     // (from index2 to end) + (from 0 to index1)
     curve2 = vector<Point>(points.begin() + index2, points.end());
     curve2.insert(curve2.end(), points.begin(), points.begin() + index1);
+}
+
+void Utils::splitcurve(const Points &points, int indexfirst, int indexlast, ints &curve1index, ints &curve2index)
+{
+    if (indexlast == -1 || indexfirst == -1)
+        return;
+    curve1index.clear();
+    curve2index.clear();
+    int index1, index2;
+    if (indexfirst >= indexlast)
+    {
+        index1 = indexlast;
+        index2 = indexfirst;
+    }
+    else //if (indexfirst < indexlast)
+    {
+        index1 = indexfirst;
+        index2 = indexlast;
+    }
+    // from index1 to index2
+    curve1index = Utils::range(index1, index2, true, true);
+    curve2index = Utils::merge(Utils::range(index2, points.size() - 1, true, true), Utils::range(0, index1, true, true));
 }
 
 Points Utils::getpointswithoutTE(const Points &curve1, const Points &curve2, const Point &first, const Point &last, Points &TEPoints)
@@ -230,6 +264,22 @@ Points Utils::getpointswithoutTE(const Points &points, int indexfirst, int index
     Points curve2;
     Utils::splitcurve(points, indexfirst, indexlast, curve1, curve2);
     return Utils::getpointswithoutTE(curve1, curve2, points.at(indexfirst), points.at(indexlast), TEPoints);
+}
+
+void Utils::getpointswithoutTE(const Points &points, int indexfirst, int indexlast, ints &curveindex, ints &teindex)
+{
+    if (indexlast == -1 || indexfirst == -1)
+        return;
+    ints curve1index, curve2index;
+    Utils::splitcurve(points, indexfirst, indexlast, curve1index, curve2index);
+    double len1 = Point::lengthsquared(Utils::extract(points, curve1index));
+    double len2 = Point::lengthsquared(Utils::extract(points, curve2index));
+    curveindex = len1 >= len2 ? curve1index : curve2index;
+    teindex = len1 >= len2 ? curve2index : curve1index;
+    if (curveindex.at(0) == indexlast) // wrong orientation, so reverse
+        std::reverse(curveindex.begin(), curveindex.end());
+    if (teindex.at(0) == indexfirst) // TEpoints are from last to first, so if wrong orientation, so reverse
+        std::reverse(teindex.begin(), teindex.end());
 }
 
 void Utils::getupperlowercurves(const Points &points, Points &lower, Points &upper)

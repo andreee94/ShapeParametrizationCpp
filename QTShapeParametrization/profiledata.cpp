@@ -74,35 +74,43 @@ ProfileData ProfileData::setFrameOfReference(FrameOfReference frameOfReference)
     return *this;
 }
 
-doubles ProfileData::getX() const
+doubles ProfileData::getX(bool forcefull) const
 {
     // TODO perform change in coordinates if not cartesian
     doubles x = data.getcolumn(this->columnX);
+    if (!forcefull && curvePointsIndex.size() > 0)
+        x = Utils::extract(x, curvePointsIndex);
     if (reverseX)
         std::for_each(x.begin(), x.end(), [](double &n){ n = -n; });
     return x;
 }
 
-doubles ProfileData::getY() const
+doubles ProfileData::getY(bool forcefull) const
 {
     // TODO perform change in coordinates if not cartesian
     doubles y = data.getcolumn(this->columnY);
+    if (!forcefull && curvePointsIndex.size() > 0)
+        y = Utils::extract(y, curvePointsIndex);
     if (reverseY)
         std::for_each(y.begin(), y.end(), [](double &n){ n = -n; });
     return y;
 }
 
-doubles ProfileData::getZ() const
+doubles ProfileData::getZ(bool forcefull) const
 {
     doubles z = data.getcolumn(this->columnR);
+    if (!forcefull && curvePointsIndex.size() > 0)
+        z = Utils::extract(z, curvePointsIndex);
     if (reverseZ)
         std::for_each(z.begin(), z.end(), [](double &n){ n = -n; });
     return z;
 }
 
-double ProfileData::getR() const
+double ProfileData::getR(bool forcefull) const
 {
     doubles z = data.getcolumn(this->columnR);
+    if (!forcefull && curvePointsIndex.size() > 0)
+        z = Utils::extract(z, curvePointsIndex);
     return *max_element(std::begin(z), std::end(z));
 }
 
@@ -156,10 +164,10 @@ string ProfileData::getFileName() const
     return this->filename;
 }
 
-Points ProfileData::getPoints() const
+Points ProfileData::getPoints(bool forcefull) const
 {
-    doubles x = getX();
-    doubles y = getY();
+    doubles x = getX(forcefull);
+    doubles y = getY(forcefull);
     if (this->getFrameOfReference() == FrameOfReference::CYLINDRICAL)
     {
         doubles z = getZ();
@@ -173,4 +181,62 @@ Points ProfileData::getPoints() const
         return Point::fromDoubles(rtheta, y);
     }
     else return Point::fromDoubles(x, y);
+}
+
+//Point ProfileData::getFirstPoint() const
+//{
+//    return firstPoint.value();
+//}
+
+//void ProfileData::setFirstPoint(const Point &value)
+//{
+//    firstPoint = value;
+//}
+
+//Point ProfileData::getLastPoint() const
+//{
+//    return lastPoint.value();
+//}
+
+//void ProfileData::setLastPoint(const Point &value)
+//{
+//    lastPoint = value;
+//}
+
+int ProfileData::getFirstPointIndex() const
+{
+    return firstPointIndex;
+}
+
+void ProfileData::setFirstPointIndex(int value)
+{
+    firstPointIndex = value;
+}
+
+int ProfileData::getLastPointIndex() const
+{
+    return lastPointIndex;
+}
+
+//Points ProfileData::getCurvePoints() const
+//{
+//    return curvePoints;
+//}
+
+//Points ProfileData::getTEPoints() const
+//{
+//    return TEPoints;
+//}
+
+void ProfileData:: computePointsAndTE(Points &curvePoints, Points &TEPoints)
+{
+    Points points = getPoints(true);
+    Utils::getpointswithoutTE(points, firstPointIndex, lastPointIndex, curvePointsIndex, TEPointsIndex);
+    curvePoints = Utils::extract(points, curvePointsIndex);
+    TEPoints = Utils::extract(points, TEPointsIndex);
+}
+
+void ProfileData::setLastPointIndex(int value)
+{
+    lastPointIndex = value;
 }

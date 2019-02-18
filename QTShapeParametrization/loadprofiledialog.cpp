@@ -118,6 +118,7 @@ void LoadProfileDialog::setProfileData(const ProfileData &value)
 {
     data = value;
     updateTableAndChart(true);
+    resetTEClicked();
 }
 
 ProfileData LoadProfileDialog::getProfileData() const
@@ -131,6 +132,7 @@ void LoadProfileDialog::ComboXActivated(int index)
     {
         data.setColumnX(index);
         this->updateTableAndChart(false);
+        resetTEClicked();
     }
 }
 
@@ -140,6 +142,7 @@ void LoadProfileDialog::ComboYActivated(int index)
     {
         data.setColumnY(index);
         this->updateTableAndChart(false);
+        resetTEClicked();
     }
 }
 
@@ -149,6 +152,7 @@ void LoadProfileDialog::ComboRActivated(int index)
     {
         data.setColumnR(index);
         this->updateTableAndChart(false);
+        resetTEClicked();
     }
 }
 
@@ -161,6 +165,7 @@ void LoadProfileDialog::RadioSelected(FrameOfReference type)
         colsRLabel->setEnabled(type == FrameOfReference::CYLINDRICAL);
         comboRcol->setEnabled(type == FrameOfReference::CYLINDRICAL);
         checkboxReverseZ->setEnabled(type == FrameOfReference::CYLINDRICAL);
+        resetTEClicked();
     }
 }
 
@@ -170,6 +175,7 @@ void LoadProfileDialog::CheckReverseXChanged(int state)
     {
         data.setReverseX(boolFromState(state));
         this->updateTableAndChart(false);
+        resetTEClicked();
     }
 }
 
@@ -179,6 +185,7 @@ void LoadProfileDialog::CheckReverseYChanged(int state)
     {
         data.setReverseY(boolFromState(state));
         this->updateTableAndChart(false);
+        resetTEClicked();
     }
 }
 
@@ -222,9 +229,10 @@ void LoadProfileDialog::resetTEClicked()
     seriesLast->clear();
     seriesFirst->clear();
     seriesPoints->clear();
-    firstPoint.reset();
-    lastPoint.reset();
-    QTUtils::appendPointsToSeries(seriesPoints, data.getPoints());
+    data.firstPoint.reset();
+    data.lastPoint.reset();
+    if (this->data.getFileName().size() > 0)
+        QTUtils::appendPointsToSeries(seriesPoints, data.getPoints());
     selectionType = SelectionType::None;
     updateSelectionType();
 }
@@ -252,18 +260,18 @@ void LoadProfileDialog::clickableEventList(QScatterSeries *series, QPointF point
             {
                 seriesFirst->remove(index);
                 seriesPoints->append(point);
-                firstPoint.reset();
+                data.firstPoint.reset();
             }
             else
             {
                 series->remove(index);
-                if (firstPoint) // if a first point already available, remove it and append it to default  series
+                if (data.firstPoint) // if a first point already available, remove it and append it to default  series
                 {
-                    seriesFirst->remove(firstPoint.value());
-                    seriesPoints->append(firstPoint.value());
+                    seriesFirst->remove(data.firstPoint.value());
+                    seriesPoints->append(data.firstPoint.value());
                 }
                 seriesFirst->append(point);
-                firstPoint = point;
+                data.firstPoint = point;
             }
         }
         else if (selectionType == SelectionType::Last)
@@ -272,34 +280,37 @@ void LoadProfileDialog::clickableEventList(QScatterSeries *series, QPointF point
             {
                 seriesLast->remove(index);
                 seriesPoints->append(point);
-                lastPoint.reset();
+                data.lastPoint.reset();
             }
             else
             {
-                if (lastPoint) // if a first point already available, remove it and append it to default  series
+                if (data.lastPoint) // if a first point already available, remove it and append it to default  series
                 {
-                    seriesLast->remove(lastPoint.value());
-                    seriesPoints->append(lastPoint.value());
+                    seriesLast->remove(data.lastPoint.value());
+                    seriesPoints->append(data.lastPoint.value());
                 }
                 series->remove(index);
                 seriesLast->append(point);
-                lastPoint = point;
+                data.lastPoint = point;
             }
         }
         // update TEpoints automatically
         if (checkBoxAutoTE->isChecked())
         {
-            if (firstPoint && lastPoint) // both first and last point selected
+            if (data.firstPoint && data.lastPoint) // both first and last point selected
             {
-                vector<Point> TEpoints;
+                vector<Point> curvePoints;
+                vector<Point> TEPoints;
                 vector<Point> points = data.getPoints();
-                Point p1 = Point(firstPoint.value().x(), firstPoint.value().y());
-                Point p2 = Point(lastPoint.value().x(), lastPoint.value().y());
-                vector<Point> curvePoints = Utils::getpointswithoutTE(points, Utils::indexof(points, p1), Utils::indexof(points, p2), TEpoints);
+                Point p1 = Point(data.firstPoint.value().x(), data.firstPoint.value().y());
+                Point p2 = Point(data.lastPoint.value().x(), data.lastPoint.value().y());
+                data.setFirstPointIndex(Utils::indexof(points, p1));
+                data.setLastPointIndex(Utils::indexof(points, p2));
+                data.computePointsAndTE(curvePoints, TEPoints);
                 seriesPoints->clear();
                 seriesTE->clear();
                 QTUtils::appendPointsToSeries(seriesPoints, curvePoints);
-                QTUtils::appendPointsToSeries(seriesTE, TEpoints);
+                QTUtils::appendPointsToSeries(seriesTE, TEPoints);
             }
         }
     }
@@ -313,6 +324,7 @@ void LoadProfileDialog::OpenFileDialog()
         loadEdit->setText(fileName);
         data.setFile(fileName.toUtf8().constData());
         updateTableAndChart(true);
+        resetTEClicked();
     }
 }
 
