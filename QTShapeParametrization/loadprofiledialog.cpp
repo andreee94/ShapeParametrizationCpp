@@ -73,7 +73,7 @@ void LoadProfileDialog::updateTableAndChart(bool hasUpdatedFilename)
         seriesTE->clear();
         seriesFirst->clear();
         seriesLast->clear();
-        vector<Point> points = data.getPoints();
+        vector<Point> points = data.getPoints(true);
         for (unsigned int i = 0; i < points.size(); i++)
         {
             seriesLine->append(points[i].getx(), points[i].gety());
@@ -232,7 +232,7 @@ void LoadProfileDialog::resetTEClicked()
     data.firstPoint.reset();
     data.lastPoint.reset();
     if (this->data.getFileName().size() > 0)
-        QTUtils::appendPointsToSeries(seriesPoints, data.getPoints());
+        QTUtils::appendPointsToSeries(seriesPoints, data.getPoints(true));
     selectionType = SelectionType::None;
     updateSelectionType();
 }
@@ -301,7 +301,7 @@ void LoadProfileDialog::clickableEventList(QScatterSeries *series, QPointF point
             {
                 vector<Point> curvePoints;
                 vector<Point> TEPoints;
-                vector<Point> points = data.getPoints();
+                vector<Point> points = data.getPoints(true);
                 Point p1 = Point(data.firstPoint.value().x(), data.firstPoint.value().y());
                 Point p2 = Point(data.lastPoint.value().x(), data.lastPoint.value().y());
                 data.setFirstPointIndex(Utils::indexof(points, p1));

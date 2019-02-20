@@ -1681,7 +1681,7 @@ void MainWindow::updateTE()
 
 void MainWindow::computeCP()
 {
-    if (this->data.getFileName().size() > 0 && bspline)
+    if (this->data.getFileName().size() > 0)
     {
         BsplineTaskManager *bsplinemanager = new BsplineTaskManager;
 

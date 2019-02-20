@@ -143,23 +143,27 @@ class Utils
         template<typename T>
         static std::vector<T> merge(const std::vector<T> &v1, const std::vector<T> &v2)
         {
-            std::vector<T> vec(v1.size() + v2.size());
+            std::vector<T> res;
+            res.reserve(v1.size() + v2.size());
             for (auto item : v1)
-                vec.push_back(item);
+                res.push_back(item);
             for (auto item : v2)
-                vec.push_back(item);
+                res.push_back(item);
             //vec.insert(vec.end(), v1.begin(), v1.end());
             //vec.insert(vec.end(), v2.begin(), v2.end());
-            return vec;
+            return res;
         }
 
         template<typename T>
         static std::vector<T> extract(const std::vector<T> &v, const ints & indexes)
         {
-            std::vector<T> vec(indexes.size());
+            std::vector<T> res;
+            res.reserve(indexes.size());
             for (auto ind : indexes)
-                vec.push_back(v[ind]);
-            return vec;
+            {
+                res.push_back(v[ind]);
+            }
+            return res;
         }
         ///////////////////////////////////////////////////
         ///////////////////////////////////////////////////

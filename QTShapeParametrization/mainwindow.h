@@ -90,7 +90,7 @@ protected:
         doubles getMaxParamsRange();
 
 private:
-        Bspline *bspline;
+        Bspline *bspline = NULL;
         ProfileData data;
         int oldCPnumber;
         BsplineTask *interpolationTask;
