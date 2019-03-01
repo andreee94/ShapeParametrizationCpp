@@ -192,6 +192,7 @@ void MainWindow::evaluationPointsFinished(const BsplineTask &task, const Points 
         // set tooltip
         chartView->addTooltip(series_CP_fixed, new CPIndexTooltipText(*bspline));
         chartView->addTooltip(series_CP_adjustable, new CPIndexTooltipText(*bspline));
+        resetScaleAndScroll();
     }
 }
 
@@ -1380,6 +1381,7 @@ void MainWindow::updatePointsChart()
         updateCheckBoxEnableCurve();
         checkBoxOriginalCurveChanged(checkBoxOriginalCurve->isChecked());
         checkBoxOriginalPointsChanged(checkBoxOriginalPoints->isChecked());
+        resetScaleAndScroll();
     }
 }
 
@@ -1647,6 +1649,11 @@ void MainWindow::updateTangentsNormals(bool changednumcp)
     }
 }
 
+void MainWindow::resetScaleAndScroll()
+{
+    QTUtils::resetAxes(chartView->chart(), data.getPoints(true));
+}
+
 void MainWindow::updateMINMAX()
 {
     if (this->data.getFileName().size() > 0 && bspline && bspline->getCParray().size() > 0)
@@ -1716,6 +1723,7 @@ void MainWindow::optimizeKnots()
 {
     if (this->data.getFileName().size() > 0 && bspline && bspline->getCParray().size() > 0)
     {
+        saveSettings("settings");
     }
 }
 
@@ -1909,5 +1917,24 @@ void MainWindow::saveSettings(string filename)
     settings.setvalue("machine-radius-tip", getMachineRadiusTip());
     settings.setvalue("machine-axis-type", getMachineAxisType());
     settings.setvalue("analysis-type", getAnalysisType());
+    settings.setvalues("params-ranges-min", getMinParamsRange());
+    settings.setvalues("params-ranges-max", getMaxParamsRange());
+    settings.setvalues("params-min", getMinParams());
+    settings.setvalues("params-max", getMaxParams());
+    settings.setvalues("knots", getKnotSequence().getKnots());
+
+    settings.save(filename);
+
+    //settings.setvalues("knots-types", getKnotSequence().getKnots());
+
     //settings.setvalue("knots-1", getKnotSequence());
 }
+
+
+
+
+
+
+
+
+

@@ -86,7 +86,13 @@ void LoadProfileDialog::updateTableAndChart(bool hasUpdatedFilename)
         if (! chartView->chart()->series().contains(seriesTE) )
             chartView->chart()->addSeries(seriesTE);
         chartView->chart()->createDefaultAxes();
+        resetScaleAndScroll();
     }
+}
+
+void LoadProfileDialog::resetScaleAndScroll()
+{
+    QTUtils::resetAxes(chartView->chart(), data.getPoints(true));
 }
 
 void LoadProfileDialog::updateSelectionType()
@@ -401,7 +407,7 @@ QWidget *LoadProfileDialog::generateChartLayout()
     chartView->chart()->addSeries(seriesTE);
     chartView->chart()->addSeries(seriesFirst);
     chartView->chart()->addSeries(seriesLast);
-    chartView->chart()->createDefaultAxes();
+    //chartView->chart()->createDefaultAxes();
 
     chartView->addClickable(seriesPoints);
     chartView->addClickable(seriesTE);

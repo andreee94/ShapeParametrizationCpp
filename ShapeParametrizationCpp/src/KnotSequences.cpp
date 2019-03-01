@@ -146,6 +146,16 @@ KnotSequences KnotSequences::getKSFromCumulParameters(int bspline_n, int bspline
     return KnotSequences::getKSFromParameters(bspline_n, bspline_numCP, Utils::computeCumul(0, 1, t));
 }
 
+Knots KnotSequences::getKnots() const
+{
+    return knots;
+}
+
+void KnotSequences::setKnots(const Knots &value)
+{
+    knots = value;
+}
+
 KnotSequences KnotSequences::getKSFromParameters(int bspline_n, int bspline_numCP, doubles t)
 {
     doubles uarray;

@@ -41,10 +41,13 @@ class KnotSequences
             return getKSFromParameters(bspline_n, bspline_numCP, Utils::chordlength(points));
         }
 
-    protected:
+        Knots getKnots() const;
+        void setKnots(const Knots &value);
+
+protected:
         Knots knots;
 
-    private:
+private:
 };
 
 #endif // KNOTSEQUENCES_H

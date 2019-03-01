@@ -1,5 +1,6 @@
 #include "loadprofiledialog.h"
 #include "mainwindow.h"
+#include <Ellipse.h>
 #include <QApplication>
 #include "code.cpp"
 

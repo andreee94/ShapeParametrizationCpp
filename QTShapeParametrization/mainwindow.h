@@ -249,6 +249,7 @@ private:
         void updateChart();
         void updateBspline();
         void updateTangentsNormals(bool changednumcp);
+        void resetScaleAndScroll();
 
         void createMenu();
 

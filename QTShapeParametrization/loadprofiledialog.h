@@ -75,6 +75,7 @@ private:
     void RadioSelected(FrameOfReference type);
 
     void updateTableAndChart(bool hasUpdatedFilename=false);
+    void resetScaleAndScroll();
 
     QPushButton *loadButton;
     QLineEdit *loadEdit;

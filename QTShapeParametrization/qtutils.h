@@ -28,6 +28,8 @@ public:
     static QLayoutItem* separator();
     static void appendPointsToSeries(QLineSeries *series, const Points &points);
     static void appendPointsToSeries(QScatterSeries *series, const Points &points);
+    static void resetAxes(QChart* chart, QList<QPointF> points, double margin=0.05);
+    static void resetAxes(QChart* chart, vector<Point> points, double margin=0.05);
     static void setRangeIfLarger(QValueAxis *axis, double min, double max);
     static void clearLayout(QLayout *layout);
 
