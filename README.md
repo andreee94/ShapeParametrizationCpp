@@ -7,4 +7,4 @@ An extensive set of knots is available, and in the future will be possible to op
 The tool has been developed with in mind the interpolation of blades, 
  so than it is possible to remove the trailing edge points and interpolate it independently with a circle or an ellipse.
 
-The moving the control points orthogonally respect to the curve can be done directly within the GUI.
+The control points are moved orthogonally respect to the curve directly within the GUI.
