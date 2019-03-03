@@ -17,6 +17,7 @@ class Point;
 class Utils;
 
 typedef std::vector<double> doubles;
+typedef std::vector<int> ints;
 typedef std::vector<Point> Points;
 
 class Point
@@ -120,6 +121,7 @@ class Point
         static double maxY(const Points &points);
         static double meanX(const Points &points);
         static double meanY(const Points &points);
+        static void savePoints(const string filename, const Points& points, string separator=" ", ints* indexes=nullptr);
 
     protected:
         double x, y;

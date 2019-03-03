@@ -1,5 +1,6 @@
 #include "qtutils.h"
 #include "Utils.h"
+#include <QSvgGenerator>
 
 QTUtils::QTUtils()
 {
@@ -102,4 +103,15 @@ void QTUtils::clearLayout(QLayout *layout)
         }
         delete item;
     }
+}
+
+void QTUtils::savewidgettosvg(string filename, QWidget *widget)
+{
+    QSvgGenerator generator;
+    generator.setFileName(QString::fromStdString(filename));
+    generator.setSize(widget->size());
+    generator.setViewBox(widget->rect());
+    //generator.setTitle(tr("Your title"));
+    //generator.setDescription(tr("some desscription"));
+    widget->render(&generator);
 }

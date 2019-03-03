@@ -12,10 +12,10 @@ MAKEFILE      = Makefile
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DQT_DEPRECATED_WARNINGS -DQT_QML_DEBUG -DQT_CHARTS_LIB -DQT_WIDGETS_LIB -DQT_QUICKCONTROLS2_LIB -DQT_QUICK_LIB -DQT_GUI_LIB -DQT_CONCURRENT_LIB -DQT_QML_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB
+DEFINES       = -DQT_DEPRECATED_WARNINGS -DQT_QML_DEBUG -DQT_CHARTS_LIB -DQT_SVG_LIB -DQT_WIDGETS_LIB -DQT_QUICKCONTROLS2_LIB -DQT_QUICK_LIB -DQT_GUI_LIB -DQT_CONCURRENT_LIB -DQT_QML_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -g -fopenmp -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -std=c++17 -fopenmp -g -std=gnu++1z -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I../QTShapeParametrization -I. -I../ShapeParametrizationCpp/include -I../ShapeParametrizationCpp/src -I/opt/qt/5.12.0/gcc_64/include -I/opt/qt/5.12.0/gcc_64/include/QtCharts -I/opt/qt/5.12.0/gcc_64/include/QtWidgets -I/opt/qt/5.12.0/gcc_64/include/QtQuickControls2 -I/opt/qt/5.12.0/gcc_64/include/QtQuick -I/opt/qt/5.12.0/gcc_64/include/QtGui -I/opt/qt/5.12.0/gcc_64/include/QtConcurrent -I/opt/qt/5.12.0/gcc_64/include/QtQml -I/opt/qt/5.12.0/gcc_64/include/QtNetwork -I/opt/qt/5.12.0/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I. -I/opt/qt/5.12.0/gcc_64/mkspecs/linux-g++
+INCPATH       = -I../QTShapeParametrization -I. -I../ShapeParametrizationCpp/include -I../ShapeParametrizationCpp/src -I/opt/qt/5.12.0/gcc_64/include -I/opt/qt/5.12.0/gcc_64/include/QtCharts -I/opt/qt/5.12.0/gcc_64/include/QtSvg -I/opt/qt/5.12.0/gcc_64/include/QtWidgets -I/opt/qt/5.12.0/gcc_64/include/QtQuickControls2 -I/opt/qt/5.12.0/gcc_64/include/QtQuick -I/opt/qt/5.12.0/gcc_64/include/QtGui -I/opt/qt/5.12.0/gcc_64/include/QtConcurrent -I/opt/qt/5.12.0/gcc_64/include/QtQml -I/opt/qt/5.12.0/gcc_64/include/QtNetwork -I/opt/qt/5.12.0/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -I. -I/opt/qt/5.12.0/gcc_64/mkspecs/linux-g++
 QMAKE         = /opt/qt/5.12.0/gcc_64/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -38,7 +38,7 @@ DISTNAME      = QTShapeParametrization1.0.0
 DISTDIR = /home/andrea/Documents/ShapeParametrizationCpp/build-QTShapeParametrization-Desktop_Qt_5_12_0_GCC_64bit-Debug/.tmp/QTShapeParametrization1.0.0
 LINK          = g++
 LFLAGS        = -fopenmp -Wl,-rpath,/opt/qt/5.12.0/gcc_64/lib -Wl,-rpath-link,/opt/qt/5.12.0/gcc_64/lib
-LIBS          = $(SUBLIBS) -fopenmp -L/opt/qt/5.12.0/gcc_64/lib -lQt5Charts -lQt5Widgets -lQt5QuickControls2 -lQt5Quick -lQt5Gui -lQt5Concurrent -lQt5Qml -lQt5Network -lQt5Core -lGL -lpthread   
+LIBS          = $(SUBLIBS) -fopenmp -L/opt/qt/5.12.0/gcc_64/lib -lQt5Charts -lQt5Svg -lQt5Widgets -lQt5QuickControls2 -lQt5Quick -lQt5Gui -lQt5Concurrent -lQt5Qml -lQt5Network -lQt5Core -lGL -lpthread   
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -125,7 +125,8 @@ OBJECTS       = main.o \
 		moc_bsplinetask.o \
 		moc_knotlistsource.o \
 		moc_knotlistdest.o
-DIST          = /opt/qt/5.12.0/gcc_64/mkspecs/features/spec_pre.prf \
+DIST          = ../QTShapeParametrization/licence_header \
+		/opt/qt/5.12.0/gcc_64/mkspecs/features/spec_pre.prf \
 		/opt/qt/5.12.0/gcc_64/mkspecs/common/unix.conf \
 		/opt/qt/5.12.0/gcc_64/mkspecs/common/linux.conf \
 		/opt/qt/5.12.0/gcc_64/mkspecs/common/sanitize.conf \
@@ -580,6 +581,7 @@ Makefile: ../QTShapeParametrization/QTShapeParametrization.pro /opt/qt/5.12.0/gc
 		/opt/qt/5.12.0/gcc_64/mkspecs/features/lex.prf \
 		../QTShapeParametrization/QTShapeParametrization.pro \
 		/opt/qt/5.12.0/gcc_64/lib/libQt5Charts.prl \
+		/opt/qt/5.12.0/gcc_64/lib/libQt5Svg.prl \
 		/opt/qt/5.12.0/gcc_64/lib/libQt5Widgets.prl \
 		/opt/qt/5.12.0/gcc_64/lib/libQt5QuickControls2.prl \
 		/opt/qt/5.12.0/gcc_64/lib/libQt5Quick.prl \
@@ -783,6 +785,7 @@ Makefile: ../QTShapeParametrization/QTShapeParametrization.pro /opt/qt/5.12.0/gc
 /opt/qt/5.12.0/gcc_64/mkspecs/features/lex.prf:
 ../QTShapeParametrization/QTShapeParametrization.pro:
 /opt/qt/5.12.0/gcc_64/lib/libQt5Charts.prl:
+/opt/qt/5.12.0/gcc_64/lib/libQt5Svg.prl:
 /opt/qt/5.12.0/gcc_64/lib/libQt5Widgets.prl:
 /opt/qt/5.12.0/gcc_64/lib/libQt5QuickControls2.prl:
 /opt/qt/5.12.0/gcc_64/lib/libQt5Quick.prl:
@@ -979,6 +982,7 @@ moc_mainwindow.cpp: /opt/qt/5.12.0/gcc_64/include/QtWidgets/QMainWindow \
 		../ShapeParametrizationCpp/include/Line.h \
 		../ShapeParametrizationCpp/include/Evaluable.h \
 		../ShapeParametrizationCpp/include/Editable.h \
+		../ShapeParametrizationCpp/include/TrailingEdge.h \
 		../ShapeParametrizationCpp/include/Settings.h \
 		../ShapeParametrizationCpp/include/BaseKnotSequence.h \
 		../ShapeParametrizationCpp/include/KnotSequences.h \
@@ -1421,21 +1425,16 @@ moc_mainwindow.cpp: /opt/qt/5.12.0/gcc_64/include/QtWidgets/QMainWindow \
 		../QTShapeParametrization/mainwindow.h \
 		moc_predefs.h \
 		/opt/qt/5.12.0/gcc_64/bin/moc
-	/opt/qt/5.12.0/gcc_64/bin/moc $(DEFINES) --include /home/andrea/Documents/ShapeParametrizationCpp/build-QTShapeParametrization-Desktop_Qt_5_12_0_GCC_64bit-Debug/moc_predefs.h -I/opt/qt/5.12.0/gcc_64/mkspecs/linux-g++ -I/home/andrea/Documents/ShapeParametrizationCpp/QTShapeParametrization -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src -I/opt/qt/5.12.0/gcc_64/include -I/opt/qt/5.12.0/gcc_64/include/QtCharts -I/opt/qt/5.12.0/gcc_64/include/QtWidgets -I/opt/qt/5.12.0/gcc_64/include/QtQuickControls2 -I/opt/qt/5.12.0/gcc_64/include/QtQuick -I/opt/qt/5.12.0/gcc_64/include/QtGui -I/opt/qt/5.12.0/gcc_64/include/QtConcurrent -I/opt/qt/5.12.0/gcc_64/include/QtQml -I/opt/qt/5.12.0/gcc_64/include/QtNetwork -I/opt/qt/5.12.0/gcc_64/include/QtCore -I. -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../QTShapeParametrization/mainwindow.h -o moc_mainwindow.cpp
+	/opt/qt/5.12.0/gcc_64/bin/moc $(DEFINES) --include /home/andrea/Documents/ShapeParametrizationCpp/build-QTShapeParametrization-Desktop_Qt_5_12_0_GCC_64bit-Debug/moc_predefs.h -I/opt/qt/5.12.0/gcc_64/mkspecs/linux-g++ -I/home/andrea/Documents/ShapeParametrizationCpp/QTShapeParametrization -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src -I/opt/qt/5.12.0/gcc_64/include -I/opt/qt/5.12.0/gcc_64/include/QtCharts -I/opt/qt/5.12.0/gcc_64/include/QtSvg -I/opt/qt/5.12.0/gcc_64/include/QtWidgets -I/opt/qt/5.12.0/gcc_64/include/QtQuickControls2 -I/opt/qt/5.12.0/gcc_64/include/QtQuick -I/opt/qt/5.12.0/gcc_64/include/QtGui -I/opt/qt/5.12.0/gcc_64/include/QtConcurrent -I/opt/qt/5.12.0/gcc_64/include/QtQml -I/opt/qt/5.12.0/gcc_64/include/QtNetwork -I/opt/qt/5.12.0/gcc_64/include/QtCore -I. -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../QTShapeParametrization/mainwindow.h -o moc_mainwindow.cpp
 
 moc_loadprofiledialog.cpp: ../QTShapeParametrization/profiledata.h \
 		../ShapeParametrizationCpp/include/Table.h \
 		../ShapeParametrizationCpp/include/Utils.h \
 		../ShapeParametrizationCpp/include/Point.h \
 		../ShapeParametrizationCpp/include/pystring.h \
-		../QTShapeParametrization/mychart.h \
-		/opt/qt/5.12.0/gcc_64/include/QtCharts/QChart \
-		/opt/qt/5.12.0/gcc_64/include/QtCharts/qchart.h \
-		/opt/qt/5.12.0/gcc_64/include/QtCharts/QAbstractSeries \
-		/opt/qt/5.12.0/gcc_64/include/QtCharts/qabstractseries.h \
-		/opt/qt/5.12.0/gcc_64/include/QtCharts/QChartGlobal \
-		/opt/qt/5.12.0/gcc_64/include/QtCharts/qchartglobal.h \
-		/opt/qt/5.12.0/gcc_64/include/QtCore/QtGlobal \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/QPointF \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qpoint.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qnamespace.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qglobal.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qconfig-bootstrapped.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qconfig.h \
@@ -1457,6 +1456,16 @@ moc_loadprofiledialog.cpp: ../QTShapeParametrization/profiledata.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qmutex.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qnumeric.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qversiontagging.h \
+		../ShapeParametrizationCpp/include/Settings.h \
+		../ShapeParametrizationCpp/include/BaseKnotSequence.h \
+		../QTShapeParametrization/mychart.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QChart \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qchart.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QAbstractSeries \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qabstractseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QChartGlobal \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qchartglobal.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/QtGlobal \
 		/opt/qt/5.12.0/gcc_64/include/QtCharts/QAbstractAxis \
 		/opt/qt/5.12.0/gcc_64/include/QtCharts/qabstractaxis.h \
 		/opt/qt/5.12.0/gcc_64/include/QtGui/QPen \
@@ -1465,7 +1474,6 @@ moc_loadprofiledialog.cpp: ../QTShapeParametrization/profiledata.h \
 		/opt/qt/5.12.0/gcc_64/include/QtGui/qtgui-config.h \
 		/opt/qt/5.12.0/gcc_64/include/QtGui/qcolor.h \
 		/opt/qt/5.12.0/gcc_64/include/QtGui/qrgb.h \
-		/opt/qt/5.12.0/gcc_64/include/QtCore/qnamespace.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qstringlist.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qlist.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qalgorithms.h \
@@ -1486,7 +1494,6 @@ moc_loadprofiledialog.cpp: ../QTShapeParametrization/profiledata.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qstringmatcher.h \
 		/opt/qt/5.12.0/gcc_64/include/QtGui/qrgba64.h \
 		/opt/qt/5.12.0/gcc_64/include/QtGui/qbrush.h \
-		/opt/qt/5.12.0/gcc_64/include/QtCore/qpoint.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qvector.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qscopedpointer.h \
 		/opt/qt/5.12.0/gcc_64/include/QtGui/qmatrix.h \
@@ -1874,7 +1881,6 @@ moc_loadprofiledialog.cpp: ../QTShapeParametrization/profiledata.h \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qradiobutton.h \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qscrollbar.h \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qscroller.h \
-		/opt/qt/5.12.0/gcc_64/include/QtCore/QPointF \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QScrollerProperties \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qscrollerproperties.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/QMetaType \
@@ -1982,7 +1988,7 @@ moc_loadprofiledialog.cpp: ../QTShapeParametrization/profiledata.h \
 		../QTShapeParametrization/loadprofiledialog.h \
 		moc_predefs.h \
 		/opt/qt/5.12.0/gcc_64/bin/moc
-	/opt/qt/5.12.0/gcc_64/bin/moc $(DEFINES) --include /home/andrea/Documents/ShapeParametrizationCpp/build-QTShapeParametrization-Desktop_Qt_5_12_0_GCC_64bit-Debug/moc_predefs.h -I/opt/qt/5.12.0/gcc_64/mkspecs/linux-g++ -I/home/andrea/Documents/ShapeParametrizationCpp/QTShapeParametrization -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src -I/opt/qt/5.12.0/gcc_64/include -I/opt/qt/5.12.0/gcc_64/include/QtCharts -I/opt/qt/5.12.0/gcc_64/include/QtWidgets -I/opt/qt/5.12.0/gcc_64/include/QtQuickControls2 -I/opt/qt/5.12.0/gcc_64/include/QtQuick -I/opt/qt/5.12.0/gcc_64/include/QtGui -I/opt/qt/5.12.0/gcc_64/include/QtConcurrent -I/opt/qt/5.12.0/gcc_64/include/QtQml -I/opt/qt/5.12.0/gcc_64/include/QtNetwork -I/opt/qt/5.12.0/gcc_64/include/QtCore -I. -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../QTShapeParametrization/loadprofiledialog.h -o moc_loadprofiledialog.cpp
+	/opt/qt/5.12.0/gcc_64/bin/moc $(DEFINES) --include /home/andrea/Documents/ShapeParametrizationCpp/build-QTShapeParametrization-Desktop_Qt_5_12_0_GCC_64bit-Debug/moc_predefs.h -I/opt/qt/5.12.0/gcc_64/mkspecs/linux-g++ -I/home/andrea/Documents/ShapeParametrizationCpp/QTShapeParametrization -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src -I/opt/qt/5.12.0/gcc_64/include -I/opt/qt/5.12.0/gcc_64/include/QtCharts -I/opt/qt/5.12.0/gcc_64/include/QtSvg -I/opt/qt/5.12.0/gcc_64/include/QtWidgets -I/opt/qt/5.12.0/gcc_64/include/QtQuickControls2 -I/opt/qt/5.12.0/gcc_64/include/QtQuick -I/opt/qt/5.12.0/gcc_64/include/QtGui -I/opt/qt/5.12.0/gcc_64/include/QtConcurrent -I/opt/qt/5.12.0/gcc_64/include/QtQml -I/opt/qt/5.12.0/gcc_64/include/QtNetwork -I/opt/qt/5.12.0/gcc_64/include/QtCore -I. -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../QTShapeParametrization/loadprofiledialog.h -o moc_loadprofiledialog.cpp
 
 moc_mainwindow.cpp: /opt/qt/5.12.0/gcc_64/include/QtWidgets/QMainWindow \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qmainwindow.h \
@@ -2120,6 +2126,7 @@ moc_mainwindow.cpp: /opt/qt/5.12.0/gcc_64/include/QtWidgets/QMainWindow \
 		../ShapeParametrizationCpp/include/Line.h \
 		../ShapeParametrizationCpp/include/Evaluable.h \
 		../ShapeParametrizationCpp/include/Editable.h \
+		../ShapeParametrizationCpp/include/TrailingEdge.h \
 		../ShapeParametrizationCpp/include/Settings.h \
 		../ShapeParametrizationCpp/include/BaseKnotSequence.h \
 		../ShapeParametrizationCpp/include/KnotSequences.h \
@@ -2562,7 +2569,7 @@ moc_mainwindow.cpp: /opt/qt/5.12.0/gcc_64/include/QtWidgets/QMainWindow \
 		../QTShapeParametrization/mainwindow.h \
 		moc_predefs.h \
 		/opt/qt/5.12.0/gcc_64/bin/moc
-	/opt/qt/5.12.0/gcc_64/bin/moc $(DEFINES) --include /home/andrea/Documents/ShapeParametrizationCpp/build-QTShapeParametrization-Desktop_Qt_5_12_0_GCC_64bit-Debug/moc_predefs.h -I/opt/qt/5.12.0/gcc_64/mkspecs/linux-g++ -I/home/andrea/Documents/ShapeParametrizationCpp/QTShapeParametrization -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src -I/opt/qt/5.12.0/gcc_64/include -I/opt/qt/5.12.0/gcc_64/include/QtCharts -I/opt/qt/5.12.0/gcc_64/include/QtWidgets -I/opt/qt/5.12.0/gcc_64/include/QtQuickControls2 -I/opt/qt/5.12.0/gcc_64/include/QtQuick -I/opt/qt/5.12.0/gcc_64/include/QtGui -I/opt/qt/5.12.0/gcc_64/include/QtConcurrent -I/opt/qt/5.12.0/gcc_64/include/QtQml -I/opt/qt/5.12.0/gcc_64/include/QtNetwork -I/opt/qt/5.12.0/gcc_64/include/QtCore -I. -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../QTShapeParametrization/mainwindow.h -o moc_mainwindow.cpp
+	/opt/qt/5.12.0/gcc_64/bin/moc $(DEFINES) --include /home/andrea/Documents/ShapeParametrizationCpp/build-QTShapeParametrization-Desktop_Qt_5_12_0_GCC_64bit-Debug/moc_predefs.h -I/opt/qt/5.12.0/gcc_64/mkspecs/linux-g++ -I/home/andrea/Documents/ShapeParametrizationCpp/QTShapeParametrization -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src -I/opt/qt/5.12.0/gcc_64/include -I/opt/qt/5.12.0/gcc_64/include/QtCharts -I/opt/qt/5.12.0/gcc_64/include/QtSvg -I/opt/qt/5.12.0/gcc_64/include/QtWidgets -I/opt/qt/5.12.0/gcc_64/include/QtQuickControls2 -I/opt/qt/5.12.0/gcc_64/include/QtQuick -I/opt/qt/5.12.0/gcc_64/include/QtGui -I/opt/qt/5.12.0/gcc_64/include/QtConcurrent -I/opt/qt/5.12.0/gcc_64/include/QtQml -I/opt/qt/5.12.0/gcc_64/include/QtNetwork -I/opt/qt/5.12.0/gcc_64/include/QtCore -I. -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../QTShapeParametrization/mainwindow.h -o moc_mainwindow.cpp
 
 moc_mychartview.cpp: /opt/qt/5.12.0/gcc_64/include/QtCharts/QChartView \
 		/opt/qt/5.12.0/gcc_64/include/QtCharts/qchartview.h \
@@ -3114,7 +3121,7 @@ moc_mychartview.cpp: /opt/qt/5.12.0/gcc_64/include/QtCharts/QChartView \
 		../QTShapeParametrization/mychartview.h \
 		moc_predefs.h \
 		/opt/qt/5.12.0/gcc_64/bin/moc
-	/opt/qt/5.12.0/gcc_64/bin/moc $(DEFINES) --include /home/andrea/Documents/ShapeParametrizationCpp/build-QTShapeParametrization-Desktop_Qt_5_12_0_GCC_64bit-Debug/moc_predefs.h -I/opt/qt/5.12.0/gcc_64/mkspecs/linux-g++ -I/home/andrea/Documents/ShapeParametrizationCpp/QTShapeParametrization -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src -I/opt/qt/5.12.0/gcc_64/include -I/opt/qt/5.12.0/gcc_64/include/QtCharts -I/opt/qt/5.12.0/gcc_64/include/QtWidgets -I/opt/qt/5.12.0/gcc_64/include/QtQuickControls2 -I/opt/qt/5.12.0/gcc_64/include/QtQuick -I/opt/qt/5.12.0/gcc_64/include/QtGui -I/opt/qt/5.12.0/gcc_64/include/QtConcurrent -I/opt/qt/5.12.0/gcc_64/include/QtQml -I/opt/qt/5.12.0/gcc_64/include/QtNetwork -I/opt/qt/5.12.0/gcc_64/include/QtCore -I. -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../QTShapeParametrization/mychartview.h -o moc_mychartview.cpp
+	/opt/qt/5.12.0/gcc_64/bin/moc $(DEFINES) --include /home/andrea/Documents/ShapeParametrizationCpp/build-QTShapeParametrization-Desktop_Qt_5_12_0_GCC_64bit-Debug/moc_predefs.h -I/opt/qt/5.12.0/gcc_64/mkspecs/linux-g++ -I/home/andrea/Documents/ShapeParametrizationCpp/QTShapeParametrization -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src -I/opt/qt/5.12.0/gcc_64/include -I/opt/qt/5.12.0/gcc_64/include/QtCharts -I/opt/qt/5.12.0/gcc_64/include/QtSvg -I/opt/qt/5.12.0/gcc_64/include/QtWidgets -I/opt/qt/5.12.0/gcc_64/include/QtQuickControls2 -I/opt/qt/5.12.0/gcc_64/include/QtQuick -I/opt/qt/5.12.0/gcc_64/include/QtGui -I/opt/qt/5.12.0/gcc_64/include/QtConcurrent -I/opt/qt/5.12.0/gcc_64/include/QtQml -I/opt/qt/5.12.0/gcc_64/include/QtNetwork -I/opt/qt/5.12.0/gcc_64/include/QtCore -I. -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../QTShapeParametrization/mychartview.h -o moc_mychartview.cpp
 
 moc_RangeSlider.cpp: /opt/qt/5.12.0/gcc_64/include/QtWidgets/QWidget \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qwidget.h \
@@ -3227,7 +3234,7 @@ moc_RangeSlider.cpp: /opt/qt/5.12.0/gcc_64/include/QtWidgets/QWidget \
 		../QTShapeParametrization/RangeSlider.h \
 		moc_predefs.h \
 		/opt/qt/5.12.0/gcc_64/bin/moc
-	/opt/qt/5.12.0/gcc_64/bin/moc $(DEFINES) --include /home/andrea/Documents/ShapeParametrizationCpp/build-QTShapeParametrization-Desktop_Qt_5_12_0_GCC_64bit-Debug/moc_predefs.h -I/opt/qt/5.12.0/gcc_64/mkspecs/linux-g++ -I/home/andrea/Documents/ShapeParametrizationCpp/QTShapeParametrization -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src -I/opt/qt/5.12.0/gcc_64/include -I/opt/qt/5.12.0/gcc_64/include/QtCharts -I/opt/qt/5.12.0/gcc_64/include/QtWidgets -I/opt/qt/5.12.0/gcc_64/include/QtQuickControls2 -I/opt/qt/5.12.0/gcc_64/include/QtQuick -I/opt/qt/5.12.0/gcc_64/include/QtGui -I/opt/qt/5.12.0/gcc_64/include/QtConcurrent -I/opt/qt/5.12.0/gcc_64/include/QtQml -I/opt/qt/5.12.0/gcc_64/include/QtNetwork -I/opt/qt/5.12.0/gcc_64/include/QtCore -I. -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../QTShapeParametrization/RangeSlider.h -o moc_RangeSlider.cpp
+	/opt/qt/5.12.0/gcc_64/bin/moc $(DEFINES) --include /home/andrea/Documents/ShapeParametrizationCpp/build-QTShapeParametrization-Desktop_Qt_5_12_0_GCC_64bit-Debug/moc_predefs.h -I/opt/qt/5.12.0/gcc_64/mkspecs/linux-g++ -I/home/andrea/Documents/ShapeParametrizationCpp/QTShapeParametrization -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src -I/opt/qt/5.12.0/gcc_64/include -I/opt/qt/5.12.0/gcc_64/include/QtCharts -I/opt/qt/5.12.0/gcc_64/include/QtSvg -I/opt/qt/5.12.0/gcc_64/include/QtWidgets -I/opt/qt/5.12.0/gcc_64/include/QtQuickControls2 -I/opt/qt/5.12.0/gcc_64/include/QtQuick -I/opt/qt/5.12.0/gcc_64/include/QtGui -I/opt/qt/5.12.0/gcc_64/include/QtConcurrent -I/opt/qt/5.12.0/gcc_64/include/QtQml -I/opt/qt/5.12.0/gcc_64/include/QtNetwork -I/opt/qt/5.12.0/gcc_64/include/QtCore -I. -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../QTShapeParametrization/RangeSlider.h -o moc_RangeSlider.cpp
 
 moc_rangesliderlayout.cpp: /opt/qt/5.12.0/gcc_64/include/QtWidgets/QWidget \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qwidget.h \
@@ -3366,6 +3373,7 @@ moc_rangesliderlayout.cpp: /opt/qt/5.12.0/gcc_64/include/QtWidgets/QWidget \
 		../ShapeParametrizationCpp/include/Line.h \
 		../ShapeParametrizationCpp/include/Evaluable.h \
 		../ShapeParametrizationCpp/include/Editable.h \
+		../ShapeParametrizationCpp/include/TrailingEdge.h \
 		../ShapeParametrizationCpp/include/Settings.h \
 		../ShapeParametrizationCpp/include/BaseKnotSequence.h \
 		../ShapeParametrizationCpp/include/KnotSequences.h \
@@ -3797,7 +3805,7 @@ moc_rangesliderlayout.cpp: /opt/qt/5.12.0/gcc_64/include/QtWidgets/QWidget \
 		../QTShapeParametrization/rangesliderlayout.h \
 		moc_predefs.h \
 		/opt/qt/5.12.0/gcc_64/bin/moc
-	/opt/qt/5.12.0/gcc_64/bin/moc $(DEFINES) --include /home/andrea/Documents/ShapeParametrizationCpp/build-QTShapeParametrization-Desktop_Qt_5_12_0_GCC_64bit-Debug/moc_predefs.h -I/opt/qt/5.12.0/gcc_64/mkspecs/linux-g++ -I/home/andrea/Documents/ShapeParametrizationCpp/QTShapeParametrization -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src -I/opt/qt/5.12.0/gcc_64/include -I/opt/qt/5.12.0/gcc_64/include/QtCharts -I/opt/qt/5.12.0/gcc_64/include/QtWidgets -I/opt/qt/5.12.0/gcc_64/include/QtQuickControls2 -I/opt/qt/5.12.0/gcc_64/include/QtQuick -I/opt/qt/5.12.0/gcc_64/include/QtGui -I/opt/qt/5.12.0/gcc_64/include/QtConcurrent -I/opt/qt/5.12.0/gcc_64/include/QtQml -I/opt/qt/5.12.0/gcc_64/include/QtNetwork -I/opt/qt/5.12.0/gcc_64/include/QtCore -I. -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../QTShapeParametrization/rangesliderlayout.h -o moc_rangesliderlayout.cpp
+	/opt/qt/5.12.0/gcc_64/bin/moc $(DEFINES) --include /home/andrea/Documents/ShapeParametrizationCpp/build-QTShapeParametrization-Desktop_Qt_5_12_0_GCC_64bit-Debug/moc_predefs.h -I/opt/qt/5.12.0/gcc_64/mkspecs/linux-g++ -I/home/andrea/Documents/ShapeParametrizationCpp/QTShapeParametrization -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src -I/opt/qt/5.12.0/gcc_64/include -I/opt/qt/5.12.0/gcc_64/include/QtCharts -I/opt/qt/5.12.0/gcc_64/include/QtSvg -I/opt/qt/5.12.0/gcc_64/include/QtWidgets -I/opt/qt/5.12.0/gcc_64/include/QtQuickControls2 -I/opt/qt/5.12.0/gcc_64/include/QtQuick -I/opt/qt/5.12.0/gcc_64/include/QtGui -I/opt/qt/5.12.0/gcc_64/include/QtConcurrent -I/opt/qt/5.12.0/gcc_64/include/QtQml -I/opt/qt/5.12.0/gcc_64/include/QtNetwork -I/opt/qt/5.12.0/gcc_64/include/QtCore -I. -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../QTShapeParametrization/rangesliderlayout.h -o moc_rangesliderlayout.cpp
 
 moc_MultiSliderView.cpp: /opt/qt/5.12.0/gcc_64/include/QtWidgets/QWidget \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qwidget.h \
@@ -3910,22 +3918,16 @@ moc_MultiSliderView.cpp: /opt/qt/5.12.0/gcc_64/include/QtWidgets/QWidget \
 		../QTShapeParametrization/MultiSliderView.h \
 		moc_predefs.h \
 		/opt/qt/5.12.0/gcc_64/bin/moc
-	/opt/qt/5.12.0/gcc_64/bin/moc $(DEFINES) --include /home/andrea/Documents/ShapeParametrizationCpp/build-QTShapeParametrization-Desktop_Qt_5_12_0_GCC_64bit-Debug/moc_predefs.h -I/opt/qt/5.12.0/gcc_64/mkspecs/linux-g++ -I/home/andrea/Documents/ShapeParametrizationCpp/QTShapeParametrization -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src -I/opt/qt/5.12.0/gcc_64/include -I/opt/qt/5.12.0/gcc_64/include/QtCharts -I/opt/qt/5.12.0/gcc_64/include/QtWidgets -I/opt/qt/5.12.0/gcc_64/include/QtQuickControls2 -I/opt/qt/5.12.0/gcc_64/include/QtQuick -I/opt/qt/5.12.0/gcc_64/include/QtGui -I/opt/qt/5.12.0/gcc_64/include/QtConcurrent -I/opt/qt/5.12.0/gcc_64/include/QtQml -I/opt/qt/5.12.0/gcc_64/include/QtNetwork -I/opt/qt/5.12.0/gcc_64/include/QtCore -I. -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../QTShapeParametrization/MultiSliderView.h -o moc_MultiSliderView.cpp
+	/opt/qt/5.12.0/gcc_64/bin/moc $(DEFINES) --include /home/andrea/Documents/ShapeParametrizationCpp/build-QTShapeParametrization-Desktop_Qt_5_12_0_GCC_64bit-Debug/moc_predefs.h -I/opt/qt/5.12.0/gcc_64/mkspecs/linux-g++ -I/home/andrea/Documents/ShapeParametrizationCpp/QTShapeParametrization -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src -I/opt/qt/5.12.0/gcc_64/include -I/opt/qt/5.12.0/gcc_64/include/QtCharts -I/opt/qt/5.12.0/gcc_64/include/QtSvg -I/opt/qt/5.12.0/gcc_64/include/QtWidgets -I/opt/qt/5.12.0/gcc_64/include/QtQuickControls2 -I/opt/qt/5.12.0/gcc_64/include/QtQuick -I/opt/qt/5.12.0/gcc_64/include/QtGui -I/opt/qt/5.12.0/gcc_64/include/QtConcurrent -I/opt/qt/5.12.0/gcc_64/include/QtQml -I/opt/qt/5.12.0/gcc_64/include/QtNetwork -I/opt/qt/5.12.0/gcc_64/include/QtCore -I. -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../QTShapeParametrization/MultiSliderView.h -o moc_MultiSliderView.cpp
 
 moc_bsplinetask.cpp: ../QTShapeParametrization/profiledata.h \
 		../ShapeParametrizationCpp/include/Table.h \
 		../ShapeParametrizationCpp/include/Utils.h \
 		../ShapeParametrizationCpp/include/Point.h \
 		../ShapeParametrizationCpp/include/pystring.h \
-		../ShapeParametrizationCpp/include/Bspline.h \
-		../ShapeParametrizationCpp/include/Line.h \
-		../ShapeParametrizationCpp/include/Evaluable.h \
-		../ShapeParametrizationCpp/include/Editable.h \
-		../ShapeParametrizationCpp/include/Settings.h \
-		../ShapeParametrizationCpp/include/BaseKnotSequence.h \
-		../ShapeParametrizationCpp/include/KnotSequences.h \
-		/opt/qt/5.12.0/gcc_64/include/QtCore/QMutex \
-		/opt/qt/5.12.0/gcc_64/include/QtCore/qmutex.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/QPointF \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qpoint.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qnamespace.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qglobal.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qconfig-bootstrapped.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qconfig.h \
@@ -3944,12 +3946,21 @@ moc_bsplinetask.cpp: ../QTShapeParametrization/profiledata.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qatomic_cxx11.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qatomic_msvc.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qglobalstatic.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qmutex.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qnumeric.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qversiontagging.h \
+		../ShapeParametrizationCpp/include/Settings.h \
+		../ShapeParametrizationCpp/include/BaseKnotSequence.h \
+		../ShapeParametrizationCpp/include/Bspline.h \
+		../ShapeParametrizationCpp/include/Line.h \
+		../ShapeParametrizationCpp/include/Evaluable.h \
+		../ShapeParametrizationCpp/include/Editable.h \
+		../ShapeParametrizationCpp/include/TrailingEdge.h \
+		../ShapeParametrizationCpp/include/KnotSequences.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/QMutex \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/QObject \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qobject.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qobjectdefs.h \
-		/opt/qt/5.12.0/gcc_64/include/QtCore/qnamespace.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qobjectdefs_impl.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qstring.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qchar.h \
@@ -3983,7 +3994,7 @@ moc_bsplinetask.cpp: ../QTShapeParametrization/profiledata.h \
 		../QTShapeParametrization/bsplinetask.h \
 		moc_predefs.h \
 		/opt/qt/5.12.0/gcc_64/bin/moc
-	/opt/qt/5.12.0/gcc_64/bin/moc $(DEFINES) --include /home/andrea/Documents/ShapeParametrizationCpp/build-QTShapeParametrization-Desktop_Qt_5_12_0_GCC_64bit-Debug/moc_predefs.h -I/opt/qt/5.12.0/gcc_64/mkspecs/linux-g++ -I/home/andrea/Documents/ShapeParametrizationCpp/QTShapeParametrization -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src -I/opt/qt/5.12.0/gcc_64/include -I/opt/qt/5.12.0/gcc_64/include/QtCharts -I/opt/qt/5.12.0/gcc_64/include/QtWidgets -I/opt/qt/5.12.0/gcc_64/include/QtQuickControls2 -I/opt/qt/5.12.0/gcc_64/include/QtQuick -I/opt/qt/5.12.0/gcc_64/include/QtGui -I/opt/qt/5.12.0/gcc_64/include/QtConcurrent -I/opt/qt/5.12.0/gcc_64/include/QtQml -I/opt/qt/5.12.0/gcc_64/include/QtNetwork -I/opt/qt/5.12.0/gcc_64/include/QtCore -I. -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../QTShapeParametrization/bsplinetask.h -o moc_bsplinetask.cpp
+	/opt/qt/5.12.0/gcc_64/bin/moc $(DEFINES) --include /home/andrea/Documents/ShapeParametrizationCpp/build-QTShapeParametrization-Desktop_Qt_5_12_0_GCC_64bit-Debug/moc_predefs.h -I/opt/qt/5.12.0/gcc_64/mkspecs/linux-g++ -I/home/andrea/Documents/ShapeParametrizationCpp/QTShapeParametrization -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src -I/opt/qt/5.12.0/gcc_64/include -I/opt/qt/5.12.0/gcc_64/include/QtCharts -I/opt/qt/5.12.0/gcc_64/include/QtSvg -I/opt/qt/5.12.0/gcc_64/include/QtWidgets -I/opt/qt/5.12.0/gcc_64/include/QtQuickControls2 -I/opt/qt/5.12.0/gcc_64/include/QtQuick -I/opt/qt/5.12.0/gcc_64/include/QtGui -I/opt/qt/5.12.0/gcc_64/include/QtConcurrent -I/opt/qt/5.12.0/gcc_64/include/QtQml -I/opt/qt/5.12.0/gcc_64/include/QtNetwork -I/opt/qt/5.12.0/gcc_64/include/QtCore -I. -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../QTShapeParametrization/bsplinetask.h -o moc_bsplinetask.cpp
 
 moc_knotlistsource.cpp: /opt/qt/5.12.0/gcc_64/include/QtWidgets/QListWidget \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qlistwidget.h \
@@ -4110,7 +4121,7 @@ moc_knotlistsource.cpp: /opt/qt/5.12.0/gcc_64/include/QtWidgets/QListWidget \
 		../QTShapeParametrization/knotlistsource.h \
 		moc_predefs.h \
 		/opt/qt/5.12.0/gcc_64/bin/moc
-	/opt/qt/5.12.0/gcc_64/bin/moc $(DEFINES) --include /home/andrea/Documents/ShapeParametrizationCpp/build-QTShapeParametrization-Desktop_Qt_5_12_0_GCC_64bit-Debug/moc_predefs.h -I/opt/qt/5.12.0/gcc_64/mkspecs/linux-g++ -I/home/andrea/Documents/ShapeParametrizationCpp/QTShapeParametrization -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src -I/opt/qt/5.12.0/gcc_64/include -I/opt/qt/5.12.0/gcc_64/include/QtCharts -I/opt/qt/5.12.0/gcc_64/include/QtWidgets -I/opt/qt/5.12.0/gcc_64/include/QtQuickControls2 -I/opt/qt/5.12.0/gcc_64/include/QtQuick -I/opt/qt/5.12.0/gcc_64/include/QtGui -I/opt/qt/5.12.0/gcc_64/include/QtConcurrent -I/opt/qt/5.12.0/gcc_64/include/QtQml -I/opt/qt/5.12.0/gcc_64/include/QtNetwork -I/opt/qt/5.12.0/gcc_64/include/QtCore -I. -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../QTShapeParametrization/knotlistsource.h -o moc_knotlistsource.cpp
+	/opt/qt/5.12.0/gcc_64/bin/moc $(DEFINES) --include /home/andrea/Documents/ShapeParametrizationCpp/build-QTShapeParametrization-Desktop_Qt_5_12_0_GCC_64bit-Debug/moc_predefs.h -I/opt/qt/5.12.0/gcc_64/mkspecs/linux-g++ -I/home/andrea/Documents/ShapeParametrizationCpp/QTShapeParametrization -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src -I/opt/qt/5.12.0/gcc_64/include -I/opt/qt/5.12.0/gcc_64/include/QtCharts -I/opt/qt/5.12.0/gcc_64/include/QtSvg -I/opt/qt/5.12.0/gcc_64/include/QtWidgets -I/opt/qt/5.12.0/gcc_64/include/QtQuickControls2 -I/opt/qt/5.12.0/gcc_64/include/QtQuick -I/opt/qt/5.12.0/gcc_64/include/QtGui -I/opt/qt/5.12.0/gcc_64/include/QtConcurrent -I/opt/qt/5.12.0/gcc_64/include/QtQml -I/opt/qt/5.12.0/gcc_64/include/QtNetwork -I/opt/qt/5.12.0/gcc_64/include/QtCore -I. -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../QTShapeParametrization/knotlistsource.h -o moc_knotlistsource.cpp
 
 moc_knotlistdest.cpp: ../ShapeParametrizationCpp/include/BaseKnotSequence.h \
 		../ShapeParametrizationCpp/include/Point.h \
@@ -4120,6 +4131,7 @@ moc_knotlistdest.cpp: ../ShapeParametrizationCpp/include/BaseKnotSequence.h \
 		../ShapeParametrizationCpp/include/Line.h \
 		../ShapeParametrizationCpp/include/Evaluable.h \
 		../ShapeParametrizationCpp/include/Editable.h \
+		../ShapeParametrizationCpp/include/TrailingEdge.h \
 		../ShapeParametrizationCpp/include/Settings.h \
 		../ShapeParametrizationCpp/include/KnotSequences.h \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QListWidget \
@@ -4247,7 +4259,7 @@ moc_knotlistdest.cpp: ../ShapeParametrizationCpp/include/BaseKnotSequence.h \
 		../QTShapeParametrization/knotlistdest.h \
 		moc_predefs.h \
 		/opt/qt/5.12.0/gcc_64/bin/moc
-	/opt/qt/5.12.0/gcc_64/bin/moc $(DEFINES) --include /home/andrea/Documents/ShapeParametrizationCpp/build-QTShapeParametrization-Desktop_Qt_5_12_0_GCC_64bit-Debug/moc_predefs.h -I/opt/qt/5.12.0/gcc_64/mkspecs/linux-g++ -I/home/andrea/Documents/ShapeParametrizationCpp/QTShapeParametrization -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src -I/opt/qt/5.12.0/gcc_64/include -I/opt/qt/5.12.0/gcc_64/include/QtCharts -I/opt/qt/5.12.0/gcc_64/include/QtWidgets -I/opt/qt/5.12.0/gcc_64/include/QtQuickControls2 -I/opt/qt/5.12.0/gcc_64/include/QtQuick -I/opt/qt/5.12.0/gcc_64/include/QtGui -I/opt/qt/5.12.0/gcc_64/include/QtConcurrent -I/opt/qt/5.12.0/gcc_64/include/QtQml -I/opt/qt/5.12.0/gcc_64/include/QtNetwork -I/opt/qt/5.12.0/gcc_64/include/QtCore -I. -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../QTShapeParametrization/knotlistdest.h -o moc_knotlistdest.cpp
+	/opt/qt/5.12.0/gcc_64/bin/moc $(DEFINES) --include /home/andrea/Documents/ShapeParametrizationCpp/build-QTShapeParametrization-Desktop_Qt_5_12_0_GCC_64bit-Debug/moc_predefs.h -I/opt/qt/5.12.0/gcc_64/mkspecs/linux-g++ -I/home/andrea/Documents/ShapeParametrizationCpp/QTShapeParametrization -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/include -I/home/andrea/Documents/ShapeParametrizationCpp/ShapeParametrizationCpp/src -I/opt/qt/5.12.0/gcc_64/include -I/opt/qt/5.12.0/gcc_64/include/QtCharts -I/opt/qt/5.12.0/gcc_64/include/QtSvg -I/opt/qt/5.12.0/gcc_64/include/QtWidgets -I/opt/qt/5.12.0/gcc_64/include/QtQuickControls2 -I/opt/qt/5.12.0/gcc_64/include/QtQuick -I/opt/qt/5.12.0/gcc_64/include/QtGui -I/opt/qt/5.12.0/gcc_64/include/QtConcurrent -I/opt/qt/5.12.0/gcc_64/include/QtQml -I/opt/qt/5.12.0/gcc_64/include/QtNetwork -I/opt/qt/5.12.0/gcc_64/include/QtCore -I. -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../QTShapeParametrization/knotlistdest.h -o moc_knotlistdest.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -4292,14 +4304,9 @@ main.o: ../QTShapeParametrization/main.cpp ../QTShapeParametrization/loadprofile
 		../ShapeParametrizationCpp/include/Utils.h \
 		../ShapeParametrizationCpp/include/Point.h \
 		../ShapeParametrizationCpp/include/pystring.h \
-		../QTShapeParametrization/mychart.h \
-		/opt/qt/5.12.0/gcc_64/include/QtCharts/QChart \
-		/opt/qt/5.12.0/gcc_64/include/QtCharts/qchart.h \
-		/opt/qt/5.12.0/gcc_64/include/QtCharts/QAbstractSeries \
-		/opt/qt/5.12.0/gcc_64/include/QtCharts/qabstractseries.h \
-		/opt/qt/5.12.0/gcc_64/include/QtCharts/QChartGlobal \
-		/opt/qt/5.12.0/gcc_64/include/QtCharts/qchartglobal.h \
-		/opt/qt/5.12.0/gcc_64/include/QtCore/QtGlobal \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/QPointF \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qpoint.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qnamespace.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qglobal.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qconfig-bootstrapped.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qconfig.h \
@@ -4321,6 +4328,16 @@ main.o: ../QTShapeParametrization/main.cpp ../QTShapeParametrization/loadprofile
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qmutex.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qnumeric.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qversiontagging.h \
+		../ShapeParametrizationCpp/include/Settings.h \
+		../ShapeParametrizationCpp/include/BaseKnotSequence.h \
+		../QTShapeParametrization/mychart.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QChart \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qchart.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QAbstractSeries \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qabstractseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QChartGlobal \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qchartglobal.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/QtGlobal \
 		/opt/qt/5.12.0/gcc_64/include/QtCharts/QAbstractAxis \
 		/opt/qt/5.12.0/gcc_64/include/QtCharts/qabstractaxis.h \
 		/opt/qt/5.12.0/gcc_64/include/QtGui/QPen \
@@ -4329,7 +4346,6 @@ main.o: ../QTShapeParametrization/main.cpp ../QTShapeParametrization/loadprofile
 		/opt/qt/5.12.0/gcc_64/include/QtGui/qtgui-config.h \
 		/opt/qt/5.12.0/gcc_64/include/QtGui/qcolor.h \
 		/opt/qt/5.12.0/gcc_64/include/QtGui/qrgb.h \
-		/opt/qt/5.12.0/gcc_64/include/QtCore/qnamespace.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qstringlist.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qlist.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qalgorithms.h \
@@ -4350,7 +4366,6 @@ main.o: ../QTShapeParametrization/main.cpp ../QTShapeParametrization/loadprofile
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qstringmatcher.h \
 		/opt/qt/5.12.0/gcc_64/include/QtGui/qrgba64.h \
 		/opt/qt/5.12.0/gcc_64/include/QtGui/qbrush.h \
-		/opt/qt/5.12.0/gcc_64/include/QtCore/qpoint.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qvector.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qscopedpointer.h \
 		/opt/qt/5.12.0/gcc_64/include/QtGui/qmatrix.h \
@@ -4738,7 +4753,6 @@ main.o: ../QTShapeParametrization/main.cpp ../QTShapeParametrization/loadprofile
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qradiobutton.h \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qscrollbar.h \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qscroller.h \
-		/opt/qt/5.12.0/gcc_64/include/QtCore/QPointF \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QScrollerProperties \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qscrollerproperties.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/QMetaType \
@@ -4849,8 +4863,7 @@ main.o: ../QTShapeParametrization/main.cpp ../QTShapeParametrization/loadprofile
 		../ShapeParametrizationCpp/include/Line.h \
 		../ShapeParametrizationCpp/include/Evaluable.h \
 		../ShapeParametrizationCpp/include/Editable.h \
-		../ShapeParametrizationCpp/include/Settings.h \
-		../ShapeParametrizationCpp/include/BaseKnotSequence.h \
+		../ShapeParametrizationCpp/include/TrailingEdge.h \
 		../ShapeParametrizationCpp/include/KnotSequences.h \
 		../QTShapeParametrization/RangeSlider.h \
 		/opt/qt/5.12.0/gcc_64/include/QtGui/QPainter \
@@ -4863,6 +4876,7 @@ main.o: ../QTShapeParametrization/main.cpp ../QTShapeParametrization/loadprofile
 		../QTShapeParametrization/knotlistdest.h \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QListWidget \
 		../QTShapeParametrization/knotlistsource.h \
+		../ShapeParametrizationCpp/include/Ellipse.h \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QApplication \
 		../QTShapeParametrization/code.cpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../QTShapeParametrization/main.cpp
@@ -4982,6 +4996,9 @@ mainwindow.o: ../QTShapeParametrization/mainwindow.cpp ../QTShapeParametrization
 		../ShapeParametrizationCpp/include/Utils.h \
 		../ShapeParametrizationCpp/include/Point.h \
 		../ShapeParametrizationCpp/include/pystring.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/QPointF \
+		../ShapeParametrizationCpp/include/Settings.h \
+		../ShapeParametrizationCpp/include/BaseKnotSequence.h \
 		../QTShapeParametrization/mychart.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCharts/QChart \
 		/opt/qt/5.12.0/gcc_64/include/QtCharts/qchart.h \
@@ -5322,7 +5339,6 @@ mainwindow.o: ../QTShapeParametrization/mainwindow.cpp ../QTShapeParametrization
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qradiobutton.h \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qscrollbar.h \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qscroller.h \
-		/opt/qt/5.12.0/gcc_64/include/QtCore/QPointF \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QScrollerProperties \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qscrollerproperties.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/QMetaType \
@@ -5433,8 +5449,7 @@ mainwindow.o: ../QTShapeParametrization/mainwindow.cpp ../QTShapeParametrization
 		../ShapeParametrizationCpp/include/Line.h \
 		../ShapeParametrizationCpp/include/Evaluable.h \
 		../ShapeParametrizationCpp/include/Editable.h \
-		../ShapeParametrizationCpp/include/Settings.h \
-		../ShapeParametrizationCpp/include/BaseKnotSequence.h \
+		../ShapeParametrizationCpp/include/TrailingEdge.h \
 		../ShapeParametrizationCpp/include/KnotSequences.h \
 		../QTShapeParametrization/RangeSlider.h \
 		../QTShapeParametrization/rangesliderlayout.h \
@@ -5461,14 +5476,9 @@ loadprofiledialog.o: ../QTShapeParametrization/loadprofiledialog.cpp ../QTShapeP
 		../ShapeParametrizationCpp/include/Utils.h \
 		../ShapeParametrizationCpp/include/Point.h \
 		../ShapeParametrizationCpp/include/pystring.h \
-		../QTShapeParametrization/mychart.h \
-		/opt/qt/5.12.0/gcc_64/include/QtCharts/QChart \
-		/opt/qt/5.12.0/gcc_64/include/QtCharts/qchart.h \
-		/opt/qt/5.12.0/gcc_64/include/QtCharts/QAbstractSeries \
-		/opt/qt/5.12.0/gcc_64/include/QtCharts/qabstractseries.h \
-		/opt/qt/5.12.0/gcc_64/include/QtCharts/QChartGlobal \
-		/opt/qt/5.12.0/gcc_64/include/QtCharts/qchartglobal.h \
-		/opt/qt/5.12.0/gcc_64/include/QtCore/QtGlobal \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/QPointF \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qpoint.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qnamespace.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qglobal.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qconfig-bootstrapped.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qconfig.h \
@@ -5490,6 +5500,16 @@ loadprofiledialog.o: ../QTShapeParametrization/loadprofiledialog.cpp ../QTShapeP
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qmutex.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qnumeric.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qversiontagging.h \
+		../ShapeParametrizationCpp/include/Settings.h \
+		../ShapeParametrizationCpp/include/BaseKnotSequence.h \
+		../QTShapeParametrization/mychart.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QChart \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qchart.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QAbstractSeries \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qabstractseries.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/QChartGlobal \
+		/opt/qt/5.12.0/gcc_64/include/QtCharts/qchartglobal.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/QtGlobal \
 		/opt/qt/5.12.0/gcc_64/include/QtCharts/QAbstractAxis \
 		/opt/qt/5.12.0/gcc_64/include/QtCharts/qabstractaxis.h \
 		/opt/qt/5.12.0/gcc_64/include/QtGui/QPen \
@@ -5498,7 +5518,6 @@ loadprofiledialog.o: ../QTShapeParametrization/loadprofiledialog.cpp ../QTShapeP
 		/opt/qt/5.12.0/gcc_64/include/QtGui/qtgui-config.h \
 		/opt/qt/5.12.0/gcc_64/include/QtGui/qcolor.h \
 		/opt/qt/5.12.0/gcc_64/include/QtGui/qrgb.h \
-		/opt/qt/5.12.0/gcc_64/include/QtCore/qnamespace.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qstringlist.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qlist.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qalgorithms.h \
@@ -5519,7 +5538,6 @@ loadprofiledialog.o: ../QTShapeParametrization/loadprofiledialog.cpp ../QTShapeP
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qstringmatcher.h \
 		/opt/qt/5.12.0/gcc_64/include/QtGui/qrgba64.h \
 		/opt/qt/5.12.0/gcc_64/include/QtGui/qbrush.h \
-		/opt/qt/5.12.0/gcc_64/include/QtCore/qpoint.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qvector.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qscopedpointer.h \
 		/opt/qt/5.12.0/gcc_64/include/QtGui/qmatrix.h \
@@ -5907,7 +5925,6 @@ loadprofiledialog.o: ../QTShapeParametrization/loadprofiledialog.cpp ../QTShapeP
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qradiobutton.h \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qscrollbar.h \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qscroller.h \
-		/opt/qt/5.12.0/gcc_64/include/QtCore/QPointF \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QScrollerProperties \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/qscrollerproperties.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/QMetaType \
@@ -6017,8 +6034,7 @@ loadprofiledialog.o: ../QTShapeParametrization/loadprofiledialog.cpp ../QTShapeP
 		../ShapeParametrizationCpp/include/Line.h \
 		../ShapeParametrizationCpp/include/Evaluable.h \
 		../ShapeParametrizationCpp/include/Editable.h \
-		../ShapeParametrizationCpp/include/Settings.h \
-		../ShapeParametrizationCpp/include/BaseKnotSequence.h \
+		../ShapeParametrizationCpp/include/TrailingEdge.h \
 		../ShapeParametrizationCpp/include/KnotSequences.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o loadprofiledialog.o ../QTShapeParametrization/loadprofiledialog.cpp
 
@@ -6026,7 +6042,33 @@ profiledata.o: ../QTShapeParametrization/profiledata.cpp ../QTShapeParametrizati
 		../ShapeParametrizationCpp/include/Table.h \
 		../ShapeParametrizationCpp/include/Utils.h \
 		../ShapeParametrizationCpp/include/Point.h \
-		../ShapeParametrizationCpp/include/pystring.h
+		../ShapeParametrizationCpp/include/pystring.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/QPointF \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qpoint.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qnamespace.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qglobal.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qconfig-bootstrapped.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qconfig.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qtcore-config.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qsystemdetection.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qprocessordetection.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qcompilerdetection.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qtypeinfo.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qsysinfo.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qlogging.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qflags.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qatomic.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qbasicatomic.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qgenericatomic.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qatomic_msvc.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qglobalstatic.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qmutex.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qnumeric.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qversiontagging.h \
+		../ShapeParametrizationCpp/include/Settings.h \
+		../ShapeParametrizationCpp/include/BaseKnotSequence.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o profiledata.o ../QTShapeParametrization/profiledata.cpp
 
 BaseKnotSequence.o: ../ShapeParametrizationCpp/src/BaseKnotSequence.cpp ../ShapeParametrizationCpp/include/BaseKnotSequence.h \
@@ -6042,11 +6084,11 @@ Bspline.o: ../ShapeParametrizationCpp/src/Bspline.cpp ../ShapeParametrizationCpp
 		../ShapeParametrizationCpp/include/Line.h \
 		../ShapeParametrizationCpp/include/Evaluable.h \
 		../ShapeParametrizationCpp/include/Editable.h \
+		../ShapeParametrizationCpp/include/TrailingEdge.h \
 		../ShapeParametrizationCpp/include/Settings.h \
 		../ShapeParametrizationCpp/include/BaseKnotSequence.h \
 		../ShapeParametrizationCpp/include/KnotSequences.h \
 		../ShapeParametrizationCpp/include/Ellipse.h \
-		../ShapeParametrizationCpp/include/TrailingEdge.h \
 		../ShapeParametrizationCpp/include/Circle.h \
 		../ShapeParametrizationCpp/include/Table.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Bspline.o ../ShapeParametrizationCpp/src/Bspline.cpp
@@ -6058,6 +6100,7 @@ BsplineIO.o: ../ShapeParametrizationCpp/src/BsplineIO.cpp ../ShapeParametrizatio
 		../ShapeParametrizationCpp/include/Line.h \
 		../ShapeParametrizationCpp/include/Evaluable.h \
 		../ShapeParametrizationCpp/include/Editable.h \
+		../ShapeParametrizationCpp/include/TrailingEdge.h \
 		../ShapeParametrizationCpp/include/Settings.h \
 		../ShapeParametrizationCpp/include/BaseKnotSequence.h \
 		../ShapeParametrizationCpp/include/KnotSequences.h
@@ -7097,6 +7140,7 @@ rangesliderlayout.o: ../QTShapeParametrization/rangesliderlayout.cpp ../QTShapeP
 		../ShapeParametrizationCpp/include/Line.h \
 		../ShapeParametrizationCpp/include/Evaluable.h \
 		../ShapeParametrizationCpp/include/Editable.h \
+		../ShapeParametrizationCpp/include/TrailingEdge.h \
 		../ShapeParametrizationCpp/include/Settings.h \
 		../ShapeParametrizationCpp/include/BaseKnotSequence.h \
 		../ShapeParametrizationCpp/include/KnotSequences.h \
@@ -8076,15 +8120,9 @@ bsplinetask.o: ../QTShapeParametrization/bsplinetask.cpp ../QTShapeParametrizati
 		../ShapeParametrizationCpp/include/Utils.h \
 		../ShapeParametrizationCpp/include/Point.h \
 		../ShapeParametrizationCpp/include/pystring.h \
-		../ShapeParametrizationCpp/include/Bspline.h \
-		../ShapeParametrizationCpp/include/Line.h \
-		../ShapeParametrizationCpp/include/Evaluable.h \
-		../ShapeParametrizationCpp/include/Editable.h \
-		../ShapeParametrizationCpp/include/Settings.h \
-		../ShapeParametrizationCpp/include/BaseKnotSequence.h \
-		../ShapeParametrizationCpp/include/KnotSequences.h \
-		/opt/qt/5.12.0/gcc_64/include/QtCore/QMutex \
-		/opt/qt/5.12.0/gcc_64/include/QtCore/qmutex.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/QPointF \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qpoint.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qnamespace.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qglobal.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qconfig-bootstrapped.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qconfig.h \
@@ -8103,12 +8141,21 @@ bsplinetask.o: ../QTShapeParametrization/bsplinetask.cpp ../QTShapeParametrizati
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qatomic_cxx11.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qatomic_msvc.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qglobalstatic.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/qmutex.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qnumeric.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qversiontagging.h \
+		../ShapeParametrizationCpp/include/Settings.h \
+		../ShapeParametrizationCpp/include/BaseKnotSequence.h \
+		../ShapeParametrizationCpp/include/Bspline.h \
+		../ShapeParametrizationCpp/include/Line.h \
+		../ShapeParametrizationCpp/include/Evaluable.h \
+		../ShapeParametrizationCpp/include/Editable.h \
+		../ShapeParametrizationCpp/include/TrailingEdge.h \
+		../ShapeParametrizationCpp/include/KnotSequences.h \
+		/opt/qt/5.12.0/gcc_64/include/QtCore/QMutex \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/QObject \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qobject.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qobjectdefs.h \
-		/opt/qt/5.12.0/gcc_64/include/QtCore/qnamespace.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qobjectdefs_impl.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qstring.h \
 		/opt/qt/5.12.0/gcc_64/include/QtCore/qchar.h \
@@ -8695,9 +8742,13 @@ qtutils.o: ../QTShapeParametrization/qtutils.cpp ../QTShapeParametrization/qtuti
 		../ShapeParametrizationCpp/include/Line.h \
 		../ShapeParametrizationCpp/include/Evaluable.h \
 		../ShapeParametrizationCpp/include/Editable.h \
+		../ShapeParametrizationCpp/include/TrailingEdge.h \
 		../ShapeParametrizationCpp/include/Settings.h \
 		../ShapeParametrizationCpp/include/BaseKnotSequence.h \
-		../ShapeParametrizationCpp/include/KnotSequences.h
+		../ShapeParametrizationCpp/include/KnotSequences.h \
+		/opt/qt/5.12.0/gcc_64/include/QtSvg/QSvgGenerator \
+		/opt/qt/5.12.0/gcc_64/include/QtSvg/qsvggenerator.h \
+		/opt/qt/5.12.0/gcc_64/include/QtSvg/qtsvgglobal.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qtutils.o ../QTShapeParametrization/qtutils.cpp
 
 knotlabel.o: ../QTShapeParametrization/knotlabel.cpp ../QTShapeParametrization/knotlabel.h \
@@ -9257,6 +9308,7 @@ knotlabel.o: ../QTShapeParametrization/knotlabel.cpp ../QTShapeParametrization/k
 		../ShapeParametrizationCpp/include/Line.h \
 		../ShapeParametrizationCpp/include/Evaluable.h \
 		../ShapeParametrizationCpp/include/Editable.h \
+		../ShapeParametrizationCpp/include/TrailingEdge.h \
 		../ShapeParametrizationCpp/include/Settings.h \
 		../ShapeParametrizationCpp/include/BaseKnotSequence.h \
 		../ShapeParametrizationCpp/include/KnotSequences.h
@@ -9958,6 +10010,7 @@ knotlistdest.o: ../QTShapeParametrization/knotlistdest.cpp ../QTShapeParametriza
 		../ShapeParametrizationCpp/include/Line.h \
 		../ShapeParametrizationCpp/include/Evaluable.h \
 		../ShapeParametrizationCpp/include/Editable.h \
+		../ShapeParametrizationCpp/include/TrailingEdge.h \
 		../ShapeParametrizationCpp/include/Settings.h \
 		../ShapeParametrizationCpp/include/KnotSequences.h \
 		/opt/qt/5.12.0/gcc_64/include/QtWidgets/QListWidget \

@@ -283,7 +283,19 @@ vector<BaseKnotSequence *> KnotListDest::getKnots()
 
 KnotSequences KnotListDest::getKnotSequence()
 {
-     return KnotSequences(knots);
+    return KnotSequences(knots);
+}
+
+void KnotListDest::setKnots(Knots knots_input)
+{
+    knots.clear();
+    clear();
+    for (auto knot : knots_input)
+    {
+        knots.push_back(knot);
+        addKnot(QString::fromStdString(knot->type()));
+    }
+    //setCurrentRow(0);
 }
 
 BaseKnotSequence *KnotListDest::getKnotFromName(QString name)

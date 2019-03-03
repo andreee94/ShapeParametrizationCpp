@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[39];
-    char stringdata0[626];
+    QByteArrayData data[44];
+    char stringdata0[713];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -69,7 +69,12 @@ QT_MOC_LITERAL(34, 554, 5), // "index"
 QT_MOC_LITERAL(35, 560, 22), // "comboBoxTEShapeChanged"
 QT_MOC_LITERAL(36, 583, 19), // "knotSelectedChanged"
 QT_MOC_LITERAL(37, 603, 17), // "BaseKnotSequence*"
-QT_MOC_LITERAL(38, 621, 4) // "knot"
+QT_MOC_LITERAL(38, 621, 4), // "knot"
+QT_MOC_LITERAL(39, 626, 18), // "saveSettingsDialog"
+QT_MOC_LITERAL(40, 645, 18), // "loadSettingsDialog"
+QT_MOC_LITERAL(41, 664, 19), // "exportProfileDialog"
+QT_MOC_LITERAL(42, 684, 24), // "showContextMenuChartView"
+QT_MOC_LITERAL(43, 709, 3) // "pos"
 
     },
     "MainWindow\0bsplineTaskStarted\0\0"
@@ -89,7 +94,9 @@ QT_MOC_LITERAL(38, 621, 4) // "knot"
     "value\0isFinished\0comboBoxTEMotionChanged\0"
     "index\0comboBoxTEShapeChanged\0"
     "knotSelectedChanged\0BaseKnotSequence*\0"
-    "knot"
+    "knot\0saveSettingsDialog\0loadSettingsDialog\0"
+    "exportProfileDialog\0showContextMenuChartView\0"
+    "pos"
 };
 #undef QT_MOC_LITERAL
 
@@ -99,7 +106,7 @@ static const uint qt_meta_data_MainWindow[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-      21,   14, // methods
+      25,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -107,27 +114,31 @@ static const uint qt_meta_data_MainWindow[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    1,  119,    2, 0x0a /* Public */,
-       5,    1,  122,    2, 0x0a /* Public */,
-       6,    0,  125,    2, 0x0a /* Public */,
-       7,    2,  126,    2, 0x0a /* Public */,
-      10,    2,  131,    2, 0x0a /* Public */,
-      11,    2,  136,    2, 0x0a /* Public */,
-      14,    2,  141,    2, 0x0a /* Public */,
-      15,    2,  146,    2, 0x0a /* Public */,
-      16,    2,  151,    2, 0x0a /* Public */,
-      17,    2,  156,    2, 0x0a /* Public */,
-      18,    2,  161,    2, 0x0a /* Public */,
-      20,    2,  166,    2, 0x0a /* Public */,
-      22,    3,  171,    2, 0x0a /* Public */,
-      26,    3,  178,    2, 0x0a /* Public */,
-      27,    0,  185,    2, 0x0a /* Public */,
-      28,    0,  186,    2, 0x0a /* Public */,
-      29,    0,  187,    2, 0x0a /* Public */,
-      30,    2,  188,    2, 0x0a /* Public */,
-      33,    1,  193,    2, 0x0a /* Public */,
-      35,    1,  196,    2, 0x0a /* Public */,
-      36,    1,  199,    2, 0x0a /* Public */,
+       1,    1,  139,    2, 0x0a /* Public */,
+       5,    1,  142,    2, 0x0a /* Public */,
+       6,    0,  145,    2, 0x0a /* Public */,
+       7,    2,  146,    2, 0x0a /* Public */,
+      10,    2,  151,    2, 0x0a /* Public */,
+      11,    2,  156,    2, 0x0a /* Public */,
+      14,    2,  161,    2, 0x0a /* Public */,
+      15,    2,  166,    2, 0x0a /* Public */,
+      16,    2,  171,    2, 0x0a /* Public */,
+      17,    2,  176,    2, 0x0a /* Public */,
+      18,    2,  181,    2, 0x0a /* Public */,
+      20,    2,  186,    2, 0x0a /* Public */,
+      22,    3,  191,    2, 0x0a /* Public */,
+      26,    3,  198,    2, 0x0a /* Public */,
+      27,    0,  205,    2, 0x0a /* Public */,
+      28,    0,  206,    2, 0x0a /* Public */,
+      29,    0,  207,    2, 0x0a /* Public */,
+      30,    2,  208,    2, 0x0a /* Public */,
+      33,    1,  213,    2, 0x0a /* Public */,
+      35,    1,  216,    2, 0x0a /* Public */,
+      36,    1,  219,    2, 0x0a /* Public */,
+      39,    0,  222,    2, 0x0a /* Public */,
+      40,    0,  223,    2, 0x0a /* Public */,
+      41,    0,  224,    2, 0x0a /* Public */,
+      42,    1,  225,    2, 0x0a /* Public */,
 
  // slots: parameters
     QMetaType::Void, 0x80000000 | 3,    4,
@@ -151,6 +162,10 @@ static const uint qt_meta_data_MainWindow[] = {
     QMetaType::Void, QMetaType::Int,   34,
     QMetaType::Void, QMetaType::Int,   34,
     QMetaType::Void, 0x80000000 | 37,   38,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void, QMetaType::QPoint,   43,
 
        0        // eod
 };
@@ -182,6 +197,10 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 18: _t->comboBoxTEMotionChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 19: _t->comboBoxTEShapeChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 20: _t->knotSelectedChanged((*reinterpret_cast< BaseKnotSequence*(*)>(_a[1]))); break;
+        case 21: _t->saveSettingsDialog(); break;
+        case 22: _t->loadSettingsDialog(); break;
+        case 23: _t->exportProfileDialog(); break;
+        case 24: _t->showContextMenuChartView((*reinterpret_cast< const QPoint(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
@@ -311,13 +330,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 21)
+        if (_id < 25)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 21;
+        _id -= 25;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 21)
+        if (_id < 25)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 21;
+        _id -= 25;
     }
     return _id;
 }

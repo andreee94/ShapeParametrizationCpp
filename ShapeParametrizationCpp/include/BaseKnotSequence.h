@@ -17,6 +17,9 @@ typedef std::vector<Point> Points;
    BaseKnotSequence* TYPE ## _myProtoype = \
       BaseKnotSequence::addPrototype(#TYPE, new TYPE());
 
+#define MAKE_NAME(TYPE) \
+   string type() const { return #TYPE; }
+
 class BaseKnotSequence
 {
     public:
@@ -66,6 +69,7 @@ class BaseKnotSequence
         virtual void setValues(vector<std::variant<int, double, bool>> values) = 0;
         virtual vector<std::variant<int, double, bool>> getValues() = 0;
         strings getValuesStrings();
+        void setValuesStrings(strings values);
 
         bool isFixed() const { return fixed; }
         int getNumParams() const { return numParams;}
@@ -87,6 +91,7 @@ class BaseKnotSequence
         ParamType propType(size_t i){ return property_types[i]; }
 
         virtual BaseKnotSequence *clone() const = 0;
+        virtual string type() const = 0;
         static BaseKnotSequence* makeKnot(string type);
         static BaseKnotSequence* addPrototype(string type, BaseKnotSequence* p);
         static std::map<string, BaseKnotSequence*> protoTable;
@@ -143,6 +148,7 @@ class UniformKS: public BaseKnotSequence
 {
     public:
         IMPLEMENT_CLONE(UniformKS)
+        MAKE_NAME(UniformKS)
 //        MAKE_PROTOTYPE(UniformKS)
 
         UniformKS() : BaseKnotSequence(1, 0.0, 1.0) { initProps(); } // NOT FIXED
@@ -170,6 +176,7 @@ class ValueKS: public BaseKnotSequence
 {
     public:
         IMPLEMENT_CLONE(ValueKS)
+        MAKE_NAME(ValueKS)
 //        MAKE_PROTOTYPE(ValueKS)
 
         ValueKS() : BaseKnotSequence(0, 0.0, 1.0) { initProps(); } // NOT FIXED
@@ -195,6 +202,7 @@ class MultiplicityValueKS: public UniformKS
 {
     public:
         IMPLEMENT_CLONE(MultiplicityValueKS)
+        MAKE_NAME(MultiplicityValueKS)
 //        MAKE_PROTOTYPE(MultiplicityValueKS)
 
         MultiplicityValueKS() : UniformKS() { initProps(); } // NOT FIXED
@@ -221,6 +229,7 @@ class BeginKS: public MultiplicityValueKS
 {
     public:
         IMPLEMENT_CLONE(BeginKS)
+        MAKE_NAME(BeginKS)
 //        MAKE_PROTOTYPE(BeginKS)
 
         BeginKS() : MultiplicityValueKS() { initProps(); } // NOT FIXED
@@ -246,6 +255,7 @@ class EndKS: public MultiplicityValueKS
 {
     public:
         IMPLEMENT_CLONE(EndKS)
+        MAKE_NAME(EndKS)
 //        MAKE_PROTOTYPE(EndKS)
 
         EndKS() : MultiplicityValueKS() { initProps(); } // NOT FIXED
@@ -271,6 +281,7 @@ class RationalKS: public BaseKnotSequence
 {
     public:
         IMPLEMENT_CLONE(RationalKS)
+        MAKE_NAME(RationalKS)
 //        MAKE_PROTOTYPE(RationalKS)
 
         RationalKS()
@@ -302,6 +313,7 @@ class BiRationalKS: public BaseKnotSequence
 {
     public:
         IMPLEMENT_CLONE(BiRationalKS)
+        MAKE_NAME(BiRationalKS)
 //        MAKE_PROTOTYPE(BiRationalKS)
 
         BiRationalKS()
@@ -339,6 +351,7 @@ class CumulKS: public BaseKnotSequence
 {
     public:
         IMPLEMENT_CLONE(CumulKS)
+        MAKE_NAME(CumulKS)
 //        MAKE_PROTOTYPE(CumulKS)
 
         CumulKS()
@@ -369,6 +382,7 @@ class CustomKS: public BaseKnotSequence
 {
     public:
         IMPLEMENT_CLONE(CustomKS)
+        MAKE_NAME(CustomKS)
 //        MAKE_PROTOTYPE(CustomKS)
 
         CustomKS()

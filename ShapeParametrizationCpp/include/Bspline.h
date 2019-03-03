@@ -4,6 +4,7 @@
 #include "Line.h"
 #include "Editable.h"
 #include "Evaluable.h"
+#include "TrailingEdge.h"
 #include <cmath>
 #include <string>
 #include <Settings.h>
@@ -53,8 +54,8 @@ class Bspline: public Evaluable, public Editable<Bspline>
             return this->Evaluable::evaluate(start, end, steps);
         }
 
-        Points evaluateWithTE(int numpoints, int numpointsTE, string shape, bool tangent_first=true);
-        Points evaluateTE(int numpointsTE, string shape, bool tangent_first=true);
+        Points evaluateWithTE(int numpoints, int numpointsTE, TrailingEdgeType shape, bool tangent_first=true);
+        Points evaluateTE(int numpointsTE, TrailingEdgeType shape, bool tangent_first=true);
         doubles evaluateError(const Points & original, bool approximated=true); // us just for return
 
         Bspline modifyCP(const doubles &params) const;

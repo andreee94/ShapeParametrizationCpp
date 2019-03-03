@@ -73,7 +73,7 @@ struct BsplineTask
     Points points;
     int TEnumPoints = 0;
     int numPoints = 0;
-    string TEshape;
+    TrailingEdgeType TEshape;
 };
 
 Q_DECLARE_METATYPE(BsplineTask)

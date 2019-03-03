@@ -15,6 +15,7 @@
 #include <cstdio>
 #include <iterator>
 #include <utility>
+#include <eigen3/Eigen/Dense>
 
 
 using namespace std;
@@ -27,6 +28,7 @@ typedef std::vector<bool> bools;
 typedef std::vector<string> strings;
 typedef std::vector<Point> Points;
 
+using Eigen::MatrixXd;
 
 class Utils
 {
@@ -65,6 +67,8 @@ class Utils
         static bool iszeroint(string str);
         static doubles rational(double start, double end, double q, int numpoints, bool startIncluded = true, bool endIncluded = true);
         static doubles birational(double start, double end, double q1, double q2, double center, int numpoints, bool startIncluded = true, bool endIncluded = true, bool centerIncluded = true); 
+        static void matrixtofile(const string filename, MatrixXd matrix);
+        static ints complementindexes(const ints &indexes, int totalnum);
 
 
         static constexpr unsigned int str2int(const char* str, int h = 0)

@@ -19,6 +19,9 @@
 #include <QtCharts>
 #include <QLayoutItem>
 #include <vector>
+#include <eigen3/Eigen/Dense>
+
+using Eigen::MatrixXd;
 
 //namespace Ui {
 //class MainWindow;
@@ -58,6 +61,11 @@ public slots:
 
         void knotSelectedChanged(BaseKnotSequence* knot);
 
+        void saveSettingsDialog();
+        void loadSettingsDialog();
+        void exportProfileDialog();
+        void showContextMenuChartView(const QPoint &pos);
+
 protected:
         BsplineTask *addInterpolationTask(BsplineTaskManager *bsplinemanager) ;
         BsplineTask *addEvaluationPointsTask(BsplineTaskManager *bsplinemanager) ;
@@ -74,7 +82,7 @@ protected:
         int getNumCP();
         int getNumPoints();
         int getTENumPoints();
-        string getTEShape();
+        TrailingEdgeType getTEShape();
         doubles getMinParams();
         doubles getMaxParams();
         ints getAdjustableIndexes();
@@ -85,9 +93,31 @@ protected:
         double getMachineRadiusHub();
         double getMachineRadiusTip();
         string getMachineAxisType();
+        string getStatorOrRotorType();
         string getAnalysisType();
         doubles getMinParamsRange();
         doubles getMaxParamsRange();
+
+
+        void setN(int value);
+        void setNumCP(int value);
+        void setNumPoints(int value);
+        void setTENumPoints(int value);
+        void setTEShape(TrailingEdgeType value);
+        void setMinParams(doubles value);
+        void setMaxParams(doubles value);
+        void setAdjustableIndexes(ints value);
+        void setTEMotion(TEMotion value);
+        void setKnots(Knots value);
+        void setKnotsCount(int value);
+        void setIsNumCPChanged(bool value);
+        void setMachineRadiusHub(double value);
+        void setMachineRadiusTip(double value);
+        void setMachineAxisType(string value);
+        void setStatorOrRotorType(string value);
+        void setAnalysisType(string value);
+        void setMinParamsRange(doubles value);
+        void setMaxParamsRange(doubles value);
 
 private:
         Bspline *bspline = NULL;
@@ -192,6 +222,7 @@ private:
         QLineEdit *machineHubRadius;
         QLineEdit *machineTipRadius;
         QComboBox *machineType;
+        QComboBox *machineBladeType;
         QComboBox *machineAnalysis;
 
         QWidget* generateTabBspline();
@@ -255,6 +286,8 @@ private:
 
         void loadSettings(string filename);
         void saveSettings(string filename);
+
+        void exportProfile(string filename);
 
 };
 

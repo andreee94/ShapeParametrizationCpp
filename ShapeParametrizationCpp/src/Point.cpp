@@ -438,6 +438,20 @@ double Point::meanY(const Points &points)
     return sum / points.size();
 }
 
+void Point::savePoints(const string filename, const Points &points, string separator, ints *indexes)
+{
+    ofstream file;
+    file.open(filename, ios::out);
+    for (auto const &[index, p] : Utils::enumerate(points))
+    {
+        file << p.getx() << separator << p.gety();
+        if (indexes)
+            file << separator << indexes->at(index);
+        file << endl;
+    }
+    file.close();
+}
+
 //std::ostream & Point::operator<<(std::ostream & Str) {
 //    // print something from v to str, e.g: Str << v.getX();
 //    std::ostringstream strs;

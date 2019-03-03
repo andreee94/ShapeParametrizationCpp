@@ -17,6 +17,8 @@ typedef std::vector<bool> bools;
 typedef std::vector<string> strings;
 typedef std::vector<Point> Points;
 
+enum TrailingEdgeType { TEnone=0, TEcircle=1, TEellipse=2};
+
 class TrailingEdge: public Evaluable
 {
     public:

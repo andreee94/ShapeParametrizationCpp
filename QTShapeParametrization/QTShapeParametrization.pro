@@ -7,6 +7,7 @@
 QT += core gui
 QT += charts concurrent
 QT += quickcontrols2
+QT += svg
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -83,15 +84,13 @@ HEADERS += \
 #SOURCES += *.cpp
 
 
-FORMS += \
-        mainwindow.ui \
-    loadprofiledialog.ui \
-    loadprofiledialog.ui \
-    mainwindow.ui \
-    rangesliderlayout.ui
+FORMS +=
 
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    licence_header

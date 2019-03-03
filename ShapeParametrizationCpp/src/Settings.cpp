@@ -53,10 +53,10 @@ Settings::Settings(string filename)
 
 
 // copy constructor
-Settings::Settings(const Settings& other)
-{
-    this->dict = other.dict;
-}
+//Settings::Settings(const Settings& other)
+//{
+//    this->dict = other.dict;
+//}
 
 Settings& Settings::operator=(const Settings& other)
 {
@@ -100,11 +100,6 @@ strings Settings::getlist(string key)
     strings ss;
     pystring::split(this->getstring(key), ss, " ");
     return ss;
-}
-
-Settings::~Settings()
-{
-
 }
 
 ints Settings::getints(string key)
@@ -165,13 +160,34 @@ Points Settings::getpoints(string key)
 Knots Settings::getknots(string key)
 {
     int knotsnum = getint(key + "-num");
-    Knots knots(knotsnum);
+    Knots knots;
+    knots.reserve(knotsnum);
     for (int i = 0; i < knotsnum; i++)
     {
         BaseKnotSequence * knot = BaseKnotSequence::makeKnot(getstring(key + std::to_string(i) + "-class"));
+        vector<BaseKnotSequence::ParamType> proptypes = getparamtypearray(key + std::to_string(i) + "-prop-types");
+
+        strings ss;
+        ss.reserve(proptypes.size());
+        for (int k = 0; k < proptypes.size(); k++)
+            ss.push_back(getstring(key + std::to_string(i) + "-prop" + std::to_string(k)));
+
+        knot->setValuesStrings(ss);
+        knot->setFixed(getbool(key + std::to_string(i) + "-isfixed"));
         knots.push_back(knot);
     }
     return knots;
+}
+
+vector<BaseKnotSequence::ParamType> Settings::getparamtypearray(string key)
+{
+    strings ss = this->getlist(key);
+    vector<BaseKnotSequence::ParamType> res(ss.size());
+    for(unsigned int i = 0; i < ss.size(); ++i )
+    {
+        res[i] = (BaseKnotSequence::ParamType)std::stoi(ss[i]);
+    }
+    return res;
 }
 
 strings Settings::getstrings(string key)
@@ -186,7 +202,7 @@ void Settings::setvalue(string key, string value)
 
 void Settings::setvalue(string key, bool value)
 {
-    this->dict[key] = std::to_string(value);
+    this->dict[key] = value ? "true" : "false"; //std::to_string(value);
 }
 
 void Settings::setvalue(string key, int value)
@@ -241,23 +257,28 @@ void Settings::setvalues(string key, const Knots &knots)
     {
         if (knot->isFixed())
         {
-            setvalue(key + std::to_string(index) + "-class", typeid(knot).name()); // save the knot type
+            cout << "Knot type = " << knot->type() << endl;
+            setvalue(key + std::to_string(index) + "-class", knot->type()); // save the knot type
             strings knot_values = knot->getValuesStrings(); // extract all the properties values as strings
             for (auto const [kindex, kvalue] : Utils::enumerate(knot_values))
+            {
+                cout << "Knot prop = " << kindex << " = " << kvalue << endl;
                 setvalue(key + std::to_string(index) + "-prop" + std::to_string(kindex), kvalue);
-
+            }
+            setvalue(key + std::to_string(index) + "-isfixed", knot->isFixed());
             setvalues(key + std::to_string(index) + "-prop-types", knot->propTypes());
         }
         else
         {
-            setvalue(key + std::to_string(index) + "-class", typeid(knot).name()); // save the knot type
+            setvalue(key + std::to_string(index) + "-class", knot->type()); // save the knot type
         }
     }
 }
 
 void Settings::setvalues(string key, const vector<BaseKnotSequence::ParamType> &values)
 {
-    ints enumints(values.size());
+    ints enumints;
+    enumints.reserve(values.size());
     for (auto v : values)
         enumints.push_back((int)v);
     this->dict[key] = pystring::join(" ", Utils::tostring(enumints));
@@ -273,8 +294,12 @@ Settings Settings::save(string filename)
     ofstream file;
     file.open(filename, ios::out);
     for( auto const& [key, val] : this->dict)
-        file << key << "=" << this->dict[key] << endl;
+    {
+        cout << key << "=" << val << endl;
+        file << key << "=" << val << endl;
+    }
     file.close();
+    return *this;
 }
 
 

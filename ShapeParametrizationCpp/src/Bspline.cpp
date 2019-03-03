@@ -295,7 +295,7 @@ void Bspline::setN(int value)
 
 
 
-Points Bspline::evaluateWithTE(int numpoints, int numpointsTE, string shape, bool tangent_first)
+Points Bspline::evaluateWithTE(int numpoints, int numpointsTE, TrailingEdgeType shape, bool tangent_first)
 {
     // compute bspline points
     Points bspline_points = this->evaluate(numpoints);
@@ -304,13 +304,13 @@ Points Bspline::evaluateWithTE(int numpoints, int numpointsTE, string shape, boo
 
     TrailingEdge *TE;
     Points tepoints;
-    if (pystring::lower(shape) == "ellipse")
+    if (shape == TrailingEdgeType::TEellipse)
     {
         Ellipse ellipse = Ellipse(bspline_points.front(), bspline_points.back(), tangents.front().slope(), tangents.back().slope());
         TE = dynamic_cast<TrailingEdge*>(&ellipse);
         tepoints = ellipse.computeTE(bspline_points, numpointsTE);
     }
-    else if (pystring::lower(shape) == "circle")
+    else if (shape == TrailingEdgeType::TEcircle)
     {
         double m = tangent_first ? tangents.front().slope() : tangents.back().slope();
         Circle circle = Circle(bspline_points.front(), bspline_points.back(), m, tangent_first);
@@ -329,7 +329,7 @@ Points Bspline::evaluateWithTE(int numpoints, int numpointsTE, string shape, boo
     return bspline_points;
 }
 
-Points Bspline::evaluateTE(int numpointsTE, string shape, bool tangent_first)
+Points Bspline::evaluateTE(int numpointsTE, TrailingEdgeType shape, bool tangent_first)
 {
     // compute bspline points
     Points bspline_points = this->evaluate(10); // small amount of curve points required
@@ -338,13 +338,13 @@ Points Bspline::evaluateTE(int numpointsTE, string shape, bool tangent_first)
 
     TrailingEdge *TE;
     Points tepoints;
-    if (pystring::lower(shape) == "ellipse")
+    if (shape == TrailingEdgeType::TEellipse)
     {
         Ellipse ellipse = Ellipse(bspline_points.front(), bspline_points.back(), tangents.front().slope(), tangents.back().slope());
         TE = dynamic_cast<TrailingEdge*>(&ellipse);
         tepoints = ellipse.computeTE(bspline_points, numpointsTE);
     }
-    else if (pystring::lower(shape) == "circle")
+    else if (shape == TrailingEdgeType::TEcircle)
     {
         double m = tangent_first ? tangents.front().slope() : tangents.back().slope();
         Circle circle = Circle(bspline_points.front(), bspline_points.back(), m, tangent_first);

@@ -68,6 +68,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     createMenu();
 
+    listActiveKnots->setKnots(getKnotSequence().getKnots());
+
     QWidget *widget = new QWidget(this);
     setCentralWidget(widget);
     widget->setLayout(mainVLayout);
@@ -688,6 +690,7 @@ QWidget* MainWindow::generateTabBspline()
 
     QHBoxLayout *filenameLayout = new QHBoxLayout;
     bspineFilenameEdit = new QLineEdit("");
+    bspineFilenameEdit->setReadOnly(true);
     bspineFilenameButton = new QPushButton("Choose");
         filenameLayout->addWidget(bspineFilenameEdit);
         filenameLayout->addWidget(bspineFilenameButton);
@@ -702,7 +705,7 @@ QWidget* MainWindow::generateTabBspline()
         bsplineNEdit->setValidator( new QIntValidator(1, 10, this) );
         bsplineCPnumEdit->setValidator( new QIntValidator(5, 100, this) );
         bsplineNumPointsEdit->setValidator( new QIntValidator(10, 10000, this) );
-        bsplineTEShapeCombo->addItems(QStringList{"Ellipse", "Circle", "None"});
+        bsplineTEShapeCombo->addItems(QStringList{"None", "Circle", "Ellipse"});
         bsplineTEMotionCombo->addItems(QStringList{"Rigid", "First point", "Second point", "Second-Last point", "Last point", "Auto", "None"});
         bsplineTENumPointsEdit->setValidator( new QIntValidator(10, 1000, this) );
 
@@ -835,14 +838,17 @@ QWidget* MainWindow::generateTabSettings()
     machineHubRadius = new QLineEdit;
     machineTipRadius = new QLineEdit;
     machineType = new QComboBox;
+    machineBladeType = new QComboBox;
     machineAnalysis = new QComboBox;
 
     machineType->addItems(QStringList{"Axial", "Radial"});
+    machineBladeType->addItems(QStringList{"Stator", "Rotor"});
     machineAnalysis->addItems(QStringList{"Stator Only", "Rotor Only", "Stator-Rotor"});
 
     formLayout1->addRow("Machine Hub Radius", machineHubRadius);
     formLayout1->addRow("Machine Tip Radius", machineTipRadius);
     formLayout1->addRow("Machine Axis Type", machineType);
+    formLayout1->addRow("Machine Blade Type", machineBladeType);
     formLayout1->addRow("Analysis Type", machineAnalysis);
 
     groupLayout1->setLayout(formLayout1);
@@ -951,6 +957,9 @@ QLayout* MainWindow::generateChartLayout()
     //chartView->addTooltip(series_CP_adjustable, new CPIndexTooltipText(bspline));
     chartView->addToggleable(series_CP_fixed, series_CP_adjustable);
 
+    chartView->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(chartView,QOverload<const QPoint &>::of(&QChartView::customContextMenuRequested),this, QOverload<const QPoint &>::of(&MainWindow::showContextMenuChartView));
+
     // ////////////////////////////////////////////////////////////////////////////////////
     // ////////////////////////////////////////////////////////////////////////////////////
     QLineSeries *series2 = new QLineSeries();
@@ -972,6 +981,9 @@ QLayout* MainWindow::generateChartLayout()
 
     chartErrorView->chart()->addSeries(series_errorApprox);
     chartErrorView->chart()->addSeries(series_errorPrecise);
+
+    series_errorApprox->setUseOpenGL(true);
+    series_errorPrecise->setUseOpenGL(true);
 
     showBsplineButton = new QPushButton("Show Curve");
     labelErrorApproxMax = new QLabel("max: ");
@@ -1498,7 +1510,7 @@ void MainWindow::comboBoxTEShapeChanged(int index)
 
 void MainWindow::knotSelectedChanged(BaseKnotSequence *knot)
 {
-    if (knot)
+    if (knot && knotsSeries)
     {
         QPushButton *sendBtn = new QPushButton("Apply");
         QTUtils::clearLayout(propLayout);
@@ -1580,6 +1592,37 @@ void MainWindow::knotSelectedChanged(BaseKnotSequence *knot)
 
 // //////////////////////////////////////////////////////////////////
 // //////////////////////////////////////////////////////////////////
+
+void MainWindow::saveSettingsDialog()
+{
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Open Profile Data"), "/home/andrea", tr("Every Text Files (* *.txt)"));
+    saveSettings(fileName.toStdString());
+}
+
+void MainWindow::loadSettingsDialog()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open Profile Data"), "/home/andrea", tr("Every Text Files (* *.txt)"));
+    loadSettings(fileName.toStdString());
+}
+
+void MainWindow::exportProfileDialog()
+{
+    QString fileName = QFileDialog::getExistingDirectory(this, tr("Export Profile Folder"), "/home/andrea");
+    exportProfile(fileName.toStdString());
+}
+
+void MainWindow::showContextMenuChartView(const QPoint &pos)
+{
+    QMenu contextMenu(tr("Context menu"), this);
+    QAction action1("Reset Scale", this);
+    connect(&action1, &QAction::triggered, this, &MainWindow::resetScaleAndScroll);
+    contextMenu.addAction(&action1);
+
+    contextMenu.exec(chartView->viewport()->mapToGlobal(pos));
+}
+
+// //////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////
 // //////////////////////////////////////////////////////////////////
 // //////////////////////////////////////////////////////////////////
 // //////////////////////////////////////////////////////////////////
@@ -1651,7 +1694,10 @@ void MainWindow::updateTangentsNormals(bool changednumcp)
 
 void MainWindow::resetScaleAndScroll()
 {
-    QTUtils::resetAxes(chartView->chart(), data.getPoints(true));
+    if (this->data.getFileName().size() > 0)
+        QTUtils::resetAxes(chartView->chart(), data.getPoints(true));
+    else
+        QTUtils::resetAxes(chartView->chart(), {Point(0,0), Point(1,1)}, 0);
 }
 
 void MainWindow::updateMINMAX()
@@ -1754,9 +1800,10 @@ int MainWindow::getTENumPoints()
     return bsplineTENumPointsEdit->text().toInt();
 }
 
-string MainWindow::getTEShape()
+TrailingEdgeType MainWindow::getTEShape()
 {
-    return bsplineTEShapeCombo->currentText().toLower().toStdString();
+    return (TrailingEdgeType)bsplineTEShapeCombo->currentIndex();
+    //return TrailingEdgeType->currentText().toLower().toStdString();
 }
 
 doubles MainWindow::getMinParams()
@@ -1824,32 +1871,148 @@ bool MainWindow::isNumCPChanged(bool updateOld)
 
 double MainWindow::getMachineRadiusHub()
 {
-
+    return machineHubRadius->text().toDouble();
 }
 
 double MainWindow::getMachineRadiusTip()
 {
-
+    return machineTipRadius->text().toDouble();
 }
 
 string MainWindow::getMachineAxisType()
 {
+    return machineType->currentText().toStdString();
+}
 
+string MainWindow::getStatorOrRotorType()
+{
+    return machineBladeType->currentText().toStdString();
 }
 
 string MainWindow::getAnalysisType()
 {
-
+    return machineAnalysis->currentText().toStdString();
 }
 
 doubles MainWindow::getMinParamsRange()
 {
-
+    doubles params;
+    for (unsigned int i = 0; i < rangeSliders.size(); i++)
+    {
+        params.push_back(rangeSliders[i]->GetMinimun());
+    }
+    return params;
 }
 
 doubles MainWindow::getMaxParamsRange()
 {
+    doubles params;
+    for (unsigned int i = 0; i < rangeSliders.size(); i++)
+    {
+        params.push_back(rangeSliders[i]->GetMaximun());
+    }
+    return params;
+}
 
+// //////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////
+
+void MainWindow::setN(int value)
+{
+    bsplineNEdit->setText(QString::number(value));
+}
+
+void MainWindow::setNumCP(int value)
+{
+    bsplineCPnumEdit->setText(QString::number(value));
+}
+
+void MainWindow::setNumPoints(int value)
+{
+    bsplineNumPointsEdit->setText(QString::number(value));
+}
+
+void MainWindow::setTENumPoints(int value)
+{
+    bsplineTENumPointsEdit->setText(QString::number(value));
+}
+
+void MainWindow::setTEShape(TrailingEdgeType value)
+{
+    return bsplineTEShapeCombo->setCurrentIndex(value);
+    //return bsplineTEShapeCombo->setCurrentText(QString::fromStdString(value));
+}
+
+void MainWindow::setMinParams(doubles value)
+{
+    for (auto const [index, slider] : Utils::enumerate(rangeSliders))
+        slider->SetLowerValue(value[index]);
+//    if (checkBoxAutoMINMAX->isChecked())
+//        updateMINMAX();
+}
+
+void MainWindow::setMaxParams(doubles value)
+{
+    for (auto const [index, slider] : Utils::enumerate(rangeSliders))
+        slider->SetUpperValue(value[index]);
+//    if (checkBoxAutoMINMAX->isChecked())
+//        updateMINMAX();
+}
+
+void MainWindow::setAdjustableIndexes(ints value)
+{
+    bspline->setAdjustableIndices(value);
+    // TODO MOVE POINTS IN THE CORRECT SERIES
+}
+
+void MainWindow::setTEMotion(TEMotion value)
+{
+    return bsplineTEMotionCombo->setCurrentIndex(value);
+}
+
+void MainWindow::setKnots(Knots value)
+{
+    listActiveKnots->setKnots(value);
+}
+
+void MainWindow::setMachineRadiusHub(double value)
+{
+    machineHubRadius->setText(QString::number(value));
+}
+
+void MainWindow::setMachineRadiusTip(double value)
+{
+    machineTipRadius->setText(QString::number(value));
+}
+
+void MainWindow::setMachineAxisType(string value)
+{
+    machineType->setCurrentText(QString::fromStdString(value));
+}
+
+void MainWindow::setStatorOrRotorType(string value)
+{
+    machineBladeType->setCurrentText(QString::fromStdString(value));
+}
+
+void MainWindow::setAnalysisType(string value)
+{
+    machineAnalysis->setCurrentText(QString::fromStdString(value));
+}
+
+void MainWindow::setMinParamsRange(doubles value)
+{
+    for (auto const [index, slider] : Utils::enumerate(rangeSliders))
+        slider->SetMinimum(value[index]);
+}
+
+void MainWindow::setMaxParamsRange(doubles value)
+{
+    for (auto const [index, slider] : Utils::enumerate(rangeSliders))
+        slider->SetMaximum(value[index]);
 }
 
 // //////////////////////////////////////////////////////////////////
@@ -1873,10 +2036,20 @@ void MainWindow::createMenu()
     openAct->setStatusTip(tr("Open an existing file"));
     //connect(openAct, &QAction::triggered, this, &MainWindow::open);
 
-    QAction *saveAct = new QAction(tr("&Save"), this);
+    QAction *saveAct = new QAction(tr("&Save Settings"), this);
     saveAct->setShortcuts(QKeySequence::Save);
-    saveAct->setStatusTip(tr("Save the document to disk"));
-    //connect(saveAct, &QAction::triggered, this, &MainWindow::save);
+    saveAct->setStatusTip(tr("Save the settings to disk"));
+    connect(saveAct, &QAction::triggered, this, &MainWindow::saveSettingsDialog);
+
+    QAction *loadAct = new QAction(tr("&Load Settings"), this);
+    loadAct->setShortcuts(QKeySequence::Save);
+    loadAct->setStatusTip(tr("Load the settings from disk"));
+    connect(loadAct, &QAction::triggered, this, &MainWindow::loadSettingsDialog);
+
+    QAction *exportAct = new QAction(tr("&Export Profile.."), this);
+    exportAct->setShortcuts(QKeySequence::Save);
+    exportAct->setStatusTip(tr("Export the profile data"));
+    connect(exportAct, &QAction::triggered, this, &MainWindow::exportProfileDialog);
 
     QAction *printAct = new QAction(tr("&Print..."), this);
     printAct->setShortcuts(QKeySequence::Print);
@@ -1891,6 +2064,8 @@ void MainWindow::createMenu()
     fileMenu->addAction(newAct);
     fileMenu->addAction(openAct);
     fileMenu->addAction(saveAct);
+    fileMenu->addAction(loadAct);
+    fileMenu->addAction(exportAct);
     fileMenu->addAction(exitAct);
 
     QMenu *editMenu = menuBar()->addMenu(tr("&Edit"));
@@ -1902,11 +2077,32 @@ void MainWindow::createMenu()
 void MainWindow::loadSettings(string filename)
 {
     Settings settings(filename);
+    data.loadFromSettings(&settings, "profile-data");
+    data.setFile(settings.getstring("filename"));
+    bspineFilenameEdit->setText(QString::fromStdString(data.getFileName()));
+    updatePointsChart();
+
+    setNumCP(settings.getint("bspline-numcp"));
+    setN(settings.getint("bspline-degree"));
+    setNumPoints(settings.getint("bspline-numpoints"));
+    setTEShape((TrailingEdgeType)settings.getint("bspline-te-shape"));
+    setTENumPoints(settings.getint("bspline-te-numpoints"));
+    setTEMotion((TEMotion)settings.getint("bspline-te-motion"));
+    setMachineRadiusHub(settings.getdouble("machine-radius-hub"));
+    setMachineRadiusTip(settings.getdouble("machine-radius-tip"));
+    setMachineAxisType(settings.getstring("machine-axis-type"));
+    setAnalysisType(settings.getstring("analysis-type"));
+    setMinParamsRange(settings.getdoubles("params-ranges-min"));
+    setMaxParamsRange(settings.getdoubles("params-ranges-max"));
+    setMinParams(settings.getdoubles("params-min"));
+    setMaxParams(settings.getdoubles("params-max"));
+    setKnots(settings.getknots("knots"));
 }
 
 void MainWindow::saveSettings(string filename)
 {
     Settings settings;
+    settings.setvalue("filename", data.getFileName());
     settings.setvalue("bspline-numcp", getNumCP());
     settings.setvalue("bspline-degree", getN());
     settings.setvalue("bspline-numpoints", getNumPoints());
@@ -1922,12 +2118,44 @@ void MainWindow::saveSettings(string filename)
     settings.setvalues("params-min", getMinParams());
     settings.setvalues("params-max", getMaxParams());
     settings.setvalues("knots", getKnotSequence().getKnots());
-
+    data.saveToSettings(&settings, "profile-data");
     settings.save(filename);
-
     //settings.setvalues("knots-types", getKnotSequence().getKnots());
 
     //settings.setvalue("knots-1", getKnotSequence());
+}
+
+void MainWindow::exportProfile(string folder)
+{
+    if (this->data.getFileName().size() > 0 && bspline && bspline->getCParray().size() > 0)
+    {
+        Settings scriptParameters;
+        scriptParameters.setvalue("bspline-CPnumber", getNumCP());
+        scriptParameters.setvalue("bspline-n", getN());
+        scriptParameters.setvalue("bspline-points", getNumPoints());
+        scriptParameters.setvalue("bspline-te-shape", getTEShape());
+        scriptParameters.setvalue("bspline-te-points", getTENumPoints());
+        scriptParameters.setvalue("bspline-te-motion", getTEMotion());
+        scriptParameters.setvalue("bspline-te-tangent", (string)"final"); // TODO
+        scriptParameters.setvalue("machine-radius-hub", getMachineRadiusHub());
+        scriptParameters.setvalue("machine-radius-shroud", getMachineRadiusTip());
+        scriptParameters.setvalue("machine-type", getMachineAxisType());
+        scriptParameters.setvalue("machine-statorrotor", getStatorOrRotorType());
+        scriptParameters.setvalue("analysis-type", getAnalysisType());
+        scriptParameters.save(folder + "/Script_Params_Parameterization.txt");
+
+    //    MatrixXd  knotsarray(getKnotSequence().getSequence({}));
+    //    Utils::matrixtofile(folder + "/u.txt", knotsarray);
+
+        ints adjustableindexes = getAdjustableIndexes();
+        Point::savePoints(folder + "/CPadj.txt", Utils::extract(bspline->getCParray(), adjustableindexes), " ", &adjustableindexes);
+
+        ints fixedindexes = Utils::complementindexes(getAdjustableIndexes(), bspline->getCParray().size());
+        Point::savePoints(folder  + "/CPfixed.txt", Utils::extract(bspline->getCParray(), fixedindexes), " ", &fixedindexes);
+
+        QTUtils::savewidgettosvg(folder + "/bspline-errors.svg", chartErrorView);
+        QTUtils::savewidgettosvg(folder + "/bspline-image.svg", chartView);
+    }
 }
 
 

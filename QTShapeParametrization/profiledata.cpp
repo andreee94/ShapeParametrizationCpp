@@ -5,6 +5,7 @@
 #include "string"
 #include <vector>
 #include <algorithm>
+#include <Settings.h>
 
 typedef std::vector<double> doubles;
 typedef std::vector<Point> Points;
@@ -239,4 +240,38 @@ void ProfileData:: computePointsAndTE(Points &curvePoints, Points &TEPoints)
 void ProfileData::setLastPointIndex(int value)
 {
     lastPointIndex = value;
+}
+
+void ProfileData::saveToSettings(Settings* settings, const string key) const
+{
+    settings->setvalue(key + "-filename", filename);
+    settings->setvalue(key + "-columnX", columnX);
+    settings->setvalue(key + "-columnY", columnY);
+    settings->setvalue(key + "-columnR", columnR);
+    settings->setvalue(key + "-R", R);
+    settings->setvalue(key + "-reverseX", reverseX);
+    settings->setvalue(key + "-reverseY", reverseY);
+    settings->setvalue(key + "-reverseZ", reverseZ);
+    settings->setvalue(key + "-frameOfReference", frameOfReference);
+    settings->setvalue(key + "-firstPointIndex", firstPointIndex);
+    settings->setvalue(key + "-lastPointIndex", lastPointIndex);
+    settings->setvalues(key + "-curvePointsIndex", curvePointsIndex);
+    settings->setvalues(key + "-TEPointsIndex", TEPointsIndex);
+}
+
+void ProfileData::loadFromSettings(Settings *settings, const string key)
+{
+    filename = settings->getstring(key + "-filename");
+    columnX = settings->getint(key + "-columnX");
+    columnY = settings->getint(key + "-columnY");
+    columnR = settings->getint(key + "-columnR");
+    R = settings->getdouble(key + "-R");
+    reverseX = settings->getbool(key + "-reverseX");
+    reverseY = settings->getbool(key + "-reverseY");
+    reverseZ = settings->getbool(key + "-reverseZ");
+    frameOfReference = (FrameOfReference)settings->getint(key + "-frameOfReference");
+    firstPointIndex = settings->getint(key + "-firstPointIndex");
+    lastPointIndex = settings->getint(key + "-lastPointIndex");
+    curvePointsIndex = settings->getints(key + "-curvePointsIndex");
+    TEPointsIndex = settings->getints(key + "-TEPointsIndex");
 }

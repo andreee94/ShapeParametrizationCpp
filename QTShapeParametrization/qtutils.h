@@ -32,6 +32,7 @@ public:
     static void resetAxes(QChart* chart, vector<Point> points, double margin=0.05);
     static void setRangeIfLarger(QValueAxis *axis, double min, double max);
     static void clearLayout(QLayout *layout);
+    static void savewidgettosvg(string filename, QWidget *widget);
 
 };
 

@@ -5,6 +5,7 @@
 #include "Point.h"
 #include "string"
 #include <QPointF>
+#include <Settings.h>
 #include <vector>
 
 
@@ -13,7 +14,7 @@ typedef std::vector<Point> Points;
 
 using namespace std;
 
-enum FrameOfReference { CARTESIAN, CYLINDRICAL};
+enum FrameOfReference { CARTESIAN=0, CYLINDRICAL=1};
 
 class ProfileData
 {
@@ -34,6 +35,9 @@ public:
     //void setLastPoint(const Point &value);
     void setFirstPointIndex(int value);
     void setLastPointIndex(int value);
+
+    void saveToSettings(Settings* settings, const string key) const;
+    void loadFromSettings(Settings *settings, const string key);
 
     double Value( int row, int col ) const { return this->data.Value(row, col); }
 

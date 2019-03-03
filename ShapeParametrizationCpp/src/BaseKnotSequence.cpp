@@ -44,7 +44,8 @@ BaseKnotSequence *BaseKnotSequence::addPrototype(string type, BaseKnotSequence *
 strings BaseKnotSequence::getValuesStrings()
 {
     vector<std::variant<int, double, bool>> values = getValues();
-    strings ss(values.size());
+    strings ss;
+    ss.reserve(values.size());
     for (auto const [index, value] : Utils::enumerate(values))
     {
         if (property_types[index] == ParamType::INT)
@@ -55,6 +56,21 @@ strings BaseKnotSequence::getValuesStrings()
             ss.push_back(std::to_string(std::get<bool>(value)));
     }
     return ss;
+}
+
+void BaseKnotSequence::setValuesStrings(strings ss)
+{
+    vector<std::variant<int, double, bool>> values;
+    for (auto const [index, value] : Utils::enumerate(ss))
+    {
+        if (property_types[index] == ParamType::INT)
+            values.push_back(std::stoi(value));
+        else if (property_types[index] == ParamType::DOUBLE)
+            values.push_back(std::stod(value));
+        else if (property_types[index] == ParamType::BOOL)
+            values.push_back(Utils::getbool(value));
+    }
+    setValues(values);
 }
 
 void BaseKnotSequence::setValues(vector<std::variant<int, double, bool>> values)

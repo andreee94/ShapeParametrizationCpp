@@ -29,14 +29,14 @@ class Settings
         /** Copy constructor
          *  \param other Object to copy from
          */
-        Settings(const Settings& other);
+        //Settings(const Settings& other);
         /** Assignment operator
          *  \param other Object to assign from
          *  \return A reference to this
          */
         Settings& operator=(const Settings& other);
         /** Default destructor */
-        virtual ~Settings();
+        //virtual ~Settings();
 
         string getstring(string key);
         int getint(string key);
@@ -54,6 +54,7 @@ class Settings
         bools getbools(string key);
         Points getpoints(string key);
         Knots getknots(string key);
+        vector<BaseKnotSequence::ParamType> getparamtypearray(string key);
 
         void setvalue(string key, string value);
         void setvalue(string key, bool value);

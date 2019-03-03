@@ -377,7 +377,8 @@ string Utils::tostring( std::ostream& str )
 
 strings Utils::tostring( const doubles &values )
 {
-    strings ss(values.size());
+    strings ss;
+    ss.reserve(values.size());
     for (auto d : values)
         ss.push_back(std::to_string(d));
     return ss;
@@ -385,7 +386,8 @@ strings Utils::tostring( const doubles &values )
 
 strings Utils::tostring( const ints &values )
 {
-    strings ss(values.size());
+    strings ss;
+    ss.reserve(values.size());
     for (auto d : values)
         ss.push_back(std::to_string(d));
     return ss;
@@ -393,9 +395,11 @@ strings Utils::tostring( const ints &values )
 
 strings Utils::tostring( const bools &values )
 {
-    strings ss(values.size());
+    strings ss;
+    ss.reserve(values.size());
     for (auto d : values)
-        ss.push_back(std::to_string(d));
+        ss.push_back(d ? "true" : "false");
+    // ss.push_back(std::to_string(d));
     return ss;
 }
 
@@ -468,6 +472,26 @@ doubles Utils::birational(double start, double end, double q1, double q2, double
     uarray.insert(uarray.end(), uarray_right.begin(), uarray_right.end());
     uarray = Utils::extract(uarray, startIncluded ? 0 : 1, endIncluded ? 0 : 1);
     return uarray;
+}
+
+void Utils::matrixtofile(const string filename, MatrixXd matrix)
+{
+    ofstream file;
+    file.open(filename, ios::out);
+    file << matrix << endl;
+    file.close();
+}
+
+ints Utils::complementindexes(const ints &indexes, int totalnum)
+{
+    ints res;
+    res.reserve(totalnum - indexes.size());
+    for (int i = 0; i < totalnum; i++)
+    {
+        if (!Utils::contains(indexes, i))
+            res.push_back(i);
+    }
+    return res;
 }
 
 

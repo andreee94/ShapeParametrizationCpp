@@ -325,7 +325,7 @@ void LoadProfileDialog::clickableEventList(QScatterSeries *series, QPointF point
 void LoadProfileDialog::OpenFileDialog()
 {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open Profile Data"), "/home/andrea", tr("Every Text Files (* *.txt)"));
-    if (fileName.toUtf8().constData() != this->data.getFileName())
+    if (fileName.toUtf8().constData() != this->data.getFileName() && fileName != "")
     {
         loadEdit->setText(fileName);
         data.setFile(fileName.toUtf8().constData());
