@@ -1,4 +1,4 @@
-# ShapeParametrizationCpp
+# Shape Parametrization
 A shape parametrization tool which uses bspline curves in c++
 
 The tool provides the GUI to interpolate a set of points with B-Spline curves.
