@@ -8,3 +8,8 @@ The tool has been developed with in mind the interpolation of blades,
  so than it is possible to remove the trailing edge points and interpolate it independently with a circle or an ellipse.
 
 The control points are moved orthogonally respect to the curve directly within the GUI.
+
+# TODO
+- [ ] Knots optimization.
+	- Choose between the knots which are fixed and which one to optimize
+

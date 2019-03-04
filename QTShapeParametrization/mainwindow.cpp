@@ -1446,14 +1446,20 @@ int MainWindow::updateKnotCount()
 
 void MainWindow::showErrorChart()
 {
-    stackedLayoutChart->setCurrentIndex(1);
-    stackedLayoutCheckBoxGroup->setCurrentIndex(1);
+    if (stackedLayoutChart->currentIndex() == 0)
+    {
+        stackedLayoutChart->setCurrentIndex(1);
+        stackedLayoutCheckBoxGroup->setCurrentIndex(1);
+    }
 }
 
 void MainWindow::showBsplineChart()
 {
-    stackedLayoutChart->setCurrentIndex(0);
-    stackedLayoutCheckBoxGroup->setCurrentIndex(0);
+    if (stackedLayoutChart->currentIndex() == 1)
+    {
+        stackedLayoutChart->setCurrentIndex(0);
+        stackedLayoutCheckBoxGroup->setCurrentIndex(0);
+    }
 }
 
 void MainWindow::compareButtonClicked()
@@ -2024,17 +2030,18 @@ void MainWindow::setMaxParamsRange(doubles value)
 
 void MainWindow::createMenu()
 {
-    QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
+    // //////////////////////////////////////////////////////////////////
+    // //////////////////////////////////////////////////////////////////
 
     QAction *newAct = new QAction(tr("&New"), this);
     newAct->setShortcuts(QKeySequence::New);
     newAct->setStatusTip(tr("Create a new file"));
     //connect(newAct, &QAction::triggered, this, &MainWindow::newFile);
 
-    QAction *openAct = new QAction(tr("&Open..."), this);
+    QAction *openAct = new QAction(tr("&Open profile..."), this);
     openAct->setShortcuts(QKeySequence::Open);
     openAct->setStatusTip(tr("Open an existing file"));
-    //connect(openAct, &QAction::triggered, this, &MainWindow::open);
+    connect(openAct, &QAction::triggered, this, &MainWindow::loadFile);
 
     QAction *saveAct = new QAction(tr("&Save Settings"), this);
     saveAct->setShortcuts(QKeySequence::Save);
@@ -2061,14 +2068,63 @@ void MainWindow::createMenu()
     exitAct->setStatusTip(tr("Exit the application"));
     connect(exitAct, &QAction::triggered, this, &QWidget::close);
 
-    fileMenu->addAction(newAct);
+    QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
+//    fileMenu->addAction(newAct);
     fileMenu->addAction(openAct);
     fileMenu->addAction(saveAct);
     fileMenu->addAction(loadAct);
     fileMenu->addAction(exportAct);
     fileMenu->addAction(exitAct);
 
+    // //////////////////////////////////////////////////////////////////
+    // //////////////////////////////////////////////////////////////////
+
+    QAction *computeCPAct = new QAction(tr("Compute C&P"), this);
+    computeCPAct->setStatusTip(tr("Compute the Control Points"));
+    connect(computeCPAct, &QAction::triggered, this, &MainWindow::computeCP);
+
+    QAction *optimizeKnotsAct = new QAction(tr("Optimiz&e Knots"), this);
+    optimizeKnotsAct->setStatusTip(tr("Optimize the knot sequence"));
+    connect(optimizeKnotsAct, &QAction::triggered, this, &MainWindow::optimizeKnots);
+
+    QAction *updateTEAct = new QAction(tr("Update T&E"), this);
+    updateTEAct->setStatusTip(tr("Update the Trailing Edge"));
+    connect(updateTEAct, &QAction::triggered, this, &MainWindow::updateTE);
+
+    QAction *updateMinMaxAct = new QAction(tr("Update Curves"), this);
+    updateMinMaxAct->setStatusTip(tr("Update the Edited Curves"));
+    connect(updateMinMaxAct, &QAction::triggered, this, &MainWindow::updateMINMAX);
+
     QMenu *editMenu = menuBar()->addMenu(tr("&Edit"));
+    editMenu->addAction(computeCPAct);
+    editMenu->addAction(optimizeKnotsAct);
+    editMenu->addAction(updateTEAct);
+    editMenu->addAction(updateMinMaxAct);
+
+    // //////////////////////////////////////////////////////////////////
+    // //////////////////////////////////////////////////////////////////
+
+    QAction *resetChartAct = new QAction(tr("Reset"), this);
+    resetChartAct->setStatusTip(tr("Reset Chart Scroll and Position"));
+    connect(resetChartAct, &QAction::triggered, this, &MainWindow::resetScaleAndScroll);
+
+    QAction *curveChartAct = new QAction(tr("Show Curve"), this);
+    resetChartAct->setStatusTip(tr("Show the Curve Chart"));
+    connect(resetChartAct, &QAction::triggered, this, &MainWindow::showBsplineChart);
+
+    QAction *errorChartAct = new QAction(tr("Show Error"), this);
+    errorChartAct->setStatusTip(tr("Show the Error Chart"));
+    connect(errorChartAct, &QAction::triggered, this, &MainWindow::showErrorChart);
+
+    QMenu *chartMenu = menuBar()->addMenu(tr("&Chart"));
+    chartMenu->addAction(resetChartAct);
+    chartMenu->addAction(curveChartAct);
+    chartMenu->addAction(errorChartAct);
+
+    // //////////////////////////////////////////////////////////////////
+    // //////////////////////////////////////////////////////////////////
+    /// \brief helpMenu
+    ///
     QMenu *helpMenu = menuBar()->addMenu(tr("&Help"));
 
 
