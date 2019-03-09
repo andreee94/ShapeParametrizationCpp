@@ -56,7 +56,7 @@ SOURCES += \
     qtutils.cpp \
     knotlabel.cpp \
     knotlistsource.cpp \
-    knotlistdest.cpp
+    knotlistdest.cpp \
 
 HEADERS += \
         mainwindow.h \
@@ -76,7 +76,7 @@ HEADERS += \
     qtutils.h \
     knotlabel.h \
     knotlistsource.h \
-    knotlistdest.h
+    knotlistdest.h \
     mychart.h
 
 

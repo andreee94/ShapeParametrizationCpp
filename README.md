@@ -9,6 +9,9 @@ The tool has been developed with in mind the interpolation of blades,
 
 The control points are moved orthogonally respect to the curve directly within the GUI.
 
+# Release file:
+The file to run the program is: `QTShapeParametrization-run`
+
 # TODO
 - [ ] Knots optimization.
 	- Choose between the knots which are fixed and which one to optimize
