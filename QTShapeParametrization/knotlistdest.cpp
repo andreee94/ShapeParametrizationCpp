@@ -144,7 +144,9 @@ void KnotListDest::dropEvent(QDropEvent *event)
             is_sorting = false;
         }
         else {
-            knots.insert(knots.begin() + index, getKnotFromName(knottype));
+            BaseKnotSequence *knot = getKnotFromName(knottype);
+            knots.insert(knots.begin() + index, knot);
+            emit knotAdded(knot);
         }
 
         setCurrentRow(index);
@@ -160,7 +162,9 @@ void KnotListDest::dragLeaveEvent(QDragLeaveEvent *event)
 {
     if (is_sorting) // it comes from inside this list
     {
+        BaseKnotSequence *knot = knots.at(sorting_index_start);
         knots.erase(knots.begin() + sorting_index_start);
+        emit knotRemoved(knot);
         is_sorting = false;
         event->accept();
     }
@@ -257,7 +261,9 @@ void KnotListDest::mouseDoubleClickEvent( QMouseEvent *event )
         if (i != -1)
         {
             delete takeItem(i);
+            BaseKnotSequence *knot = knots.at(i);
             knots.erase(knots.begin() + i);
+            emit knotRemoved(knot);
             //delete knots[i];
         }
     }

@@ -57,6 +57,7 @@ SOURCES += \
     knotlabel.cpp \
     knotlistsource.cpp \
     knotlistdest.cpp \
+    optimizeknotsdialog.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -77,7 +78,8 @@ HEADERS += \
     knotlabel.h \
     knotlistsource.h \
     knotlistdest.h \
-    mychart.h
+    mychart.h \
+    optimizeknotsdialog.h
 
 
 #HEADERS += *.h

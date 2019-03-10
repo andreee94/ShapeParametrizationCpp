@@ -22,6 +22,8 @@ class KnotListDest : public QListWidget
 
     signals:
         void knotChanged(BaseKnotSequence* knot);
+        void knotAdded(BaseKnotSequence* knot);
+        void knotRemoved(BaseKnotSequence* knot);
 
     protected slots:
         void currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);

@@ -5,6 +5,7 @@
 #include "rangesliderlayout.h"
 #include "knotlistsource.h"
 #include "knotlistdest.h"
+#include "optimizeknotsdialog.h"
 //#include "ui_mainwindow.h"
 #include <QtWidgets>
 #include <QtCharts>
@@ -1125,6 +1126,8 @@ QLayout *MainWindow::generateKnotListLayout()
 
     listActiveKnots->setMinimumWidth(160);
     listAllKnots->setMinimumWidth(160);
+    listAllKnots->setMinimumWidth(160);
+    listAllKnots->setMaximumWidth(240);
     connect(listActiveKnots, &KnotListDest::knotChanged, this, &MainWindow::knotSelectedChanged);
 
     knotCountLabel = new QLabel;
@@ -1773,6 +1776,16 @@ void MainWindow::computeCP()
 
 void MainWindow::optimizeKnots()
 {
+    OptimizeKnotsDialog *dialog = new OptimizeKnotsDialog;
+    dialog->setWindowModality(Qt::WindowModality::ApplicationModal);
+    dialog->setN(getN());
+    dialog->setNumCP(getNumCP());
+    dialog->setKnotSequence(getKnotSequence());
+    int ok = dialog->exec();
+    if (ok)
+    {
+    }
+
     if (this->data.getFileName().size() > 0 && bspline && bspline->getCParray().size() > 0)
     {
         saveSettings("settings");

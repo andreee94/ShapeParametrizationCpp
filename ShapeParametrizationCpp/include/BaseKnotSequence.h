@@ -85,6 +85,7 @@ class BaseKnotSequence
         void setEndIncluded(bool value) { endIncluded = value; }
 
         virtual void initProps() = 0 ;
+        size_t propsCount() {return property_names.size(); }
         vector<string> propNames(){ return property_names; }
         vector<ParamType> propTypes(){ return property_types; }
         string propName(size_t i){ return property_names[i]; }
