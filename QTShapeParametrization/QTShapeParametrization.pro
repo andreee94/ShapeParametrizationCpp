@@ -67,6 +67,7 @@ HEADERS += \
         #$$PWD/../ShapeParametrizationCpp/include/Point.h \
         #$$PWD/../ShapeParametrizationCpp/include/Line.h \
         $$PWD/../ShapeParametrizationCpp/include/*.h \
+        $$PWD/../optim/optim.hpp \
     mainwindow.h \
     mychartview.h \
     mychart.h \

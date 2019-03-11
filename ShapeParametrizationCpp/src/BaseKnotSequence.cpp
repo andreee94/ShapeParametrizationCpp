@@ -157,6 +157,7 @@ void UniformKS::initProps()
 {
     this->property_names = {"Start", "End", "Include Start", "Include End", "Steps"};
     this->property_types = {ParamType::DOUBLE, ParamType::DOUBLE, ParamType::BOOL, ParamType::BOOL, ParamType::INT};
+    this->property_optimizables = {false, false, false, false, false};
 }
 
 doubles UniformKS::getSequence(doubles params)
@@ -200,6 +201,7 @@ void ValueKS::initProps()
 {
     this->property_names = {"Value"};
     this->property_types = {ParamType::DOUBLE};
+    this->property_optimizables = {false};
 }
 
 doubles ValueKS::getSequence(doubles params)
@@ -237,6 +239,7 @@ void MultiplicityValueKS::initProps()
 {
     this->property_names = {"Value", "Multiplicity"};
     this->property_types = {ParamType::DOUBLE, ParamType::INT};
+    this->property_optimizables = {false, false};
 }
 
 doubles MultiplicityValueKS::getSequence(doubles params)
@@ -276,6 +279,7 @@ void BeginKS::initProps()
 {
     this->property_names = {"Bspline Degree"};
     this->property_types = {ParamType::INT};
+    this->property_optimizables = {false};
 }
 
 doubles BeginKS::getSequence(doubles params)
@@ -314,6 +318,7 @@ void EndKS::initProps()
 {
     this->property_names = {"Bspline Degree"};
     this->property_types = {ParamType::INT};
+    this->property_optimizables = {false};
 }
 
 doubles EndKS::getSequence(doubles params)
@@ -351,6 +356,7 @@ void RationalKS::initProps()
 {
     this->property_names = {"Start", "End", "Include Start", "Include End", "Points number", "Ratio"};
     this->property_types = {ParamType::DOUBLE, ParamType::DOUBLE, ParamType::BOOL, ParamType::BOOL, ParamType::INT, ParamType::DOUBLE};
+    this->property_optimizables = {false, false, false, false, false, true};
 }
 
 doubles RationalKS::getSequence(doubles params)
@@ -394,6 +400,7 @@ void BiRationalKS::initProps()
 {
     this->property_names = {"Start", "End", "Include Start", "Include End", "Include Center", "Points number", "Ratio 1", "Ratio 2", "Center"};
     this->property_types = {ParamType::DOUBLE, ParamType::DOUBLE, ParamType::BOOL, ParamType::BOOL,ParamType::BOOL, ParamType::INT, ParamType::DOUBLE, ParamType::DOUBLE, ParamType::DOUBLE};
+    this->property_optimizables = {false, false, false, false, false, false, true, true, true};
     }
 
 doubles BiRationalKS::getSequence(doubles params)
@@ -446,6 +453,7 @@ void CumulKS::initProps()
 {
     this->property_names = {"Start", "End", "Include Start", "Include End"};
     this->property_types = {ParamType::DOUBLE, ParamType::DOUBLE, ParamType::BOOL, ParamType::BOOL};
+    this->property_optimizables = {false, false, false, false};
 }
 
 doubles CumulKS::getSequence(doubles params)
@@ -485,6 +493,7 @@ void CustomKS::initProps()
 {
     this->property_names = {"Start", "End", "Include Start", "Include End"};
     this->property_types = {ParamType::DOUBLE, ParamType::DOUBLE, ParamType::BOOL, ParamType::BOOL};
+    this->property_optimizables = {false, false, false, false};
 }
 
 doubles CustomKS::getSequence(doubles params)

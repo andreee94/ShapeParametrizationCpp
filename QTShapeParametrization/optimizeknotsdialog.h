@@ -60,6 +60,7 @@ public slots:
 private:
     QWidget *generateKnotChartLayout();
     QLayout *generateMainLayout();
+    QLayout *generateOptSettingsLayout();
 
     int updateKnotSeries();
     int updateKnotCount();

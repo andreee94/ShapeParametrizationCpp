@@ -88,8 +88,10 @@ class BaseKnotSequence
         size_t propsCount() {return property_names.size(); }
         vector<string> propNames(){ return property_names; }
         vector<ParamType> propTypes(){ return property_types; }
+        vector<bool> propOptimizables(){ return property_optimizables; }
         string propName(size_t i){ return property_names[i]; }
         ParamType propType(size_t i){ return property_types[i]; }
+        bool propOptimizable(size_t i){ return property_optimizables[i]; }
 
         virtual BaseKnotSequence *clone() const = 0;
         virtual string type() const = 0;
@@ -101,6 +103,7 @@ class BaseKnotSequence
     protected:
         vector<string> property_names;
         vector<ParamType> property_types;
+        vector<bool> property_optimizables;
         double start=0;
         double end=1;
         int numParams=0;

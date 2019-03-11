@@ -23,6 +23,7 @@
 #include "mychart.h"
 #include "optimizeknotsdialog.h"
 #include "qtutils.h"
+#include "rangesliderlayout.h"
 
 #include <QVBoxLayout>
 
@@ -168,16 +169,61 @@ QLayout *OptimizeKnotsDialog::generateMainLayout()
     listAllPropsOut->addWidget(scrollLayout);
     allPropsGroupBox->setLayout(listAllPropsOut);
 
+    QHBoxLayout *buttonsBox = new QHBoxLayout;
+    buttonsBox->addWidget(new QPushButton("Random Test"));
+    buttonsBox->addWidget(new QPushButton("Optimize"));
+
     gridLayout->addWidget(labelActiveKnots, 0, 0, 1, 1);
     gridLayout->addWidget(labelAllKnots, 0, 1, 1, 1);
 
     gridLayout->addWidget(listActiveKnots, 1, 0, 1, 1);
     gridLayout->addWidget(listAllKnots, 1, 1, 1, 1);
-    gridLayout->addWidget(allPropsGroupBox, 0, 4, 4, 2);
+    gridLayout->addLayout(generateOptSettingsLayout(), 2, 0, 2, 2);
+    gridLayout->addWidget(allPropsGroupBox, 0, 4, 4, 3);
 
-    gridLayout->addWidget(propGroupBox, 0, 2, 4, 2);
-    gridLayout->addLayout(knotHBox, 3, 0, 1, 2);
+    gridLayout->addWidget(propGroupBox, 0, 2, 3, 2);
+    gridLayout->addLayout(buttonsBox, 3, 2, 1, 1);
+    gridLayout->addLayout(knotHBox, 4, 0, 1, 2);
     return gridLayout;
+}
+
+QLayout *OptimizeKnotsDialog::generateOptSettingsLayout()
+{
+    // //////////////////////////////////////////////////////////////////
+    QGroupBox *errorGroupBox = new QGroupBox(tr("Exclusive Radio Buttons"));
+    QRadioButton *radioErrorPrecise = new QRadioButton(tr("Precise Error"));
+    QRadioButton *radioErrorApprox = new QRadioButton(tr("Approximated Error"));
+    QVBoxLayout *errorAccuracyVbox = new QVBoxLayout;
+    errorAccuracyVbox->addWidget(radioErrorPrecise);
+    errorAccuracyVbox->addWidget(radioErrorApprox);
+    errorGroupBox->setLayout(errorAccuracyVbox);
+
+    // //////////////////////////////////////////////////////////////////
+    QGroupBox *maxcAvgGroupBox = new QGroupBox(tr("Exclusive Radio Buttons"));
+    QRadioButton *radioErrorAvg = new QRadioButton(tr("Max Error"));
+    QRadioButton *radioErrorMax = new QRadioButton(tr("Average Error"));
+    QVBoxLayout *errorMaxAvgVbox = new QVBoxLayout;
+    errorMaxAvgVbox->addWidget(radioErrorAvg);
+    errorMaxAvgVbox->addWidget(radioErrorMax);
+    maxcAvgGroupBox->setLayout(errorMaxAvgVbox);
+
+    // //////////////////////////////////////////////////////////////////
+    QGroupBox *rangeBox = new QGroupBox(tr("Number of Profile Points"));
+    QVBoxLayout *rangeLayout = new QVBoxLayout;
+    RangeSliderLayout *rangeslider = new RangeSliderLayout;
+    rangeslider->SetRange(-1, 1);
+    rangeLayout->addWidget(rangeslider);
+    rangeBox->setLayout(rangeLayout);
+
+    // //////////////////////////////////////////////////////////////////
+    QGridLayout *mainGridLayout = new QGridLayout;
+    //| errorGroupBox | maxcAvgGroupBox |
+    //|             label               |
+    //|             range               |
+    mainGridLayout->addWidget(errorGroupBox, 0, 0, 1, 1);
+    mainGridLayout->addWidget(maxcAvgGroupBox, 0, 1, 1, 1);
+    mainGridLayout->addWidget(rangeBox, 2, 0, 1, 2);
+    return mainGridLayout;
 }
 
 // //////////////////////////////////////////////////////////////////
@@ -322,10 +368,13 @@ int OptimizeKnotsDialog::updateFixedKnotProps(Knots knots)
     QTUtils::clearLayout(listAllProps);
     for (auto knot : knots)
     {
-        listAllProps->addWidget(new QLabel("- " + QString::fromStdString(knot->type())), Qt::AlignCenter);
+        QLabel *label = new QLabel(QString::fromStdString(knot->type()));
+        label->setStyleSheet("font-weight: bold; color: " + QTUtils::color2str(QTUtils::Blue()));
+        listAllProps->addWidget(label, Qt::AlignCenter);
         for (size_t i = 0; i < knot->propsCount(); i++)
         {
             QCheckBox *checkBox = new QCheckBox(QString::fromStdString(knot->propName(i)));
+            checkBox->setEnabled(knot->propOptimizable(i));
             listAllProps->addWidget(checkBox);
         }
         listAllProps->addItem(QTUtils::separator());
