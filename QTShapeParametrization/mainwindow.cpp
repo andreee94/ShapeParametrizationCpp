@@ -1403,7 +1403,7 @@ void MainWindow::updatePointsChart()
 int MainWindow::updateKnotSeries()
 {
     knotsSeries->clear();
-    doubles uarray = getKnotSequence().getSequence({});
+    doubles uarray = getKnotSequence().getSequence();
     int maxmultiplicity = 0;
     for (unsigned int i = 0; i < uarray.size(); i++)
     {
@@ -1781,6 +1781,9 @@ void MainWindow::optimizeKnots()
     dialog->setN(getN());
     dialog->setNumCP(getNumCP());
     dialog->setKnotSequence(getKnotSequence());
+    if (this->data.getFileName().size() > 0)
+        dialog->setOriginalPoints(data.getPoints());
+    else dialog->setOriginalPoints({});
     int ok = dialog->exec();
     if (ok)
     {
@@ -1877,7 +1880,7 @@ KnotSequences MainWindow::getKnotSequence()
 
 int MainWindow::getKnotsCount()
 {
-    return getKnotSequence().getSequence({}).size();
+    return getKnotSequence().getSequence().size();
 }
 
 bool MainWindow::isNumCPChanged(bool updateOld)

@@ -27,15 +27,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 INCLUDEPATH += $$PWD/../ShapeParametrizationCpp/include
 INCLUDEPATH += $$PWD/../ShapeParametrizationCpp/src
+INCLUDEPATH += $$PWD/../dlib
 
 CONFIG += c++11
 CONFIG += c++17
+CONFIG += link_pkgconfig
+CONFIG += -lX11
 QMAKE_CXXFLAGS += -std=c++17
 QMAKE_CXXFLAGS += -fopenmp
 QMAKE_LFLAGS += -fopenmp
 QMAKE_CFLAGS_RELEASE += -fopenmp
 QMAKE_CFLAGS_DEBUG += -fopenmp
-LIBS += -fopenmp
+#LIBS += -fopenmp
+#LIBS += -pthread
+PKGCONFIG += x11
 
 SOURCES += \
         main.cpp \
@@ -57,7 +62,8 @@ SOURCES += \
     knotlabel.cpp \
     knotlistsource.cpp \
     knotlistdest.cpp \
-    optimizeknotsdialog.cpp
+    optimizeknotsdialog.cpp \
+    ../dlib/dlib/all/source.cpp
 
 HEADERS += \
         mainwindow.h \

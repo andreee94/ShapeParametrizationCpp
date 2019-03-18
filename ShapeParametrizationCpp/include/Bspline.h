@@ -71,6 +71,7 @@ class Bspline: public Evaluable, public Editable<Bspline>
         void setSettings(string filename);
 
         static Bspline interpolate(const Points &points, int numCP, int n, const KnotSequences &knotsequence);
+        static Bspline interpolate(const Points &points, int numCP, int n, const doubles &uarray);
 
         int getN() const;
         void setN(int value);

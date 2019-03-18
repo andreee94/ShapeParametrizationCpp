@@ -24,8 +24,12 @@
 #include "optimizeknotsdialog.h"
 #include "qtutils.h"
 #include "rangesliderlayout.h"
+#include <dlib/optimization.h>
+#include <dlib/global_optimization.h>
 
 #include <QVBoxLayout>
+
+
 
 OptimizeKnotsDialog::OptimizeKnotsDialog(QWidget *parent) :
     QDialog(parent)
@@ -169,21 +173,27 @@ QLayout *OptimizeKnotsDialog::generateMainLayout()
     listAllPropsOut->addWidget(scrollLayout);
     allPropsGroupBox->setLayout(listAllPropsOut);
 
+    QPushButton * randomTestButton = new QPushButton("Random Test");
+    QPushButton * optimizeButton = new QPushButton("Optimize");
     QHBoxLayout *buttonsBox = new QHBoxLayout;
-    buttonsBox->addWidget(new QPushButton("Random Test"));
-    buttonsBox->addWidget(new QPushButton("Optimize"));
+    buttonsBox->addWidget(randomTestButton);
+    buttonsBox->addWidget(optimizeButton);
+
+    connect(randomTestButton, &QPushButton::clicked, this, &OptimizeKnotsDialog::randomTestClicked);
+    connect(optimizeButton, &QPushButton::clicked, this, &OptimizeKnotsDialog::optimizeClicked);
 
     gridLayout->addWidget(labelActiveKnots, 0, 0, 1, 1);
     gridLayout->addWidget(labelAllKnots, 0, 1, 1, 1);
 
     gridLayout->addWidget(listActiveKnots, 1, 0, 1, 1);
     gridLayout->addWidget(listAllKnots, 1, 1, 1, 1);
-    gridLayout->addLayout(generateOptSettingsLayout(), 2, 0, 2, 2);
-    gridLayout->addWidget(allPropsGroupBox, 0, 4, 4, 3);
+    gridLayout->addLayout(generateOptSettingsLayout(), 2, 0, 1, 4);
+    //gridLayout->addLayout(generateOptSettingsLayout(), 2, 0, 1, 2);
+    gridLayout->addWidget(allPropsGroupBox, 0, 3, 2, 1);
 
-    gridLayout->addWidget(propGroupBox, 0, 2, 3, 2);
-    gridLayout->addLayout(buttonsBox, 3, 2, 1, 1);
-    gridLayout->addLayout(knotHBox, 4, 0, 1, 2);
+    gridLayout->addWidget(propGroupBox, 0, 2, 2, 1);
+    gridLayout->addLayout(buttonsBox, 3, 3, 1, 1);
+    gridLayout->addLayout(knotHBox, 3, 0, 1, 2);
     return gridLayout;
 }
 
@@ -194,8 +204,9 @@ QLayout *OptimizeKnotsDialog::generateOptSettingsLayout()
     QRadioButton *radioErrorPrecise = new QRadioButton(tr("Precise Error"));
     QRadioButton *radioErrorApprox = new QRadioButton(tr("Approximated Error"));
     QVBoxLayout *errorAccuracyVbox = new QVBoxLayout;
-    errorAccuracyVbox->addWidget(radioErrorPrecise);
     errorAccuracyVbox->addWidget(radioErrorApprox);
+    errorAccuracyVbox->addWidget(radioErrorPrecise);
+    radioErrorApprox->setChecked(true);
     errorGroupBox->setLayout(errorAccuracyVbox);
 
     // //////////////////////////////////////////////////////////////////
@@ -205,6 +216,7 @@ QLayout *OptimizeKnotsDialog::generateOptSettingsLayout()
     QVBoxLayout *errorMaxAvgVbox = new QVBoxLayout;
     errorMaxAvgVbox->addWidget(radioErrorAvg);
     errorMaxAvgVbox->addWidget(radioErrorMax);
+    radioErrorAvg->setChecked(true);
     maxcAvgGroupBox->setLayout(errorMaxAvgVbox);
 
     // //////////////////////////////////////////////////////////////////
@@ -222,7 +234,8 @@ QLayout *OptimizeKnotsDialog::generateOptSettingsLayout()
     //|             range               |
     mainGridLayout->addWidget(errorGroupBox, 0, 0, 1, 1);
     mainGridLayout->addWidget(maxcAvgGroupBox, 0, 1, 1, 1);
-    mainGridLayout->addWidget(rangeBox, 2, 0, 1, 2);
+    mainGridLayout->addWidget(rangeBox, 0, 2, 1, 2);
+    //mainGridLayout->addWidget(rangeBox, 2, 0, 1, 2);
     return mainGridLayout;
 }
 
@@ -316,13 +329,40 @@ void OptimizeKnotsDialog::knotAddedRemoved(BaseKnotSequence *knot)
     updateFixedKnotProps();
 }
 
+void OptimizeKnotsDialog::optimizeClicked()
+{
+    KnotSequences knotsequence = getKnotSequence();
+    knotsequence.setPropsToOptimize(getCheckBoxesValues());
+
+    auto rosen = [this, &knotsequence](const column_vector& m)
+    {
+        std::vector<double> x(m.begin(), m.end());
+        doubles err = knotsequence.computeError(numCP, n, originalPoints, x);
+        double r = *std::max_element(err.begin(), err.end());
+        cout << r << endl;
+        return r;
+    };
+
+    auto result = find_min_global(rosen, {0.2}, {0.8}, dlib::max_function_calls(300));
+    cout << result.x << endl;
+    cout << result.y << endl;
+}
+
+void OptimizeKnotsDialog::randomTestClicked()
+{
+    bools propsToOptimize = getCheckBoxesValues();
+    KnotSequences knotSequence = getKnotSequence();
+    knotSequence.setPropsToOptimize(propsToOptimize);
+    doubles uarray = knotSequence.getSequence(Utils::randvector(Utils::countTrue(propsToOptimize)));
+    updateKnotSeries(uarray);
+}
+
 // //////////////////////////////////////////////////////////////////
 // //////////////////////////////////////////////////////////////////
 
-int OptimizeKnotsDialog::updateKnotSeries()
+int OptimizeKnotsDialog::updateKnotSeries(const doubles &uarray)
 {
     knotsSeries->clear();
-    doubles uarray = getKnotSequence().getSequence({});
     int maxmultiplicity = 0;
     for (unsigned int i = 0; i < uarray.size(); i++)
     {
@@ -351,6 +391,12 @@ int OptimizeKnotsDialog::updateKnotSeries()
     return maxmultiplicity;
 }
 
+
+int OptimizeKnotsDialog::updateKnotSeries()
+{
+    return updateKnotSeries(getKnotSequence().getSequence());
+}
+
 int OptimizeKnotsDialog::updateKnotCount()
 {
     int numcp = getNumCP();
@@ -366,6 +412,8 @@ int OptimizeKnotsDialog::updateKnotCount()
 int OptimizeKnotsDialog::updateFixedKnotProps(Knots knots)
 {
     QTUtils::clearLayout(listAllProps);
+    listCheckBoxes.clear();
+
     for (auto knot : knots)
     {
         QLabel *label = new QLabel(QString::fromStdString(knot->type()));
@@ -373,13 +421,52 @@ int OptimizeKnotsDialog::updateFixedKnotProps(Knots knots)
         listAllProps->addWidget(label, Qt::AlignCenter);
         for (size_t i = 0; i < knot->propsCount(); i++)
         {
-            QCheckBox *checkBox = new QCheckBox(QString::fromStdString(knot->propName(i)));
+            QCheckBox *checkBox;
+            checkBox = new QCheckBox;
+            checkBox->setText(QString::fromStdString(knot->propName(i)));
             checkBox->setEnabled(knot->propOptimizable(i));
             listAllProps->addWidget(checkBox);
+            listCheckBoxes.append(checkBox);
         }
         listAllProps->addItem(QTUtils::separator());
     }
 }
+
+//int OptimizeKnotsDialog::updateFixedKnotProps(Knots knots)
+//{
+//    //QTUtils::clearLayout(listAllProps);
+//    int totalCheckBoxCount = 0;
+//    for (auto knot : knots)
+//    {
+//        QLabel *label = new QLabel(QString::fromStdString(knot->type()));
+//        label->setStyleSheet("font-weight: bold; color: " + QTUtils::color2str(QTUtils::Blue()));
+//        listAllProps->addWidget(label, Qt::AlignCenter);
+//        for (size_t i = 0; i < knot->propsCount(); i++)
+//        {
+//            QCheckBox *checkBox;
+//            if (i < listCheckBoxes.size())
+//                checkBox = new QCheckBox();
+//            else
+//                checkBox = listCheckBoxes.at(i);
+//            checkBox->setText(QString::fromStdString(knot->propName(i)));
+//            checkBox->setEnabled(knot->propOptimizable(i));
+//            if (i < listAllProps->count())
+//                listAllProps->replaceWidget(listAllProps->itemAt(i)->widget(), checkBox);
+//            else
+//                listAllProps->addWidget(checkBox);
+//            listCheckBoxes.append(checkBox);
+//            totalCheckBoxCount += 1;
+//        }
+//        listAllProps->addItem(QTUtils::separator());
+//    }
+
+//    if (listAllProps->count() > totalCheckBoxCount)
+//        while (listAllProps->count() > totalCheckBoxCount)
+//        {
+//            listAllProps->removeWidget(listCheckBoxes.at(listCheckBoxes.size() - 1));
+//            listCheckBoxes.pop_back();
+//        }
+//}
 
 int OptimizeKnotsDialog::updateFixedKnotProps(KnotSequences knotsequence)
 {
@@ -390,6 +477,39 @@ int OptimizeKnotsDialog::updateFixedKnotProps()
 {
     updateFixedKnotProps(getKnotSequence());
 }
+
+Points OptimizeKnotsDialog::getOriginalPoints() const
+{
+    return originalPoints;
+}
+
+void OptimizeKnotsDialog::setOriginalPoints(const Points &value)
+{
+    originalPoints = value;
+}
+
+bools OptimizeKnotsDialog::getCheckBoxesValues()
+{
+    bools res;
+    res.reserve(listCheckBoxes.size());
+    for (QCheckBox *box : listCheckBoxes)
+        res.push_back(box->isChecked());
+    return res;
+}
+
+struct errorData{
+    KnotSequences knotsequence;
+    Points originalPoints;
+    int numCP;
+    int n;
+};
+
+//double OptimizeKnotsDialog::errorfunction(const arma::Col<double> &input, void *opt_data)
+//{
+//    errorData* data = reinterpret_cast<errorData*>(opt_data);
+//    doubles error;// = data->knotsequence.computeError(data->numCP, data->n, data->originalPoints, arma::conv_to<doubles>::from(input)); //TODO
+//    return *std::max_element(std::begin(error), std::end(error));
+//}
 
 // //////////////////////////////////////////////////////////////////
 // //////////////////////////////////////////////////////////////////
@@ -407,7 +527,7 @@ void OptimizeKnotsDialog::setKnotSequence(KnotSequences knotsequence)
 
 int OptimizeKnotsDialog::getKnotsCount()
 {
-    return getKnotSequence().getSequence({}).size();
+    return getKnotSequence().getSequence().size();
 }
 
 int OptimizeKnotsDialog::getN() const

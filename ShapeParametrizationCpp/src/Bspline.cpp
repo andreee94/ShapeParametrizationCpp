@@ -277,7 +277,14 @@ Points Bspline::interpolate_getCP(const Points &points, doubles uarray, int numC
 
 Bspline Bspline::interpolate(const Points &points, int numCP, int n, const KnotSequences &knotsequence)
 {
-    doubles uarray = knotsequence.getSequence((doubles){});
+    doubles uarray = knotsequence.getSequence();
+    Points CParray = Bspline::interpolate_getCP(points, uarray, numCP, n);
+    cout << "CParray = " << CParray.size() << endl;
+    return Bspline(CParray, uarray, n);
+}
+
+Bspline Bspline::interpolate(const Points &points, int numCP, int n, const doubles &uarray)
+{
     Points CParray = Bspline::interpolate_getCP(points, uarray, numCP, n);
     cout << "CParray = " << CParray.size() << endl;
     return Bspline(CParray, uarray, n);

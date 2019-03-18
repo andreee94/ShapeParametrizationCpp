@@ -5,6 +5,7 @@
 #include <math.h>
 #include <pystring.h>
 #include <boost/lexical_cast.hpp>
+#include <random>
 
 using namespace std;
 
@@ -491,6 +492,26 @@ ints Utils::complementindexes(const ints &indexes, int totalnum)
         if (!Utils::contains(indexes, i))
             res.push_back(i);
     }
+    return res;
+}
+
+long Utils::countTrue(bools values)
+{
+    // Count the true occurrences in the vector of bools
+    return std::count_if(values.begin(), values.end(), [](bool x){ return x; });
+}
+
+long Utils::countFalse(bools values)
+{
+    // Count the false occurrences in the vector of bools
+    return std::count_if(values.begin(), values.end(), [](bool x){ return !x; });
+}
+
+doubles Utils::randvector(int size)
+{
+    doubles res;
+    for (int i = 0; i < size; i++)
+        res.push_back((double)std::rand() / RAND_MAX);
     return res;
 }
 

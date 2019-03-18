@@ -58,7 +58,7 @@ strings BaseKnotSequence::getValuesStrings()
     return ss;
 }
 
-void BaseKnotSequence::setValuesStrings(strings ss)
+void BaseKnotSequence::setValuesStrings(const strings &ss)
 {
     vector<std::variant<int, double, bool>> values;
     for (auto const [index, value] : Utils::enumerate(ss))
@@ -71,6 +71,66 @@ void BaseKnotSequence::setValuesStrings(strings ss)
             values.push_back(Utils::getbool(value));
     }
     setValues(values);
+}
+
+void BaseKnotSequence::setValuesToOptimize(const vector<std::variant<int, double, bool>> &values)
+{
+    if (values.size() != propsToOptimizeCount())
+        throw std::runtime_error("Values to optimize count is wrong");
+
+    vector<std::variant<int, double, bool> > full_values = getValues();
+    size_t k = 0;
+    for (auto const &[index, isToOptimize] : Utils::enumerate(property_to_optimize))
+    {
+        if (isToOptimize && propOptimizable(index)) // both can be optimized and has to be optimized
+        {
+            full_values.at(index) = values.at(k);
+            k++;
+        }
+    }
+    setValues(full_values);
+}
+
+vector<std::variant<int, double, bool> > BaseKnotSequence::valuesFromDoubles(const doubles &values)
+{
+    if (values.size() != propsCount())
+        throw std::runtime_error("Values count is wrong");
+
+    vector<std::variant<int, double, bool> > res;
+    for (auto const [index, value] : Utils::enumerate(values))
+    {
+        if (property_types[index] == ParamType::INT)
+            res.push_back((int)value);
+        else if (property_types[index] == ParamType::DOUBLE)
+            res.push_back(value);
+        else if (property_types[index] == ParamType::BOOL)
+            res.push_back(value > 0.5); // v > 0.5 true, v < 0.5 false
+    }
+    return res;
+}
+
+vector<std::variant<int, double, bool> > BaseKnotSequence::valuesToOptimizeFromDoubles(const doubles &values)
+{
+    if (values.size() != propsToOptimizeCount())
+        throw std::runtime_error("Values count is wrong");
+
+    vector<std::variant<int, double, bool> > res;
+    int k = 0;
+    for (int index = 0;  index < propsCount(); index++)
+    {
+        if (propToOptimize(index) && propOptimizable(index)) // both can be optimized and has to be optimized
+        {
+            double value = values.at(k);
+            if (property_types[index] == ParamType::INT)
+                res.push_back((int)value);
+            else if (property_types[index] == ParamType::DOUBLE)
+                res.push_back(value);
+            else if (property_types[index] == ParamType::BOOL)
+                res.push_back(value > 0.5); // v > 0.5 true, v < 0.5 false
+            k++;
+        }
+    }
+    return res;
 }
 
 void BaseKnotSequence::setValues(vector<std::variant<int, double, bool>> values)

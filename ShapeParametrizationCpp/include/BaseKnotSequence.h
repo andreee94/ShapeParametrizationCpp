@@ -69,7 +69,10 @@ class BaseKnotSequence
         virtual void setValues(vector<std::variant<int, double, bool>> values) = 0;
         virtual vector<std::variant<int, double, bool>> getValues() = 0;
         strings getValuesStrings();
-        void setValuesStrings(strings values);
+        void setValuesStrings(const strings &values);
+        void setValuesToOptimize(const vector<std::variant<int, double, bool>> &values);
+        vector<std::variant<int, double, bool>> valuesFromDoubles(const doubles &values);
+        vector<std::variant<int, double, bool>> valuesToOptimizeFromDoubles(const doubles &values);
 
         bool isFixed() const { return fixed; }
         int getNumParams() const { return numParams;}
@@ -92,6 +95,10 @@ class BaseKnotSequence
         string propName(size_t i){ return property_names[i]; }
         ParamType propType(size_t i){ return property_types[i]; }
         bool propOptimizable(size_t i){ return property_optimizables[i]; }
+        bool propToOptimize(size_t i){ return property_to_optimize[i]; }
+        vector<bool> propsToOptimize(){ return property_to_optimize; }
+        long propsToOptimizeCount(){ return Utils::countTrue(property_to_optimize); }
+        void setPropsToOptimize(const vector<bool> &values){ property_to_optimize = values; }
 
         virtual BaseKnotSequence *clone() const = 0;
         virtual string type() const = 0;
@@ -103,7 +110,8 @@ class BaseKnotSequence
     protected:
         vector<string> property_names;
         vector<ParamType> property_types;
-        vector<bool> property_optimizables;
+        vector<bool> property_optimizables; // property that can be optimized
+        vector<bool> property_to_optimize; // property that are optimized
         double start=0;
         double end=1;
         int numParams=0;

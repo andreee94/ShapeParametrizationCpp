@@ -5,6 +5,7 @@
 #include <cmath>
 #include <Point.h>
 #include <iostream>
+#include <Bspline.h>
 
 using namespace std;
 
@@ -29,45 +30,86 @@ KnotSequences &KnotSequences::operator=(const KnotSequences &other)
     return *this;
 }
 
-doubles KnotSequences::getSequence(doubles params) const
-{
-    doubles uarray;
-    int StartIndex = 0;
+//doubles KnotSequences::getSequence(doubles params) const
+//{
+//    doubles uarray;
+//    int StartIndex = 0;
 
-    // for each knot extract params ang generate the sequence
-    //for (BaseKnotSequence* item : this->knots)
-    cout << this->knots.size();
-    for (unsigned int i = 0; i < this->knots.size(); i++)
-    {
-        // extract params
-        doubles sequence;
-        if (knots[i]->isFixed())
-        {
-            sequence = knots[i]->getSequence();
-        }
-        else
-        {
-            doubles item_params(params.begin() + StartIndex, params.begin() + StartIndex + this->knots[i]->getNumParams());
-            sequence = this->knots[i]->getSequence(item_params);
-        }
-//        if (BaseFixedKnotSequence *fixed_item = dynamic_cast<BaseFixedKnotSequence*>((knots[i])))
+//    // for each knot extract params ang generate the sequence
+//    //for (BaseKnotSequence* item : this->knots)
+//    cout << this->knots.size();
+//    for (unsigned int i = 0; i < this->knots.size(); i++)
+//    {
+//        // extract params
+//        doubles sequence;
+//        if (knots[i]->isFixed())
 //        {
-//            //BaseFixedKnotSequence* fixed_item = dynamic_cast<BaseFixedKnotSequence*>(this->knots[i] );
-//            doubles sequence = fixed_item->getSequence();
-//            uarray.insert(uarray.end(), sequence.begin(), sequence.end());
+//            sequence = knots[i]->getSequence();
 //        }
 //        else
-//        //if (typeid(item) != typeid(BaseFixedKnotSequence) && item->getNumParams() > 0)
 //        {
 //            doubles item_params(params.begin() + StartIndex, params.begin() + StartIndex + this->knots[i]->getNumParams());
-//            doubles sequence = this->knots[i]->getSequence(item_params);
-//            uarray.insert(uarray.end(), sequence.begin(), sequence.end());
+//            sequence = this->knots[i]->getSequence(item_params);
 //        }
+////        if (BaseFixedKnotSequence *fixed_item = dynamic_cast<BaseFixedKnotSequence*>((knots[i])))
+////        {
+////            //BaseFixedKnotSequence* fixed_item = dynamic_cast<BaseFixedKnotSequence*>(this->knots[i] );
+////            doubles sequence = fixed_item->getSequence();
+////            uarray.insert(uarray.end(), sequence.begin(), sequence.end());
+////        }
+////        else
+////        //if (typeid(item) != typeid(BaseFixedKnotSequence) && item->getNumParams() > 0)
+////        {
+////            doubles item_params(params.begin() + StartIndex, params.begin() + StartIndex + this->knots[i]->getNumParams());
+////            doubles sequence = this->knots[i]->getSequence(item_params);
+////            uarray.insert(uarray.end(), sequence.begin(), sequence.end());
+////        }
 
-        uarray.insert(uarray.end(), sequence.begin(), sequence.end());
-        StartIndex += this->knots[i]->getNumParams();
+//        uarray.insert(uarray.end(), sequence.begin(), sequence.end());
+//        StartIndex += this->knots[i]->getNumParams();
+//    }
+//    return uarray;
+//}
+
+
+doubles KnotSequences::getSequence() const
+{
+    doubles uarray;
+
+    for (auto knot : knots)
+    {
+        for (auto u : knot->getSequence())
+            uarray.push_back(u);
     }
     return uarray;
+}
+
+doubles KnotSequences::getSequence(const doubles &values) const
+{
+    doubles uarray;
+
+    int offset = 0;
+    for (auto knot : knots)
+    {
+        int count = knot->propsToOptimizeCount();
+        vector<std::variant<int, double, bool>> temp = knot->valuesToOptimizeFromDoubles(Utils::slice(values, offset, offset + count));
+        knot->setValuesToOptimize(temp);
+
+        for (auto u : knot->getSequence())
+            uarray.push_back(u);
+
+        offset += count;
+    }
+    return uarray;
+}
+
+doubles KnotSequences::computeError(int numCP, int n, const Points &original, const doubles &values)
+{
+    doubles uarray = getSequence(values);
+    Bspline bspline = Bspline::interpolate(original, numCP, n, uarray);
+//    doubles us = Utils::centripetal(original, 1);
+    doubles error = bspline.evaluateError(original, true);
+    return error;
 }
 
 int KnotSequences::computeNumParams()
@@ -81,6 +123,44 @@ int KnotSequences::computeNumParams()
 size_t KnotSequences::count() const
 {
     return knots.size();
+}
+
+void KnotSequences::setPropsToOptimize(const bools &values)
+{
+    int offset = 0;
+    for (auto knot : knots)
+    {
+        int count = knot->propsCount();
+        knot->setPropsToOptimize(Utils::slice(values, offset, offset + count));
+        offset += count;
+    }
+}
+
+void KnotSequences::setValuesToOptimize(const vector<std::variant<int, double, bool> > &values)
+{
+    int offset = 0;
+    for (auto knot : knots)
+    {
+        int count = knot->propsToOptimizeCount();
+        knot->setValuesToOptimize(Utils::slice(values, offset, offset + count));
+        offset += count;
+    }
+}
+
+vector<std::variant<int, double, bool> > KnotSequences::valuesToOptimizeFromDoubles(const doubles &values)
+{
+    vector<std::variant<int, double, bool> > res;
+    res.reserve(values.size());
+    int offset = 0;
+    for (auto knot : knots)
+    {
+        int count = knot->propsToOptimizeCount();
+        // get variant from double for the baseknot
+        vector<std::variant<int, double, bool> > temp = knot->valuesToOptimizeFromDoubles(Utils::slice(values, offset, offset + count));
+        for (auto var : temp)
+            res.push_back(var);
+        offset += count;
+    }
 }
 
 

@@ -69,6 +69,9 @@ class Utils
         static doubles birational(double start, double end, double q1, double q2, double center, int numpoints, bool startIncluded = true, bool endIncluded = true, bool centerIncluded = true); 
         static void matrixtofile(const string filename, MatrixXd matrix);
         static ints complementindexes(const ints &indexes, int totalnum);
+        static long countTrue(bools values);
+        static long countFalse(bools values);
+        static doubles randvector(int size);
 
 
         static constexpr unsigned int str2int(const char* str, int h = 0)

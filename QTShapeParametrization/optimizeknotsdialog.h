@@ -29,6 +29,13 @@
 
 #include <QDialog>
 #include <QScatterSeries>
+//#include "../optim/optim.hpp"
+//#include <armadillo>
+
+#include <dlib/matrix/matrix.h>
+
+typedef dlib::matrix<double,0,1> column_vector;
+
 
 namespace Ui {
 class OptimizeKnotsDialog;
@@ -52,10 +59,15 @@ public:
     int getN() const;
     void setN(int value);
 
+    Points getOriginalPoints() const;
+    void setOriginalPoints(const Points &value);
+
 public slots:
 
     void knotSelectedChanged(BaseKnotSequence* knot);
     void knotAddedRemoved(BaseKnotSequence* knot);
+    void optimizeClicked();
+    void randomTestClicked();
 
 private:
     QWidget *generateKnotChartLayout();
@@ -63,6 +75,7 @@ private:
     QLayout *generateOptSettingsLayout();
 
     int updateKnotSeries();
+    int updateKnotSeries(const doubles &uarray);
     int updateKnotCount();
     int updateFixedKnotProps(Knots knots);
     int updateFixedKnotProps(KnotSequences knotsequence);
@@ -77,9 +90,16 @@ private:
     QVBoxLayout *listAllProps;
     QWidget *knotCountOKWidget;
     QLabel *knotCountLabel;
+    QList<QCheckBox*> listCheckBoxes;
 
     int n;
     int numCP;
+    Points originalPoints;
+    KnotSequences tempKnotSequence;
+    bools getCheckBoxesValues();
+
+
+//    double errorfunction(const arma::Col<double> &input, const arma::Col<double> *grad_out, void* opt_data);
 };
 
 #endif // OPTIMIZEKNOTSDIALOG_H
