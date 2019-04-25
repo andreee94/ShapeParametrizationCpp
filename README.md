@@ -12,6 +12,12 @@ The control points are moved orthogonally respect to the curve directly within t
 # Release file:
 The file to run the program is: `QTShapeParametrization-run`
 
+# INSTALL
+- Eigen Library
+`sudo apt install libeigen3-dev`
+- Boost Library
+`sudo apt-get install libboost-all-dev`
+
 # TODO
 - [ ] Knots optimization.
 	- Choose between the knots which are fixed and which one to optimize

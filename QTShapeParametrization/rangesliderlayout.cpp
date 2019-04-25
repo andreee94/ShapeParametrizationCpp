@@ -29,12 +29,16 @@ RangeSliderLayout::RangeSliderLayout(QWidget *parent) :
     minEdit->setFixedWidth(50);
     maxEdit->setFixedWidth(50);
 
-    minEdit->setValidator(new QDoubleValidator(rangeSlider->GetMinimun(), rangeSlider->GetMaximun(), 3, this));
-    minEdit->setValidator(new QDoubleValidator(rangeSlider->GetMinimun(), rangeSlider->GetMaximun(), 3, this));
+    changedMinMaxValue();
+
+    minEdit->setText(QString::number(rangeSlider->GetLowerValue(), 'f', 2));
+    maxEdit->setText(QString::number(rangeSlider->GetUpperValue(), 'f', 2));
 
     mainHLayout->addWidget(minEdit, 0);
     mainHLayout->addWidget(rangeSlider, 1);
     mainHLayout->addWidget(maxEdit, 0);
+
+    letTextToIncreaseRange = false;
 
     setLayout(mainHLayout);
 
@@ -49,13 +53,17 @@ RangeSliderLayout::RangeSliderLayout(QWidget *parent) :
 
 void RangeSliderLayout::private_lowerValueChanged(double aLowerValue, bool isFinished)
 {
-    minEdit->setText(QString::number(aLowerValue, 'f', 2));
+    if (!fromLineEdit)
+        minEdit->setText(QString::number(aLowerValue, 'f', 2));
+    fromLineEdit = false;
     emit lowerValueChanged(aLowerValue, isFinished);
 }
 
 void RangeSliderLayout::private_upperValueChanged(double aUpperValue, bool isFinished)
 {
-    maxEdit->setText(QString::number(aUpperValue, 'f', 2));
+    if (!fromLineEdit)
+        maxEdit->setText(QString::number(aUpperValue, 'f', 2));
+    fromLineEdit = false;
     emit upperValueChanged(aUpperValue, isFinished);
 }
 
@@ -95,6 +103,7 @@ double RangeSliderLayout::GetLowerValue() const
 void RangeSliderLayout::SetLowerValue(double aLowerValue)
 {
     rangeSlider->setLowerValue(aLowerValue);
+//    minEdit->setText(QString::number(aLowerValue, 'f', 2));
 }
 
 double RangeSliderLayout::GetUpperValue() const
@@ -105,6 +114,7 @@ double RangeSliderLayout::GetUpperValue() const
 void RangeSliderLayout::SetUpperValue(double aUpperValue)
 {
     rangeSlider->setUpperValue(aUpperValue);
+//    maxEdit->setText(QString::number(aUpperValue, 'f', 2));
 }
 
 void RangeSliderLayout::SetRange(double aMinimum, double aMaximum)
@@ -115,18 +125,52 @@ void RangeSliderLayout::SetRange(double aMinimum, double aMaximum)
 
 void RangeSliderLayout::changedMinMaxValue()
 {
-    minEdit->setValidator(new QDoubleValidator(rangeSlider->GetMinimun(), rangeSlider->GetMaximun(), 3, this));
-    maxEdit->setValidator(new QDoubleValidator(rangeSlider->GetMinimun(), rangeSlider->GetMaximun(), 3, this));
+    if (letTextToIncreaseRange)
+    {
+        minEdit->setValidator(new QDoubleValidator(rangeSlider->GetMinimun(), rangeSlider->GetMaximun(), 3, this));
+        maxEdit->setValidator(new QDoubleValidator(rangeSlider->GetMinimun(), rangeSlider->GetMaximun(), 3, this));
+    }
+    else
+    {
+        minEdit->setValidator(new QDoubleValidator(-MAXFLOAT, MAXFLOAT, 3, this));
+        maxEdit->setValidator(new QDoubleValidator(-MAXFLOAT, MAXFLOAT, 3, this));
+    }
 }
 
-void RangeSliderLayout::changedTextValueMin()
+void RangeSliderLayout::changedTextValueMin(const QString & ss)
 {
+    bool ok(false);
+    double value = ss.toDouble(&ok);
 
+    if (ok)
+        if ((value >= rangeSlider->GetMinimun() && value <= rangeSlider->GetMaximun()) || letTextToIncreaseRange)
+        {
+            fromLineEdit = true;
+            SetLowerValue(value);
+        }
 }
 
-void RangeSliderLayout::changedTextValueMax()
+void RangeSliderLayout::changedTextValueMax(const QString & ss)
 {
+    bool ok(false);
+    double value = ss.toDouble(&ok);
 
+    if (ok)
+        if ((value >= rangeSlider->GetMinimun() && value <= rangeSlider->GetMaximun()) || letTextToIncreaseRange)
+        {
+            fromLineEdit = true;
+            SetUpperValue(value);
+        }
+}
+
+bool RangeSliderLayout::getLetTextToIncreaseRange() const
+{
+    return letTextToIncreaseRange;
+}
+
+void RangeSliderLayout::setLetTextToIncreaseRange(bool value)
+{
+    letTextToIncreaseRange = value;
 }
 
 RangeSliderLayout::~RangeSliderLayout()

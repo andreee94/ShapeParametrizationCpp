@@ -43,10 +43,17 @@ public:
 
     ~RangeSliderLayout();
 
+    bool getLetTextToIncreaseRange() const;
+    void setLetTextToIncreaseRange(bool value);
+
 signals:
     void lowerValueChanged(double aLowerValue, bool isFinished=false);
     void upperValueChanged(double aUpperValue, bool isFinished=false);
     void rangeChanged(double aMin, double aMax);
+
+private slots:
+    void changedTextValueMin(const QString &);
+    void changedTextValueMax(const QString &);
 
 private:
     void private_lowerValueChanged(double aLowerValue, bool isFinished=false);
@@ -55,12 +62,12 @@ private:
 
     void changedMinMaxValue();
 
-    void changedTextValueMin();
-    void changedTextValueMax();
 
     RangeSlider *rangeSlider;
     QLineEdit *minEdit;
     QLineEdit *maxEdit;
+    bool letTextToIncreaseRange;
+    bool fromLineEdit = false;
 
     //Ui::RangeSliderLayout *ui;
 };

@@ -26,8 +26,10 @@
 #include "rangesliderlayout.h"
 #include <dlib/optimization.h>
 #include <dlib/global_optimization.h>
+#include <dlib/matrix/matrix.h>
 
 #include <QVBoxLayout>
+
 
 
 
@@ -136,6 +138,8 @@ QLayout *OptimizeKnotsDialog::generateMainLayout()
     propLayout->addRow(empty);
     propLayout->setFormAlignment(Qt::AlignRight);
     propGroupBox->setLayout(propLayout);
+    propGroupBox->setMinimumWidth(200);
+    propGroupBox->setMaximumWidth(230);
     //formContainerLayout->addLayout(propLayout);
     //formContainerLayout->addStretch(10);
 
@@ -172,6 +176,7 @@ QLayout *OptimizeKnotsDialog::generateMainLayout()
     scrollLayout->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     listAllPropsOut->addWidget(scrollLayout);
     allPropsGroupBox->setLayout(listAllPropsOut);
+    allPropsGroupBox->setMinimumWidth(330);
 
     QPushButton * randomTestButton = new QPushButton("Random Test");
     QPushButton * optimizeButton = new QPushButton("Optimize");
@@ -194,6 +199,9 @@ QLayout *OptimizeKnotsDialog::generateMainLayout()
     gridLayout->addWidget(propGroupBox, 0, 2, 2, 1);
     gridLayout->addLayout(buttonsBox, 3, 3, 1, 1);
     gridLayout->addLayout(knotHBox, 3, 0, 1, 2);
+
+    gridLayout->setColumnStretch( 3, 0 ); // prevent allPropsGroupBox to stretch
+    gridLayout->setColumnStretch( 4, 0 ); // prevent allPropsGroupBox to stretch
     return gridLayout;
 }
 
@@ -343,7 +351,10 @@ void OptimizeKnotsDialog::optimizeClicked()
         return r;
     };
 
-    auto result = find_min_global(rosen, {0.2}, {0.8}, dlib::max_function_calls(300));
+    column_vector min_range = getMinOptimizablesParams();
+    column_vector max_range = getMaxOptimizablesParams();
+
+    auto result = find_min_global(rosen, min_range, max_range, dlib::max_function_calls(300));
     cout << result.x << endl;
     cout << result.y << endl;
 }
@@ -413,6 +424,7 @@ int OptimizeKnotsDialog::updateFixedKnotProps(Knots knots)
 {
     QTUtils::clearLayout(listAllProps);
     listCheckBoxes.clear();
+    listRangeSliders.clear();
 
     for (auto knot : knots)
     {
@@ -426,6 +438,13 @@ int OptimizeKnotsDialog::updateFixedKnotProps(Knots knots)
             checkBox->setText(QString::fromStdString(knot->propName(i)));
             checkBox->setEnabled(knot->propOptimizable(i));
             listAllProps->addWidget(checkBox);
+            if (knot->propOptimizable(i))
+            {
+                RangeSliderLayout *rangeslider = new RangeSliderLayout;
+                rangeslider->SetRange(knot->propMinRange(i), knot->propMaxRange(i));
+                listAllProps->addWidget(rangeslider);
+                listRangeSliders.append(rangeslider);
+            }
             listCheckBoxes.append(checkBox);
         }
         listAllProps->addItem(QTUtils::separator());
@@ -495,6 +514,29 @@ bools OptimizeKnotsDialog::getCheckBoxesValues()
     for (QCheckBox *box : listCheckBoxes)
         res.push_back(box->isChecked());
     return res;
+}
+
+column_vector OptimizeKnotsDialog::getMinOptimizablesParams()
+{
+    column_vector params;
+//    matrix<double,0,1> params;
+    for (unsigned int i = 0; i < listRangeSliders.size(); i++)
+    {
+        params(i) = listRangeSliders[i]->GetLowerValue();
+//        params.push_back(listRangeSliders[i]->GetLowerValue());
+    }
+    return params;
+}
+
+column_vector OptimizeKnotsDialog::getMaxOptimizablesParams()
+{
+    column_vector params;
+    for (unsigned int i = 0; i < listRangeSliders.size(); i++)
+    {
+        params(i) = listRangeSliders[i]->GetUpperValue();
+//        params.push_back(listRangeSliders[i]->GetUpperValue());
+    }
+    return params;
 }
 
 struct errorData{

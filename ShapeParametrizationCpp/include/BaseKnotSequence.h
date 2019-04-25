@@ -96,9 +96,13 @@ class BaseKnotSequence
         ParamType propType(size_t i){ return property_types[i]; }
         bool propOptimizable(size_t i){ return property_optimizables[i]; }
         bool propToOptimize(size_t i){ return property_to_optimize[i]; }
+        double propMinRange(size_t i){ return property_optimizables_min[i]; }
+        double propMaxRange(size_t i){ return property_optimizables_max[i]; }
         vector<bool> propsToOptimize(){ return property_to_optimize; }
         long propsToOptimizeCount(){ return Utils::countTrue(property_to_optimize); }
         void setPropsToOptimize(const vector<bool> &values){ property_to_optimize = values; }
+        void setPropsToOptimizeMin(const vector<double> &values){ property_to_optimize_min = values; }
+        void setPropsToOptimizeMax(const vector<double> &values){ property_to_optimize_max = values; }
 
         virtual BaseKnotSequence *clone() const = 0;
         virtual string type() const = 0;
@@ -111,7 +115,11 @@ class BaseKnotSequence
         vector<string> property_names;
         vector<ParamType> property_types;
         vector<bool> property_optimizables; // property that can be optimized
+        vector<double> property_optimizables_min; // property min of the range that user can choose
+        vector<double> property_optimizables_max; // property max of the range that user can choose
         vector<bool> property_to_optimize; // property that are optimized
+        vector<double> property_to_optimize_min; // property that are optimized min of the range
+        vector<double> property_to_optimize_max; // property that are optimized min of the range
         double start=0;
         double end=1;
         int numParams=0;

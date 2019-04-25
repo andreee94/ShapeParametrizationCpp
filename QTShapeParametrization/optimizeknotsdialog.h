@@ -23,9 +23,11 @@
 #ifndef OPTIMIZEKNOTSDIALOG_H
 #define OPTIMIZEKNOTSDIALOG_H
 
+#include "RangeSlider.h"
 #include "knotlistdest.h"
 #include "knotlistsource.h"
 #include "mychartview.h"
+#include "rangesliderlayout.h"
 
 #include <QDialog>
 #include <QScatterSeries>
@@ -33,6 +35,8 @@
 //#include <armadillo>
 
 #include <dlib/matrix/matrix.h>
+#include <dlib/optimization.h>
+#include <dlib/global_optimization.h>
 
 typedef dlib::matrix<double,0,1> column_vector;
 
@@ -91,12 +95,17 @@ private:
     QWidget *knotCountOKWidget;
     QLabel *knotCountLabel;
     QList<QCheckBox*> listCheckBoxes;
+    QList<RangeSliderLayout*> listRangeSliders;
 
     int n;
     int numCP;
     Points originalPoints;
     KnotSequences tempKnotSequence;
     bools getCheckBoxesValues();
+//    doubles getMinOptimizablesParams();
+//    doubles getMaxOptimizablesParams();
+    column_vector getMinOptimizablesParams();
+    column_vector getMaxOptimizablesParams();
 
 
 //    double errorfunction(const arma::Col<double> &input, const arma::Col<double> *grad_out, void* opt_data);
